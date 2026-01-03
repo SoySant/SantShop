@@ -1,292 +1,238 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
   <title>SantShop | Tecnología accesible</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="SantShop - Audífonos, celulares y accesorios con la mejor calidad-precio" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- ESTILOS -->
+  <!-- LOGO EN LA PESTAÑA -->
+  <link rel="icon" type="image/png" href="SantShop.png">
+
   <style>
     :root{
-      --primary:#020617;
-      --secondary:#0f172a;
+      --dark:#020617;
       --accent:#22c55e;
-      --text:#0f172a;
-      --muted:#64748b;
+      --gray:#64748b;
       --bg:#f8fafc;
-      --card:#ffffff;
     }
+    *{box-sizing:border-box;margin:0;padding:0;font-family:system-ui}
+    body{background:var(--bg);color:#020617}
 
-    *{box-sizing:border-box;margin:0;padding:0;font-family:'Segoe UI',system-ui,sans-serif}
-    body{background:var(--bg);color:var(--text)}
-
-    /* HEADER */
     header{
-      position:sticky;top:0;z-index:100;
-      background:rgba(2,6,23,.9);backdrop-filter:blur(10px);
-      color:white;padding:15px 25px;display:flex;align-items:center;justify-content:space-between
+      position:sticky;top:0;z-index:10;
+      background:var(--dark);color:#fff;
+      padding:15px 20px;
+      display:flex;justify-content:space-between;align-items:center
     }
-    header h1{font-size:26px;font-weight:800}
-    nav a{color:white;margin-left:18px;text-decoration:none;font-weight:600;opacity:.85}
-    nav a:hover{opacity:1}
 
-    /* HERO */
     .hero{
-      padding:90px 20px;text-align:center;
-      background:linear-gradient(135deg,#020617,#0f172a)
-    }
-    .hero h2{font-size:42px;color:white;margin-bottom:10px}
-    .hero p{font-size:18px;color:#cbd5f5;max-width:600px;margin:auto}
-    .hero .btn{
-      margin-top:30px;display:inline-block;padding:14px 34px;
-      background:var(--accent);color:white;text-decoration:none;
-      border-radius:14px;font-weight:800;font-size:16px
+      padding:60px 20px;
+      text-align:center;
+      background:linear-gradient(135deg,#020617,#0f172a);
+      color:#fff
     }
 
-    /* SECCIONES */
-    .section{padding:70px 20px;max-width:1200px;margin:auto}
-    .section h2{font-size:32px;margin-bottom:10px}
-    .section p{color:var(--muted);margin-bottom:35px}
+    .section{padding:40px 15px;max-width:1200px;margin:auto}
+
+    /* BUSCADOR */
+    .search{
+      width:100%;
+      padding:14px;
+      border-radius:14px;
+      border:1px solid #ddd;
+      margin-bottom:25px;
+      font-size:16px
+    }
 
     /* PRODUCTOS */
     .products{
       display:grid;
-      grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
-      gap:25px
+      grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+      gap:20px
     }
     .card{
-      background:var(--card);border-radius:22px;padding:20px;
-      box-shadow:0 15px 35px rgba(0,0,0,.08);
-      transition:.3s
+      background:#fff;
+      border-radius:20px;
+      padding:15px;
+      box-shadow:0 10px 25px rgba(0,0,0,.08)
     }
-    .card:hover{transform:translateY(-6px)}
-    .card img{width:100%;border-radius:16px;margin-bottom:15px}
-    .card h3{font-size:20px;margin-bottom:5px}
-    .card p{font-size:15px;color:var(--muted)}
-    .price{margin-top:10px;font-size:22px;font-weight:800;color:var(--accent)}
-    .buy{
-      margin-top:15px;
+    .card img{width:100%;border-radius:14px}
+    .card h3{margin:10px 0 5px}
+    .card p{color:var(--gray);font-size:14px}
+    .price{font-size:20px;font-weight:800;color:var(--accent);margin:10px 0}
+    .btn{
       display:block;
-      text-align:center;
+      width:100%;
       padding:14px;
-      background:var(--secondary);
-      color:white;
+      background:#0f172a;
+      color:#fff;
+      border:none;
       border-radius:14px;
-      text-decoration:none;
       font-weight:800;
-      cursor:pointer;
-      border:none
+      cursor:pointer
     }
 
-    /* WHATSAPP */
+    /* CARRITO */
+    .cart-item{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-bottom:10px
+    }
+    .cart-item button{
+      background:red;
+      color:#fff;
+      border:none;
+      border-radius:8px;
+      padding:6px 10px;
+      cursor:pointer
+    }
+
+    /* TICKET */
+    #ticket{
+      width:320px;
+      background:#fff;
+      padding:15px;
+      font-family:monospace;
+      display:none
+    }
+    #ticket img{width:90px;display:block;margin:auto}
+
     .wa{
-      position:fixed;bottom:20px;right:20px;
-      background:#25D366;color:white;
-      padding:15px 20px;border-radius:999px;
-      font-weight:800;text-decoration:none;
-      box-shadow:0 15px 30px rgba(0,0,0,.25)
-    }
-
-    /* FOOTER */
-    footer{
-      background:var(--primary);color:#cbd5f5;
-      text-align:center;padding:35px 20px;margin-top:70px
-    }
-
-    @media(max-width:600px){
-      .hero h2{font-size:32px}
+      position:fixed;
+      bottom:20px;right:20px;
+      background:#25D366;
+      color:#fff;
+      padding:15px 18px;
+      border-radius:999px;
+      text-decoration:none;
+      font-weight:800
     }
   </style>
 </head>
-  <!-- TICKET VISUAL (OCULTO) -->
-<div id="ticket" style="
-  width:320px;
-  background:#fff;
-  color:#000;
-  font-family:monospace;
-  padding:15px;
-  display:none;
-">
-  <div style="text-align:center">
-    <img src="assets/logo.png" alt="SantShop" style="width:120px;margin-bottom:10px">
-    <strong>SANTSHOP</strong><br>
-    Tecnología accesible<br><br>
-  </div>
-
-  <div id="ticketItems"></div>
-
-  <hr>
-  <p><strong id="ticketTotal"></strong></p>
-  <hr>
-
-  <p style="text-align:center">
-    Gracias por su compra<br>
-    Vuelva pronto 🙌
-  </p>
-</div>
-
-<button class="buy" onclick="generateTicketImage()">
-  Generar ticket (imagen)
-</button>
 
 <body>
 
+<!-- TICKET -->
+<div id="ticket">
+  <img src="assets/logo.png">
+  <p style="text-align:center;font-weight:800">SANTSHOP</p>
+  <hr>
+  <div id="ticketItems"></div>
+  <hr>
+  <p id="ticketTotal" style="font-weight:800"></p>
+  <p style="text-align:center">Gracias por su compra 🙌</p>
+</div>
+
 <header>
-  <h1>SantShop</h1>
-  <nav>
-    <a href="#inicio">Inicio</a>
-    <a href="#productos">Productos</a>
-    <a href="#contacto">Contacto</a>
-  </nav>
+  <strong>SantShop</strong>
 </header>
 
-<section class="hero" id="inicio">
-  <h2>Tecnología accesible, estilo premium</h2>
-  <p>Audífonos, celulares y accesorios ideales para el día a día. Calidad real, precios honestos.</p>
-  <a href="#productos" class="btn">Ver catálogo</a>
+<section class="hero">
+  <h2>Tecnología accesible</h2>
+  <p>Calidad real, precios honestos</p>
 </section>
 
-<section class="section" id="productos">
-  <h2>Productos destacados</h2>
-  <p>Seleccionados por calidad, batería y precio.</p>
-
+<section class="section">
+  <input class="search" placeholder="🔍 Buscar producto..." oninput="searchProducts(this.value)">
   <div class="products" id="productList"></div>
 </section>
 
-<section class="section" id="carrito">
-  <h2>🧾 Ticket del pedido</h2>
-  <p>Tu pedido se genera automáticamente para WhatsApp.</p>
-  <p><strong id="cartTotal">Total: $0 MXN</strong></p>
-  <a id="waTicket" class="buy" href="#" target="_blank">Enviar pedido por WhatsApp</a>
-</section>
-
-<section class="section" id="contacto">
-  <h2>¿Quieres comprar?</h2>
-  <p>Escríbenos directo por WhatsApp o únete a nuestro grupo para promos y novedades.</p>
-  <a class="buy" href="https://wa.me/529641034714" target="_blank">Hablar por WhatsApp</a>
-  <br><br>
-  <a class="buy" href="https://chat.whatsapp.com/Ev1x2BDSBUyKnrs9VNkour" target="_blank">Unirme al grupo de WhatsApp</a>
+<section class="section">
+  <h3>🧾 Pedido</h3>
+  <div id="cartList"></div>
+  <p id="cartTotal"><strong>Total: $0 MXN</strong></p>
+  <button class="btn" onclick="generateTicket()">Generar ticket</button>
 </section>
 
 <a class="wa" href="https://wa.me/529641034714" target="_blank">WhatsApp</a>
 
-<footer>
-  <p>© 2026 SantShop · Emprendimiento joven mexicano</p>
-</footer>
-
-<!-- JAVASCRIPT -->
-  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 
 <script>
-  const phone = '529641034714';
+const phone = '529641034714';
 
-  const products = [
-  {
-    id:1,
-    name:'Audífonos TWS',
-    desc:'Bluetooth, estuche de carga y buen bajo',
-    price:299,
-    image:'https://http2.mlstatic.com/D_NQ_NP_2X_697864-MLA100038119191_122025-F.webp'
-  },
-  {
-    id:2,
-    name:'Power Bank 10,000 mAh',
-    desc:'Carga rápida y segura',
-    price:599,
-    image:'https://http2.mlstatic.com/D_NQ_NP_2X_995948-MLA99547949208_122025-F.webp'
-  },
-  {
-    id:3,
-    name:'Audífonos Inalámbricos Occiam S36',
-    desc:'Bluetooth 5.4 Blancos 100h Cancelación Ruido',
-    price:450,
-    image:'https://http2.mlstatic.com/D_NQ_NP_2X_681843-MLA99455767776_112025-F.webp'
-  }
+const products = [
+  {id:1,name:'Audífonos TWS',desc:'Bluetooth y estuche',price:299,img:'https://http2.mlstatic.com/D_NQ_NP_2X_697864-MLA100038119191_122025-F.webp'},
+  {id:2,name:'Power Bank 10,000 mAh',desc:'Carga rápida',price:599,img:'https://http2.mlstatic.com/D_NQ_NP_2X_995948-MLA99547949208_122025-F.webp'},
+  {id:3,name:'Occiam S36',desc:'100h batería',price:450,img:'https://http2.mlstatic.com/D_NQ_NP_2X_681843-MLA99455767776_112025-F.webp'}
 ];
 
+let cart = [];
+let filtered = products;
 
-
-
-  let cart = [];
-
+function renderProducts(){
   const list = document.getElementById('productList');
+  list.innerHTML = '';
+  filtered.forEach(p=>{
+    list.innerHTML += `
+      <div class="card">
+        <img src="${p.img}">
+        <h3>${p.name}</h3>
+        <p>${p.desc}</p>
+        <div class="price">$${p.price}</div>
+        <button class="btn" onclick="addToCart(${p.id})">Agregar</button>
+      </div>`;
+  });
+}
 
-  function renderProducts(){
-    list.innerHTML = '';
-    products.forEach(p=>{
-      list.innerHTML += `
-        <div class="card">
-          <img src="${p.image}" alt="${p.name}">
-
-          <h3>${p.name}</h3>
-          <p>${p.desc}</p>
-          <div class="price">$${p.price} MXN</div>
-          <a class="buy" onclick="addToCart(${p.id})">Agregar al pedido</a>
-        </div>`;
-    });
+function addToCart(id){
+  const item = cart.find(i=>i.id===id);
+  if(item){ item.qty++; }
+  else{
+    const p = products.find(p=>p.id===id);
+    cart.push({...p,qty:1});
   }
+  renderCart();
+}
 
-  function addToCart(id){
-    const product = products.find(p=>p.id===id);
-    cart.push(product);
-    renderCart();
-  }
-
+function removeItem(id){
+  cart = cart.filter(i=>i.id!==id);
+  renderCart();
+}
 
 function renderCart(){
   let total = 0;
-  let itemsHTML = '';
-
-  cart.forEach((item,i)=>{
-    total += item.price;
-    itemsHTML += `
-      ${i+1}. ${item.name}<br>
-      $${item.price} MXN<br>
-    `;
+  let html = '';
+  cart.forEach(i=>{
+    total += i.price * i.qty;
+    html += `
+      <div class="cart-item">
+        ${i.qty}x ${i.name}
+        <button onclick="removeItem(${i.id})">✕</button>
+      </div>`;
   });
+  document.getElementById('cartList').innerHTML = html;
+  document.getElementById('cartTotal').innerText = 'Total: $'+total+' MXN';
 
-  document.getElementById('ticketItems').innerHTML = itemsHTML;
+  document.getElementById('ticketItems').innerHTML =
+    cart.map(i=>`${i.qty}x ${i.name} - $${i.price*i.qty}`).join('<br>');
   document.getElementById('ticketTotal').innerText =
-    'TOTAL: $' + total + ' MXN';
-
-  document.getElementById('cartTotal').innerText =
-    'Total: $' + total + ' MXN';
+    'TOTAL: $'+total+' MXN';
 }
 
-
-    });
-
-<script>
-function generateTicketImage(){
-  const ticket = document.getElementById('ticket');
-  ticket.style.display = 'block';
-
-  html2canvas(ticket).then(canvas=>{
-    const imgData = canvas.toDataURL('image/png');
-
-    const link = document.createElement('a');
-    link.download = 'ticket-santshop.png';
-    link.href = imgData;
-    link.click();
-
-    ticket.style.display = 'none';
-
-    // WhatsApp con mensaje corto
-    window.open(
-      `https://wa.me/529641034714?text=Hola, quiero apartar este pedido. Te mando el ticket 👇`,
-      '_blank'
-    );
+function generateTicket(){
+  const t = document.getElementById('ticket');
+  t.style.display='block';
+  html2canvas(t).then(c=>{
+    const a=document.createElement('a');
+    a.href=c.toDataURL();
+    a.download='ticket-santshop.png';
+    a.click();
+    t.style.display='none';
+    window.open(`https://wa.me/${phone}?text=Hola, te envío mi pedido`, '_blank');
   });
 }
 
-
-  }
-
+function searchProducts(text){
+  filtered = products.filter(p =>
+    p.name.toLowerCase().includes(text.toLowerCase())
+  );
   renderProducts();
+}
+
+renderProducts();
 </script>
 
 </body>
 </html>
-
-
