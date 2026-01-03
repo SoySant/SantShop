@@ -8,6 +8,10 @@
   <!-- LOGO EN LA PESTAÑA -->
   <link rel="icon" type="image/png" href="SantShop.png">
 
+  <!-- LIBRERÍAS -->
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
   <style>
     :root{
       --dark:#020617;
@@ -34,7 +38,6 @@
 
     .section{padding:40px 15px;max-width:1200px;margin:auto}
 
-    /* BUSCADOR */
     .search{
       width:100%;
       padding:14px;
@@ -44,7 +47,6 @@
       font-size:16px
     }
 
-    /* PRODUCTOS */
     .products{
       display:grid;
       grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
@@ -72,7 +74,6 @@
       cursor:pointer
     }
 
-    /* CARRITO */
     .cart-item{
       display:flex;
       justify-content:space-between;
@@ -88,7 +89,6 @@
       cursor:pointer
     }
 
-    /* TICKET */
     #ticket{
       width:320px;
       background:#fff;
@@ -108,6 +108,12 @@
       text-decoration:none;
       font-weight:800
     }
+
+    #adminLogin,#adminPanel{
+      max-width:600px;
+      margin:40px auto;
+      display:none
+    }
   </style>
 </head>
 
@@ -125,7 +131,7 @@
 </div>
 
 <header>
-  <strong>SantShop</strong>
+  <strong id="title">SantShop</strong>
 </header>
 
 <section class="hero">
@@ -145,12 +151,27 @@
   <button class="btn" onclick="generateTicket()">Generar ticket</button>
 </section>
 
-<a class="wa" href="https://wa.me/529641034714" target="_blank">WhatsApp</a>
+<!-- ADMIN -->
+<div id="adminLogin">
+  <h3>Admin SantShop</h3>
+  <input class="search" id="adminEmail" placeholder="Correo">
+  <input class="search" id="adminPass" type="password" placeholder="Contraseña">
+  <button class="btn" onclick="loginAdmin()">Entrar</button>
+</div>
 
-<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+<div id="adminPanel">
+  <h3>📊 Ventas</h3>
+  <canvas id="salesChart"></canvas>
+  <p id="totalSales"></p>
+  <button class="btn" onclick="logoutAdmin()">Cerrar sesión</button>
+</div>
+
+<a class="wa" href="https://wa.me/529641034714" target="_blank">WhatsApp</a>
 
 <script>
 const phone = '529641034714';
+const ADMIN_EMAIL = "josuesantizobarrios@gmail.com";
+const ADMIN_PASS = "0923josue";
 
 const products = [
   {id:1,name:'Audífonos TWS',desc:'Bluetooth y estuche',price:299,img:'https://http2.mlstatic.com/D_NQ_NP_2X_697864-MLA100038119191_122025-F.webp'},
@@ -158,7 +179,8 @@ const products = [
   {id:3,name:'Occiam S36',desc:'100h batería',price:450,img:'https://http2.mlstatic.com/D_NQ_NP_2X_681843-MLA99455767776_112025-F.webp'}
 ];
 
-let cart = [];
+let cart = JSON.parse(localStorage.getItem("cart")) || [];
+let history = JSON.parse(localStorage.getItem("history")) || [];
 let filtered = products;
 
 function renderProducts(){
@@ -178,17 +200,17 @@ function renderProducts(){
 
 function addToCart(id){
   const item = cart.find(i=>i.id===id);
-  if(item){ item.qty++; }
+  if(item) item.qty++;
   else{
     const p = products.find(p=>p.id===id);
     cart.push({...p,qty:1});
   }
-  renderCart();
+  saveCart();
 }
 
 function removeItem(id){
   cart = cart.filter(i=>i.id!==id);
-  renderCart();
+  saveCart();
 }
 
 function renderCart(){
@@ -204,15 +226,26 @@ function renderCart(){
   });
   document.getElementById('cartList').innerHTML = html;
   document.getElementById('cartTotal').innerText = 'Total: $'+total+' MXN';
+}
 
-  document.getElementById('ticketItems').innerHTML =
-    cart.map(i=>`${i.qty}x ${i.name} - $${i.price*i.qty}`).join('<br>');
-  document.getElementById('ticketTotal').innerText =
-    'TOTAL: $'+total+' MXN';
+function saveCart(){
+  localStorage.setItem("cart",JSON.stringify(cart));
+  renderCart();
 }
 
 function generateTicket(){
   const t = document.getElementById('ticket');
+  let total = 0;
+  document.getElementById('ticketItems').innerHTML =
+    cart.map(i=>{
+      total += i.price*i.qty;
+      return `${i.qty}x ${i.name} - $${i.price*i.qty}`;
+    }).join('<br>');
+  document.getElementById('ticketTotal').innerText = 'TOTAL: $'+total+' MXN';
+
+  history.push({date:new Date().toLocaleString(),total});
+  localStorage.setItem("history",JSON.stringify(history));
+
   t.style.display='block';
   html2canvas(t).then(c=>{
     const a=document.createElement('a');
@@ -222,6 +255,8 @@ function generateTicket(){
     t.style.display='none';
     window.open(`https://wa.me/${phone}?text=Hola, te envío mi pedido`, '_blank');
   });
+
+  cart=[]; saveCart();
 }
 
 function searchProducts(text){
@@ -231,7 +266,45 @@ function searchProducts(text){
   renderProducts();
 }
 
+let taps=0;
+document.getElementById("title").onclick=()=>{
+  taps++; setTimeout(()=>taps=0,800);
+  if(taps>=5) adminLogin.style.display="block";
+};
+
+function loginAdmin(){
+  if(adminEmail.value===ADMIN_EMAIL && adminPass.value===ADMIN_PASS){
+    localStorage.setItem("admin","1");
+    adminLogin.style.display="none";
+    adminPanel.style.display="block";
+    drawChart();
+  }else alert("Datos incorrectos");
+}
+
+function logoutAdmin(){
+  localStorage.removeItem("admin");
+  location.reload();
+}
+
+function drawChart(){
+  new Chart(salesChart,{
+    type:"line",
+    data:{
+      labels:history.map(h=>h.date),
+      datasets:[{label:"Ventas",data:history.map(h=>h.total)}]
+    }
+  });
+  totalSales.innerText =
+    "Total vendido: $"+history.reduce((s,h)=>s+h.total,0)+" MXN";
+}
+
+if(localStorage.getItem("admin")){
+  adminPanel.style.display="block";
+  drawChart();
+}
+
 renderProducts();
+renderCart();
 </script>
 
 </body>
