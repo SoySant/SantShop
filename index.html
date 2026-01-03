@@ -149,10 +149,30 @@
   const phone = '529641034714';
 
   const products = [
-    {id:1,name:'Audífonos TWS',desc:'Bluetooth, estuche de carga y buen bajo',price:299},
-    {id:2,name:'Power Bank 10,000 mAh',desc:'Carga rápida y segura',price:599},
-    {id:3,name:'Smart Band',desc:'Salud, pasos y notificaciones',price:699}
-  ];
+  {
+    id:1,
+    name:'Audífonos TWS',
+    desc:'Bluetooth, estuche de carga y buen bajo',
+    price:299,
+    image:'assets/tws.jpg'
+  },
+  {
+    id:2,
+    name:'Power Bank 10,000 mAh',
+    desc:'Carga rápida y segura',
+    price:599,
+    image:'assets/powerbank.jpg'
+  },
+  {
+    id:3,
+    name:'Audífonos Inalámbricos Occiam S36',
+    desc:'Bluetooth 5.4 Blancos 100h Cancelación Ruido',
+    price:450,
+    image:'assets/occiam.jpg'
+  }
+];
+
+
 
   let cart = [];
 
@@ -163,7 +183,8 @@
     products.forEach(p=>{
       list.innerHTML += `
         <div class="card">
-          <img src="https://via.placeholder.com/400" alt="${p.name}">
+          <img src="${p.image}" alt="${p.name}">
+
           <h3>${p.name}</h3>
           <p>${p.desc}</p>
           <div class="price">$${p.price} MXN</div>
