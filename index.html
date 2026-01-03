@@ -99,6 +99,37 @@
     }
   </style>
 </head>
+  <!-- TICKET VISUAL (OCULTO) -->
+<div id="ticket" style="
+  width:320px;
+  background:#fff;
+  color:#000;
+  font-family:monospace;
+  padding:15px;
+  display:none;
+">
+  <div style="text-align:center">
+    <img src="assets/logo.png" alt="SantShop" style="width:120px;margin-bottom:10px">
+    <strong>SANTSHOP</strong><br>
+    Tecnología accesible<br><br>
+  </div>
+
+  <div id="ticketItems"></div>
+
+  <hr>
+  <p><strong id="ticketTotal"></strong></p>
+  <hr>
+
+  <p style="text-align:center">
+    Gracias por su compra<br>
+    Vuelva pronto 🙌
+  </p>
+</div>
+
+<button class="buy" onclick="generateTicketImage()">
+  Generar ticket (imagen)
+</button>
+
 <body>
 
 <header>
@@ -145,6 +176,8 @@
 </footer>
 
 <!-- JAVASCRIPT -->
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+
 <script>
   const phone = '529641034714';
 
@@ -200,25 +233,54 @@
     renderCart();
   }
 
-  function renderCart(){
-    let total = 0;
-    let ticket = '🧾 *TICKET SANTSHOP*%0A';
-    ticket += '--------------------%0A';
 
-    cart.forEach((item,i)=>{
-      total += item.price;
-      ticket += `${i+1}. ${item.name} - $${item.price} MXN%0A`;
+function renderCart(){
+  let total = 0;
+  let itemsHTML = '';
+
+  cart.forEach((item,i)=>{
+    total += item.price;
+    itemsHTML += `
+      ${i+1}. ${item.name}<br>
+      $${item.price} MXN<br>
+    `;
+  });
+
+  document.getElementById('ticketItems').innerHTML = itemsHTML;
+  document.getElementById('ticketTotal').innerText =
+    'TOTAL: $' + total + ' MXN';
+
+  document.getElementById('cartTotal').innerText =
+    'Total: $' + total + ' MXN';
+}
+
+
     });
 
-    ticket += '--------------------%0A';
-    ticket += `TOTAL: $${total} MXN%0A%0A`;
-    ticket += '📌 ¿Disponible para apartar?';
+<script>
+function generateTicketImage(){
+  const ticket = document.getElementById('ticket');
+  ticket.style.display = 'block';
 
-    const waBtn = document.getElementById('waTicket');
-    waBtn.href = `https://wa.me/${phone}?text=${ticket}`;
+  html2canvas(ticket).then(canvas=>{
+    const imgData = canvas.toDataURL('image/png');
 
-    document.getElementById('cartTotal').innerText = 'Total: $' + total + ' MXN';
-    document.getElementById('cartCount').innerText = cart.length;
+    const link = document.createElement('a');
+    link.download = 'ticket-santshop.png';
+    link.href = imgData;
+    link.click();
+
+    ticket.style.display = 'none';
+
+    // WhatsApp con mensaje corto
+    window.open(
+      `https://wa.me/529641034714?text=Hola, quiero apartar este pedido. Te mando el ticket 👇`,
+      '_blank'
+    );
+  });
+}
+
+
   }
 
   renderProducts();
@@ -226,4 +288,5 @@
 
 </body>
 </html>
+
 
