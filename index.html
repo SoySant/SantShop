@@ -4,7 +4,8 @@
   <meta charset="UTF-8">
   <title>SantShop | Tech & Accesorios</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <link rel="icon" type="image/jpeg" href="SantShop.png.jpeg">
+  
+  <link rel="icon" type="image/png" href="SantShop.png.jpeg">
   
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
@@ -31,29 +32,36 @@
     header {
       position: sticky; top: 0; z-index: 100;
       background: rgba(5, 11, 20, 0.9); backdrop-filter: blur(12px);
-      padding: 15px 20px;
+      padding: 10px 20px;
       display: flex; justify-content: space-between; align-items: center;
       border-bottom: 1px solid rgba(255,255,255,0.1);
     }
+
+    .brand { display: flex; align-items: center; gap: 10px; }
+    .brand img { width: 35px; height: 35px; border-radius: 50%; border: 1px solid var(--blue); }
+
+    .cart-trigger {
+      background: #1e293b; padding: 5px 15px; border-radius: 20px; 
+      display: flex; align-items: center; gap: 8px; cursor: pointer;
+    }
+    .cart-trigger img { width: 18px; height: 18px; border-radius: 50%; }
 
     /* HERO */
     .hero {
       padding: 40px 20px; text-align: center;
     }
     .hero img { 
-      width: 120px; height: 120px; object-fit: cover; margin-bottom: 15px; border-radius: 50%; 
-      box-shadow: 0 0 30px rgba(59, 130, 246, 0.3); border: 2px solid var(--blue);
+      width: 140px; height: 140px; object-fit: cover; margin-bottom: 15px; border-radius: 50%; 
+      box-shadow: 0 0 35px rgba(59, 130, 246, 0.4); border: 2px solid var(--blue);
     }
     .hero h1 { font-size: 2.5rem; color: white; margin-bottom: 5px; }
 
     /* CONTROLES */
     .controls-container { padding: 0 20px; max-width: 1200px; margin: auto; }
-    
     .search-box input {
       width: 100%; background: #1e293b; border: 1px solid #334155;
       padding: 12px; border-radius: 12px; color: white; font-size: 1rem; margin-bottom: 15px;
     }
-
     .categories { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 10px; scrollbar-width: none; }
     .cat-btn {
       padding: 8px 18px; border-radius: 50px; border: 1px solid #334155;
@@ -69,34 +77,33 @@
     .card {
       background: var(--card-glass); backdrop-filter: blur(10px);
       border-radius: 20px; padding: 15px; border: 1px solid rgba(255,255,255,0.05);
-      display: flex; flex-direction: column;
+      display: flex; flex-direction: column; transition: 0.3s;
     }
+    .card:active { transform: scale(0.98); }
     .card img { width: 100%; height: 150px; object-fit: contain; margin-bottom: 10px; background: rgba(255,255,255,0.02); border-radius: 10px; }
-    
     .price { font-size: 1.3rem; font-weight: 800; color: white; margin: 5px 0; }
     .add-btn {
       width: 100%; padding: 10px; border-radius: 10px; border: none;
       background: var(--blue); color: white; font-weight: 700; cursor: pointer;
     }
 
-    /* CARRITO */
+    /* CHECKOUT */
     .checkout-panel {
       background: #0f172a; padding: 25px; border-radius: 25px; 
       margin: 20px; border: 1px solid #334155;
     }
 
-    /* TICKET OCULTO (ESTILO TÉRMICO) */
+    /* TICKET ESTILO TÉRMICO */
     #ticket-container {
-      position: fixed; top: 0; left: -2000px; /* Sacado de pantalla pero renderizable */
+      position: fixed; top: 0; left: -2000px;
       width: 350px; background: #fff; color: #000; padding: 20px;
       font-family: 'Courier New', Courier, monospace; text-transform: uppercase;
-      z-index: 99999;
     }
     .t-header { text-align: center; border-bottom: 2px dashed #000; padding-bottom: 10px; margin-bottom: 10px; }
     .t-row { display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 5px; }
     .t-total { font-size: 18px; font-weight: bold; margin-top: 10px; border-top: 2px dashed #000; padding-top: 5px; text-align: right; }
 
-    /* MODALES */
+    /* MODAL */
     .modal {
       position: fixed; top: 0; left: 0; width: 100%; height: 100%;
       background: rgba(0,0,0,0.9); z-index: 2000; display: none;
@@ -105,9 +112,8 @@
     .wa-float {
       position: fixed; bottom: 20px; right: 20px;
       background: #25D366; color: white; padding: 12px 20px;
-      border-radius: 50px; text-decoration: none; font-weight: bold;
+      border-radius: 50px; text-decoration: none; font-weight: bold; box-shadow: 0 4px 15px rgba(0,0,0,0.3);
     }
-    
     #toast {
       position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
       background: #10b981; color: white; padding: 10px 20px; border-radius: 20px;
@@ -141,14 +147,18 @@
 </div>
 
 <header>
-  <strong>SantShop</strong>
-  <div onclick="document.querySelector('.checkout-panel').scrollIntoView()" style="background:#1e293b; padding:5px 12px; border-radius:20px; font-size:0.9rem;">
-    🛒 <span id="cartCount">0</span>
+  <div class="brand">
+    <img src="SantShop.png.jpeg" alt="Logo">
+    <strong>SantShop</strong>
+  </div>
+  <div class="cart-trigger" onclick="document.querySelector('.checkout-panel').scrollIntoView()">
+    <img src="https://cdn-icons-png.flaticon.com/512/3394/3394009.png" alt="Logo Carrito">
+    <span id="cartCount">0</span>
   </div>
 </header>
 
 <div class="hero">
-  <img src="SantShop.png.jpeg" alt="Logo" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3081/3081559.png'">
+  <img src="SantShop.png.jpeg" alt="SantShop Logo Principal">
   <h1>SantShop</h1>
   <p>Tecnología Premium</p>
 </div>
@@ -186,7 +196,7 @@
     <span id="displayTotal" style="color:var(--blue)">$0.00</span>
   </div>
 
-  <button id="btnGenerar" onclick="procesarPedido()" style="width:100%; padding:15px; background:var(--blue); color:white; border:none; border-radius:12px; margin-top:20px; font-weight:bold; font-size:1.1rem;">
+  <button id="btnGenerar" onclick="procesarPedido()" style="width:100%; padding:15px; background:var(--blue); color:white; border:none; border-radius:12px; margin-top:20px; font-weight:bold; font-size:1.1rem; cursor:pointer;">
     CONFIRMAR Y GENERAR TICKET
   </button>
 </div>
@@ -201,7 +211,6 @@
 <a href="https://wa.me/529641034714" class="wa-float" target="_blank">WhatsApp</a>
 
 <script>
-// --- CONFIGURACIÓN ---
 const phone = '529641034714';
 const money = new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' });
 
@@ -227,8 +236,6 @@ function renderProducts(){
     return (currentCat === 'all' || p.category === currentCat) && p.name.toLowerCase().includes(term);
   });
 
-  if(filtered.length === 0) list.innerHTML = '<p style="color:gray;">No se encontraron productos.</p>';
-
   filtered.forEach(p => {
     list.innerHTML += `
       <div class="card">
@@ -252,7 +259,6 @@ function addToCart(id){
   if(item) item.qty++;
   else cart.push({...products.find(p => p.id === id), qty: 1});
   saveCart();
-  
   const t = document.getElementById('toast');
   t.style.display = 'block'; setTimeout(() => t.style.display = 'none', 1500);
 }
@@ -270,18 +276,15 @@ function saveCart(){
 function renderCart(){
   const list = document.getElementById('cartList');
   document.getElementById('cartCount').innerText = cart.reduce((acc, i) => acc + i.qty, 0);
-  
   if(cart.length === 0) {
     list.innerHTML = '<p style="color:gray; text-align:center">Carrito vacío</p>';
     document.getElementById('displayTotal').innerText = "$0.00";
     return;
   }
-
   let subtotal = 0;
   list.innerHTML = cart.map(i => {
     subtotal += i.price * i.qty;
-    return `
-    <div style="display:flex; justify-content:space-between; margin-bottom:8px; align-items:center; background:rgba(255,255,255,0.05); padding:8px; border-radius:8px;">
+    return `<div style="display:flex; justify-content:space-between; margin-bottom:8px; align-items:center; background:rgba(255,255,255,0.05); padding:8px; border-radius:8px;">
       <span style="font-size:0.9rem;">${i.qty}x ${i.name}</span>
       <div style="display:flex; align-items:center; gap:10px;">
         <span>${money.format(i.price * i.qty)}</span>
@@ -289,15 +292,12 @@ function renderCart(){
       </div>
     </div>`;
   }).join('');
-
   const envio = parseFloat(document.getElementById('envioSelect').value);
   document.getElementById('displayTotal').innerText = money.format(subtotal + envio);
 }
 
 function procesarPedido() {
     if(cart.length === 0) return alert("Agrega productos al carrito primero.");
-    
-    // 1. Datos previos
     const btn = document.getElementById('btnGenerar');
     btn.innerHTML = "⏳ Generando Ticket...";
     btn.disabled = true;
@@ -305,10 +305,7 @@ function procesarPedido() {
     const envioVal = parseFloat(document.getElementById('envioSelect').value);
     const envioTxt = document.getElementById('envioSelect').options[document.getElementById('envioSelect').selectedIndex].text;
     
-    // 2. Llenar el Ticket Oculto
-    const now = new Date();
-    document.getElementById('t-fecha').innerText = now.toLocaleString();
-    
+    document.getElementById('t-fecha').innerText = new Date().toLocaleString();
     let total = 0;
     document.getElementById('t-items').innerHTML = cart.map(i => {
         total += i.price * i.qty;
@@ -318,43 +315,21 @@ function procesarPedido() {
     document.getElementById('t-envio').innerText = money.format(envioVal);
     document.getElementById('t-total').innerText = money.format(total + envioVal);
 
-    // 3. Generar la Imagen (CON MANEJO DE ERRORES)
-    const ticketElement = document.getElementById('ticket-container');
-    
-    html2canvas(ticketElement, { 
-        scale: 2, 
-        useCORS: true, // Importante para imágenes externas
-        allowTaint: true,
-        logging: false 
-    }).then(canvas => {
-        // Descargar
+    html2canvas(document.getElementById('ticket-container'), { scale: 2 }).then(canvas => {
         const link = document.createElement('a');
         link.download = 'Ticket_SantShop.png';
-        link.href = canvas.toDataURL("image/png");
+        link.href = canvas.toDataURL();
         link.click();
 
-        // WhatsApp
-        const msg = `*PEDIDO SANTSHOP*%0ATotal: ${money.format(total + envioVal)}%0AEntrega: ${envioTxt}%0A_Te envío el ticket en imagen._`;
+        const msg = `*NUEVO PEDIDO SANTSHOP*%0A%0ATotal: ${money.format(total + envioVal)}%0AEntrega: ${envioTxt}%0A%0A_Te envío el comprobante en imagen._`;
         window.open(`https://wa.me/${phone}?text=${msg}`, '_blank');
 
-        // Limpieza
         cart = []; saveCart();
-        btn.innerHTML = "CONFIRMAR Y GENERAR TICKET";
-        btn.disabled = false;
-    }).catch(err => {
-        alert("Hubo un error generando la imagen del ticket, pero tu pedido se enviará por WhatsApp.");
-        console.error(err);
-        
-        // Fallback: Enviar solo texto si falla la imagen
-        const msg = `*PEDIDO SANTSHOP (Error Ticket)*%0ATotal: ${money.format(total + envioVal)}%0AEntrega: ${envioTxt}`;
-        window.open(`https://wa.me/${phone}?text=${msg}`, '_blank');
-        
         btn.innerHTML = "CONFIRMAR Y GENERAR TICKET";
         btn.disabled = false;
     });
 }
 
-// Detalles y Zoom
 function openDetails(id){
     const p = products.find(i => i.id === id);
     document.getElementById('modalBody').innerHTML = `
@@ -368,7 +343,6 @@ function openDetails(id){
 }
 function closeModal(){ document.getElementById('productModal').style.display = 'none'; }
 
-// Iniciar
 renderProducts();
 renderCart();
 </script>
