@@ -4,169 +4,145 @@
   <meta charset="UTF-8">
   <title>SantShop | Tech & Accesorios</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <link rel="icon" type="image/jpeg" href="file:///C:/Users/josue/Documents/Sant/SantShop/SantShop.png.jpeg">
   
-  <link rel="icon" type="image/png" href="SantShop.png.jpeg">
-  
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
   <style>
     :root {
-      --dark-bg: #050b14;
-      --card-glass: rgba(30, 41, 59, 0.7);
+      --dark-bg: #020617;
+      --card-glass: rgba(15, 23, 42, 0.8);
       --blue: #3b82f6;
+      --neon-blue: #00f2ff;
+      --neon-purple: #7000ff;
       --text: #f1f5f9;
       --gray: #94a3b8;
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; -webkit-tap-highlight-color: transparent; }
-    
-    body { 
-      background-color: var(--dark-bg);
-      background-image: radial-gradient(at 0% 0%, rgba(59, 130, 246, 0.15) 0px, transparent 50%);
-      background-attachment: fixed;
-      color: var(--text); 
-      padding-bottom: 120px;
+    @keyframes reveal { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes neonBorder { 
+      0%, 100% { border-color: rgba(0, 242, 255, 0.3); box-shadow: 0 0 5px rgba(0, 242, 255, 0.2); }
+      50% { border-color: var(--neon-blue); box-shadow: 0 0 15px rgba(0, 242, 255, 0.5); }
     }
 
-    /* HEADER */
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
+    body { background-color: var(--dark-bg); background-image: radial-gradient(circle at 50% 0%, #1e293b 0%, #020617 70%); background-attachment: fixed; color: var(--text); padding-bottom: 120px; }
+    h1, h2, h3, .brand-name { font-family: 'Orbitron', sans-serif; letter-spacing: 1px; }
+
     header {
       position: sticky; top: 0; z-index: 100;
-      background: rgba(5, 11, 20, 0.9); backdrop-filter: blur(12px);
-      padding: 10px 20px;
-      display: flex; justify-content: space-between; align-items: center;
-      border-bottom: 1px solid rgba(255,255,255,0.1);
+      background: rgba(2, 6, 23, 0.8); backdrop-filter: blur(15px);
+      padding: 12px 20px; display: flex; justify-content: space-between; align-items: center;
+      border-bottom: 1px solid rgba(59, 130, 246, 0.2);
     }
 
-    .brand { display: flex; align-items: center; gap: 10px; }
-    .brand img { width: 35px; height: 35px; border-radius: 50%; border: 1px solid var(--blue); }
+    .categories {
+      display: flex; gap: 12px; overflow-x: auto; padding: 15px 20px;
+      scrollbar-width: none; mask-image: linear-gradient(to right, black 85%, transparent);
+    }
+    .categories::-webkit-scrollbar { display: none; }
 
-    .cart-trigger {
-      background: #1e293b; padding: 5px 15px; border-radius: 20px; 
-      display: flex; align-items: center; gap: 8px; cursor: pointer;
-    }
-    .cart-trigger img { width: 18px; height: 18px; border-radius: 50%; }
-
-    /* HERO */
-    .hero {
-      padding: 40px 20px; text-align: center;
-    }
-    .hero img { 
-      width: 140px; height: 140px; object-fit: cover; margin-bottom: 15px; border-radius: 50%; 
-      box-shadow: 0 0 35px rgba(59, 130, 246, 0.4); border: 2px solid var(--blue);
-    }
-    .hero h1 { font-size: 2.5rem; color: white; margin-bottom: 5px; }
-
-    /* CONTROLES */
-    .controls-container { padding: 0 20px; max-width: 1200px; margin: auto; }
-    .search-box input {
-      width: 100%; background: #1e293b; border: 1px solid #334155;
-      padding: 12px; border-radius: 12px; color: white; font-size: 1rem; margin-bottom: 15px;
-    }
-    .categories { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 10px; scrollbar-width: none; }
     .cat-btn {
-      padding: 8px 18px; border-radius: 50px; border: 1px solid #334155;
-      background: #0f172a; color: var(--gray); cursor: pointer; white-space: nowrap;
+      padding: 10px 22px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1);
+      background: rgba(30, 41, 59, 0.5); color: var(--gray); cursor: pointer;
+      white-space: nowrap; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      font-size: 0.85rem; font-weight: 600; text-transform: uppercase;
     }
-    .cat-btn.active { background: var(--blue); color: white; border-color: var(--blue); }
+    .cat-btn.active {
+      background: rgba(59, 130, 246, 0.15); color: var(--neon-blue);
+      border-color: var(--neon-blue); box-shadow: 0 0 15px rgba(0, 242, 255, 0.2);
+      transform: translateY(-2px);
+    }
 
-    /* PRODUCTOS */
-    .products {
-      display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-      gap: 15px; padding: 20px; max-width: 1200px; margin: auto;
-    }
+    .products { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 15px; padding: 20px; }
     .card {
-      background: var(--card-glass); backdrop-filter: blur(10px);
-      border-radius: 20px; padding: 15px; border: 1px solid rgba(255,255,255,0.05);
-      display: flex; flex-direction: column; transition: 0.3s;
+      background: var(--card-glass); border-radius: 24px; padding: 12px;
+      border: 1px solid rgba(255,255,255,0.05); display: flex; flex-direction: column;
+      transition: 0.4s; animation: reveal 0.5s ease backwards;
     }
-    .card:active { transform: scale(0.98); }
-    .card img { width: 100%; height: 150px; object-fit: contain; margin-bottom: 10px; background: rgba(255,255,255,0.02); border-radius: 10px; }
-    .price { font-size: 1.3rem; font-weight: 800; color: white; margin: 5px 0; }
-    .add-btn {
-      width: 100%; padding: 10px; border-radius: 10px; border: none;
-      background: var(--blue); color: white; font-weight: 700; cursor: pointer;
+    .card:hover { transform: scale(1.03); animation: neonBorder 1.5s infinite; }
+    .card img { width: 100%; height: 160px; object-fit: contain; border-radius: 18px; cursor: pointer; }
+
+    .admin-modal {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.9); z-index: 5000; display: none;
+      justify-content: center; align-items: center; backdrop-filter: blur(10px);
+    }
+    .admin-content {
+      background: #0f172a; padding: 30px; border-radius: 25px;
+      width: 90%; max-width: 400px; border: 1px solid var(--blue);
+    }
+    .admin-input {
+      width: 100%; padding: 12px; margin: 10px 0; border-radius: 10px;
+      background: #1e293b; border: 1px solid #334155; color: white; outline: none;
     }
 
-    /* CHECKOUT */
-    .checkout-panel {
-      background: #0f172a; padding: 25px; border-radius: 25px; 
-      margin: 20px; border: 1px solid #334155;
-    }
-
-    /* TICKET ESTILO TÉRMICO */
-    #ticket-container {
-      position: fixed; top: 0; left: -2000px;
-      width: 350px; background: #fff; color: #000; padding: 20px;
-      font-family: 'Courier New', Courier, monospace; text-transform: uppercase;
-    }
-    .t-header { text-align: center; border-bottom: 2px dashed #000; padding-bottom: 10px; margin-bottom: 10px; }
-    .t-row { display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 5px; }
-    .t-total { font-size: 18px; font-weight: bold; margin-top: 10px; border-top: 2px dashed #000; padding-top: 5px; text-align: right; }
-
-    /* MODAL */
     .modal {
       position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0,0,0,0.9); z-index: 2000; display: none;
-      justify-content: center; align-items: center; padding: 20px;
+      background: rgba(0,0,0,0.95); z-index: 2000; display: none;
+      justify-content: center; align-items: center;
     }
+    .modal-content {
+      background: #020617; width: 100%; height: 100%; position: relative;
+      display: flex; flex-direction: column; overflow-y: auto;
+    }
+
     .wa-float {
-      position: fixed; bottom: 20px; right: 20px;
-      background: #25D366; color: white; padding: 12px 20px;
-      border-radius: 50px; text-decoration: none; font-weight: bold; box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+      position: fixed; bottom: 25px; right: 25px; background: #25D366;
+      width: 60px; height: 60px; border-radius: 50%; display: flex;
+      align-items: center; justify-content: center; z-index: 1000; box-shadow: 0 10px 25px rgba(0,0,0,0.5);
     }
-    #toast {
-      position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
-      background: #10b981; color: white; padding: 10px 20px; border-radius: 20px;
-      display: none; z-index: 3000; font-weight: bold;
+    
+    .price { font-size: 1.3rem; font-weight: bold; color: white; margin: 10px 0; font-family: 'Orbitron'; }
+    .add-btn {
+      width: 100%; padding: 12px; border-radius: 12px; border: none;
+      background: var(--blue); color: white; font-weight: bold; cursor: pointer;
     }
+
+    #ticket-container { position: fixed; left: -9999px; top: 0; width: 350px; background: #fff; color: #000; padding: 20px; font-family: 'Courier New', monospace; }
   </style>
 </head>
 <body>
 
-<div id="toast">✅ Agregado al carrito</div>
+<div id="loginModal" class="admin-modal">
+  <div class="admin-content">
+    <h2 style="margin-bottom:20px; text-align:center; color:var(--blue)">SANT ADMIN</h2>
+    <input type="text" id="adminUser" class="admin-input" placeholder="Usuario">
+    <input type="password" id="adminPass" class="admin-input" placeholder="Contraseña">
+    <button onclick="checkLogin()" style="width:100%; padding:12px; background:var(--blue); border:none; border-radius:10px; color:white; font-weight:bold; margin-top:10px;">ACCEDER</button>
+    <button onclick="closeAdmin()" style="width:100%; background:transparent; color:gray; border:none; margin-top:15px;">Cancelar</button>
+  </div>
+</div>
 
-<div id="ticket-container">
-    <div class="t-header">
-        <h1 style="font-size: 24px; margin:0;">SANTSHOP</h1>
-        <p>Tech & Accesorios</p>
-        <p id="t-fecha">Fecha: --/--/----</p>
-    </div>
-    <div style="border-bottom: 1px solid #000; margin-bottom: 5px;">DESCRIPCIÓN</div>
-    <div id="t-items"></div>
-    <div class="t-row" style="margin-top:10px;">
-        <span>ENVÍO:</span>
-        <span id="t-envio">$0.00</span>
-    </div>
-    <div class="t-total">
-        TOTAL: <span id="t-total">$0.00</span>
-    </div>
-    <div style="text-align:center; font-size:10px; margin-top:20px;">
-        <p>*** GRACIAS POR TU COMPRA ***</p>
-        <p>HUEHUETÁN, CHIAPAS</p>
-    </div>
+<div id="adminDashboard" class="admin-modal">
+  <div class="admin-content" style="max-width: 500px;">
+    <h2 style="color:var(--neon-blue); margin-bottom:15px;">📊 PANEL DE CONTROL</h2>
+    <div id="adminStats" style="background:rgba(255,255,255,0.05); padding:20px; border-radius:15px; margin-bottom:20px;"></div>
+    <button onclick="clearHistory()" style="width:100%; padding:12px; background:#ef4444; border:none; border-radius:10px; color:white; margin-bottom:10px;">LIMPIAR HISTORIAL</button>
+    <button onclick="closeAdmin()" style="width:100%; padding:12px; background:transparent; border:1px solid #334155; border-radius:10px; color:white;">SALIR</button>
+  </div>
 </div>
 
 <header>
-  <div class="brand">
-    <img src="SantShop.png.jpeg" alt="Logo">
-    <strong>SantShop</strong>
-  </div>
-  <div class="cart-trigger" onclick="document.querySelector('.checkout-panel').scrollIntoView()">
-    <img src="https://cdn-icons-png.flaticon.com/512/3394/3394009.png" alt="Logo Carrito">
-    <span id="cartCount">0</span>
+  <strong class="brand-name" style="color:var(--blue)">SANTSHOP</strong>
+  <div onclick="document.querySelector('.checkout-panel').scrollIntoView({behavior:'smooth'})" style="background:rgba(59,130,246,0.2); padding:8px 15px; border-radius:20px; border:1px solid var(--blue); cursor:pointer;">
+    🛒 <span id="cartCount">0</span>
   </div>
 </header>
 
-<div class="hero">
-  <img src="SantShop.png.jpeg" alt="SantShop Logo Principal">
-  <h1>SantShop</h1>
-  <p>Tecnología Premium</p>
+<div class="hero" style="text-align:center; padding: 50px 20px;">
+  <img src="file:///C:/Users/josue/Documents/Sant/SantShop/SantShop.png.jpeg" id="logoHero" alt="Logo" style="width:120px; height:120px; border-radius:50%; border:3px solid var(--blue); cursor:pointer;" onclick="adminTrigger()" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3081/3081559.png'">
+  <h1 style="margin-top:15px; font-size:2.5rem; background: linear-gradient(to bottom, #fff, #64748b); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">SANTSHOP</h1>
+  <p style="color:var(--gray)">High-End Technology</p>
 </div>
 
 <div class="controls-container">
-  <div class="search-box">
-    <input type="text" id="searchInput" placeholder="🔍 Buscar producto..." onkeyup="renderProducts()">
+  <div style="padding:0 20px;">
+    <input type="text" id="searchInput" placeholder="🔍 Buscar productos..." onkeyup="renderProducts()" 
+    style="width:100%; background:#0f172a; border:1px solid #1e293b; padding:15px; border-radius:15px; color:white; outline:none; border-bottom: 2px solid var(--blue);">
   </div>
+  
   <div class="categories">
     <button class="cat-btn active" onclick="filterCat('all', this)">Todo</button>
     <button class="cat-btn" onclick="filterCat('audio', this)">Audio</button>
@@ -178,69 +154,77 @@
 
 <div class="products" id="productList"></div>
 
-<div class="checkout-panel">
-  <h3>🧾 Tu Pedido</h3>
-  <div id="cartList" style="margin:15px 0;"></div>
+<div class="checkout-panel" style="margin:20px; background:rgba(30,41,59,0.3); padding:25px; border-radius:30px; border:1px solid rgba(255,255,255,0.05);">
+  <h3 style="margin-bottom:20px;">🧾 RESUMEN DE COMPRA</h3>
+  <div id="cartList"></div>
   
-  <label style="color:var(--gray); font-size:0.9rem;">📍 Entrega:</label>
-  <select id="envioSelect" onchange="renderCart()" style="width:100%; padding:10px; margin-top:5px; background:#1e293b; color:white; border:1px solid #334155; border-radius:10px;">
-    <option value="0">--- Seleccionar ---</option>
+  <select id="envioSelect" onchange="renderCart()" style="width:100%; padding:15px; margin-top:15px; background:#0f172a; color:white; border:1px solid #334155; border-radius:12px;">
+    <option value="0">--- Selección de Entrega ---</option>
     <option value="0">Parque Huehuetán (Gratis)</option>
-    <option value="0">La Central / Kristal (Gratis)</option>
     <option value="15">A Domicilio (Cercano) +$15</option>
-    <option value="25">Huehuetán Pueblo +$25</option>
+    <option value="0">Huehuetán Pueblo (Gratis)</option>
+    <option value="0">Abarrote Kristal (Gratis)</option>
+    <option value="0">Abarrote La Central (Gratis)</option>
   </select>
 
-  <div style="display:flex; justify-content:space-between; margin-top:20px; font-size:1.5rem; font-weight:bold;">
-    <span>Total:</span>
-    <span id="displayTotal" style="color:var(--blue)">$0.00</span>
+  <div style="display:flex; justify-content:space-between; margin-top:25px; align-items:center;">
+    <span style="color:var(--gray)">TOTAL:</span>
+    <span id="displayTotal" style="color:var(--neon-blue); font-size:2rem; font-weight:bold; font-family:'Orbitron';">$0.00</span>
   </div>
 
-  <button id="btnGenerar" onclick="procesarPedido()" style="width:100%; padding:15px; background:var(--blue); color:white; border:none; border-radius:12px; margin-top:20px; font-weight:bold; font-size:1.1rem; cursor:pointer;">
-    CONFIRMAR Y GENERAR TICKET
+  <button onclick="procesarPedido()" style="width:100%; padding:20px; background:var(--blue); color:white; border:none; border-radius:15px; margin-top:20px; font-weight:bold; text-transform:uppercase; letter-spacing:2px; box-shadow: 0 5px 15px rgba(59, 130, 246, 0.4);">
+    Generar Ticket ⚡
   </button>
 </div>
 
 <div id="productModal" class="modal">
-  <div style="background:#1e293b; padding:20px; border-radius:20px; width:90%; max-width:400px; position:relative;">
-    <span onclick="closeModal()" style="position:absolute; right:15px; top:10px; font-size:24px; cursor:pointer;">&times;</span>
-    <div id="modalBody"></div>
+  <div class="modal-content">
+    <div onclick="closeModal()" style="position:absolute; top:20px; right:20px; font-size:30px; color:white; z-index:10; cursor:pointer;">✕</div>
+    <div id="modalBody" style="padding:30px; display:flex; flex-direction:column; align-items:center;"></div>
   </div>
 </div>
 
-<a href="https://wa.me/529641034714" class="wa-float" target="_blank">WhatsApp</a>
+<a href="https://wa.me/529641034714" class="wa-float" target="_blank">
+  <svg width="35" height="35" fill="white" viewBox="0 0 16 16"><path d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.933 7.933 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.898 7.898 0 0 0 13.6 2.326zM7.994 14.521a6.573 6.573 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.557 6.557 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592zm3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.729.729 0 0 0-.529.247c-.182.198-.691.677-.691 1.654 0 .977.71 1.916.81 2.049.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232z"/></svg>
+</a>
+
+<div id="ticket-container">
+  <div style="text-align:center; border-bottom:2px dashed #000; padding-bottom:10px;">
+    <h1>SANTSHOP</h1>
+    <p id="t-fecha"></p>
+  </div>
+  <div id="t-items" style="padding:10px 0;"></div>
+  <div style="border-top:2px dashed #000; padding-top:10px; font-weight:bold; font-size:20px;">
+    TOTAL: <span id="t-total"></span>
+  </div>
+</div>
 
 <script>
-const phone = '529641034714';
-const money = new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' });
-
 const products = [
-  { id: 1, name: 'Audífonos TWS Pro 2', category: 'audio', price: 299, img: 'https://http2.mlstatic.com/D_NQ_NP_2X_697864-MLA100038119191_122025-F.webp', desc: 'Sonido Hi-Fi y cancelación de ruido.' },
-  { id: 2, name: 'PowerBank 10k mAh', category: 'carga', price: 599, img: 'https://http2.mlstatic.com/D_NQ_NP_2X_995948-MLA99547949208_122025-F.webp', desc: 'Carga rápida 22.5W.' },
-  { id: 3, name: 'Anillo Titanio Black', category: 'accesorios', price: 40, img: 'https://http2.mlstatic.com/D_NQ_NP_2X_778377-MLA98079491084_112025-F.webp', desc: 'Acero inoxidable negro mate.' },
-  { id: 4, name: 'Cargador 45W Turbo', category: 'carga', price: 280, img: 'https://http2.mlstatic.com/D_NQ_NP_2X_616746-MLA100083526249_122025-F.webp', desc: 'Incluye cable tipo C reforzado.' },
-  { id: 5, name: 'Smartwatch Ultra', category: 'relojes', price: 450, img: 'https://http2.mlstatic.com/D_NQ_NP_2X_942600-MLA99945379683_112025-F.webp', desc: 'Pantalla AMOLED y llamadas.' },
-  { id: 6, name: 'Sport Hooks IPX7', category: 'audio', price: 450, img: 'https://http2.mlstatic.com/D_NQ_NP_2X_681843-MLA99455767776_112025-F.webp', desc: 'Ganchos deportivos ajustables.' },
-  { id: 7, name: 'Figura Jujutsu Kaisen', category: 'accesorios', price: 500, img: 'https://http2.mlstatic.com/D_NQ_NP_2X_630678-MLA100664763410_122025-F.webp', desc: 'Coleccionable premium.' }
+  { id: 1, name: 'Audífonos TWS Pro 2', category: 'audio', price: 299, img: 'https://http2.mlstatic.com/D_NQ_NP_2X_697864-MLA100038119191_122025-F.webp', desc: 'Sonido Hi-Fi premium con cancelación de ruido activa.' },
+  { id: 2, name: 'PowerBank 10k mAh', category: 'carga', price: 599, img: 'https://http2.mlstatic.com/D_NQ_NP_2X_995948-MLA99547949208_122025-F.webp', desc: 'Carga súper rápida de 22.5W. Diseño ultra compacto.' },
+  { id: 3, name: 'Anillo Titanio Black', category: 'accesorios', price: 40, img: 'https://http2.mlstatic.com/D_NQ_NP_2X_778377-MLA98079491084_112025-F.webp', desc: 'Acero de titanio color negro mate. Resistente al agua.' },
+  { id: 4, name: 'Cargador 45W Turbo', category: 'carga', price: 280, img: 'https://http2.mlstatic.com/D_NQ_NP_2X_616746-MLA100083526249_122025-F.webp', desc: 'Alta potencia. Incluye cable tipo C reforzado.' },
+  { id: 5, name: 'Smartwatch Ultra', category: 'relojes', price: 450, img: 'https://http2.mlstatic.com/D_NQ_NP_2X_942600-MLA99945379683_112025-F.webp', desc: 'Pantalla AMOLED y recepción de llamadas.' },
+  { id: 6, name: 'Sport Hooks IPX7', category: 'audio', price: 450, img: 'https://http2.mlstatic.com/D_NQ_NP_2X_681843-MLA99455767776_112025-F.webp', desc: 'Protección contra sudor y sujeción máxima.' },
+  { id: 7, name: 'Figura Jujutsu Kaisen', category: 'accesorios', price: 500, img: 'https://http2.mlstatic.com/D_NQ_NP_2X_630678-MLA100664763410_122025-F.webp', desc: 'Figura coleccionable detallada de 18cm.' }
 ];
 
+const money = new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' });
 let cart = JSON.parse(localStorage.getItem("cart")) || [];
 let currentCat = 'all';
+let clicks = 0;
 
 function renderProducts(){
   const list = document.getElementById('productList');
   const term = document.getElementById('searchInput').value.toLowerCase();
   list.innerHTML = '';
-  
-  const filtered = products.filter(p => {
-    return (currentCat === 'all' || p.category === currentCat) && p.name.toLowerCase().includes(term);
-  });
-
-  filtered.forEach(p => {
+  products.filter(p => (currentCat === 'all' || p.category === currentCat) && p.name.toLowerCase().includes(term))
+  .forEach((p, i) => {
     list.innerHTML += `
-      <div class="card">
+      <div class="card" style="animation-delay:${i*0.05}s">
         <img src="${p.img}" onclick="openDetails(${p.id})">
-        <h3>${p.name}</h3>
+        <h3 style="font-size:0.9rem; margin-top:10px; color:#94a3b8;">${p.name}</h3>
         <div class="price">${money.format(p.price)}</div>
         <button class="add-btn" onclick="addToCart(${p.id})">Agregar +</button>
       </div>`;
@@ -254,95 +238,111 @@ function filterCat(cat, btn){
   renderProducts();
 }
 
+function adminTrigger() {
+    clicks++;
+    if(clicks === 5) {
+        document.getElementById('loginModal').style.display = 'flex';
+        clicks = 0;
+    }
+    setTimeout(() => clicks = 0, 2000);
+}
+
+function checkLogin() {
+    const u = document.getElementById('adminUser').value;
+    const p = document.getElementById('adminPass').value;
+    if(u === "SoySant" && p === "0923josue") {
+        document.getElementById('loginModal').style.display = 'none';
+        document.getElementById('adminDashboard').style.display = 'flex';
+        showAdminStats();
+    } else {
+        alert("Credenciales incorrectas");
+    }
+}
+
+function closeAdmin() {
+    document.getElementById('loginModal').style.display = 'none';
+    document.getElementById('adminDashboard').style.display = 'none';
+}
+
+function showAdminStats() {
+    const history = JSON.parse(localStorage.getItem("orderHistory")) || [];
+    const total = history.reduce((acc, o) => acc + o.total, 0);
+    document.getElementById('adminStats').innerHTML = `
+        <p>📦 Pedidos: <strong>${history.length}</strong></p>
+        <p>💰 Total: <strong>${money.format(total)}</strong></p>
+    `;
+}
+
+function clearHistory() {
+    if(confirm("¿Borrar todo?")) { localStorage.removeItem("orderHistory"); showAdminStats(); }
+}
+
 function addToCart(id){
   const item = cart.find(i => i.id === id);
-  if(item) item.qty++;
-  else cart.push({...products.find(p => p.id === id), qty: 1});
-  saveCart();
-  const t = document.getElementById('toast');
-  t.style.display = 'block'; setTimeout(() => t.style.display = 'none', 1500);
-}
-
-function removeFromCart(id){
-  cart = cart.filter(i => i.id !== id);
+  if(item) item.qty++; else cart.push({...products.find(p => p.id === id), qty: 1});
   saveCart();
 }
 
-function saveCart(){
-  localStorage.setItem("cart", JSON.stringify(cart));
-  renderCart();
-}
+function saveCart(){ localStorage.setItem("cart", JSON.stringify(cart)); renderCart(); }
 
 function renderCart(){
   const list = document.getElementById('cartList');
   document.getElementById('cartCount').innerText = cart.reduce((acc, i) => acc + i.qty, 0);
-  if(cart.length === 0) {
-    list.innerHTML = '<p style="color:gray; text-align:center">Carrito vacío</p>';
-    document.getElementById('displayTotal').innerText = "$0.00";
-    return;
-  }
   let subtotal = 0;
   list.innerHTML = cart.map(i => {
     subtotal += i.price * i.qty;
-    return `<div style="display:flex; justify-content:space-between; margin-bottom:8px; align-items:center; background:rgba(255,255,255,0.05); padding:8px; border-radius:8px;">
-      <span style="font-size:0.9rem;">${i.qty}x ${i.name}</span>
-      <div style="display:flex; align-items:center; gap:10px;">
-        <span>${money.format(i.price * i.qty)}</span>
-        <span onclick="removeFromCart(${i.id})" style="color:#ef4444; cursor:pointer; font-weight:bold;">&times;</span>
-      </div>
+    return `<div style="display:flex; justify-content:space-between; margin-bottom:10px; background:rgba(255,255,255,0.03); padding:10px; border-radius:10px;">
+      <span>${i.qty}x ${i.name}</span>
+      <span onclick="removeFromCart(${i.id})" style="color:#ef4444; cursor:pointer;">✕</span>
     </div>`;
   }).join('');
   const envio = parseFloat(document.getElementById('envioSelect').value);
   document.getElementById('displayTotal').innerText = money.format(subtotal + envio);
 }
 
-function procesarPedido() {
-    if(cart.length === 0) return alert("Agrega productos al carrito primero.");
-    const btn = document.getElementById('btnGenerar');
-    btn.innerHTML = "⏳ Generando Ticket...";
-    btn.disabled = true;
-
-    const envioVal = parseFloat(document.getElementById('envioSelect').value);
-    const envioTxt = document.getElementById('envioSelect').options[document.getElementById('envioSelect').selectedIndex].text;
-    
-    document.getElementById('t-fecha').innerText = new Date().toLocaleString();
-    let total = 0;
-    document.getElementById('t-items').innerHTML = cart.map(i => {
-        total += i.price * i.qty;
-        return `<div class="t-row"><span>${i.qty} x ${i.name.substring(0,18)}</span><span>${money.format(i.price * i.qty)}</span></div>`;
-    }).join('');
-    
-    document.getElementById('t-envio').innerText = money.format(envioVal);
-    document.getElementById('t-total').innerText = money.format(total + envioVal);
-
-    html2canvas(document.getElementById('ticket-container'), { scale: 2 }).then(canvas => {
-        const link = document.createElement('a');
-        link.download = 'Ticket_SantShop.png';
-        link.href = canvas.toDataURL();
-        link.click();
-
-        const msg = `*NUEVO PEDIDO SANTSHOP*%0A%0ATotal: ${money.format(total + envioVal)}%0AEntrega: ${envioTxt}%0A%0A_Te envío el comprobante en imagen._`;
-        window.open(`https://wa.me/${phone}?text=${msg}`, '_blank');
-
-        cart = []; saveCart();
-        btn.innerHTML = "CONFIRMAR Y GENERAR TICKET";
-        btn.disabled = false;
-    });
-}
+function removeFromCart(id){ cart = cart.filter(i => i.id !== id); saveCart(); }
 
 function openDetails(id){
     const p = products.find(i => i.id === id);
     document.getElementById('modalBody').innerHTML = `
-        <img src="${p.img}" style="width:100%; border-radius:10px; margin-bottom:10px;">
-        <h2>${p.name}</h2>
-        <h3 style="color:var(--blue); margin:10px 0;">${money.format(p.price)}</h3>
-        <p>${p.desc}</p>
-        <button class="add-btn" style="margin-top:15px;" onclick="addToCart(${p.id}); closeModal()">Añadir al Carrito</button>
+        <img src="${p.img}" style="width:100%; max-height:300px; object-fit:contain; filter:drop-shadow(0 10px 20px #000);">
+        <h2 style="margin-top:25px; color:white;">${p.name}</h2>
+        <div class="price" style="font-size:2rem; color:var(--blue);">${money.format(p.price)}</div>
+        <p style="color:var(--gray); text-align:center; line-height:1.6; margin-bottom:25px;">${p.desc}</p>
+        <button class="add-btn" onclick="addToCart(${p.id}); closeModal()">AÑADIR AL CARRITO</button>
     `;
     document.getElementById('productModal').style.display = 'flex';
 }
 function closeModal(){ document.getElementById('productModal').style.display = 'none'; }
 
+function procesarPedido() {
+    if(cart.length === 0) return alert("El carrito está vacío");
+    const envioVal = parseFloat(document.getElementById('envioSelect').value);
+    const now = new Date();
+    document.getElementById('t-fecha').innerText = now.toLocaleString();
+    let subtotal = 0;
+    document.getElementById('t-items').innerHTML = cart.map(i => {
+        subtotal += i.price * i.qty;
+        return `<p>${i.qty} x ${i.name} = ${money.format(i.price*i.qty)}</p>`;
+    }).join('');
+    const finalTotal = subtotal + envioVal;
+    document.getElementById('t-total').innerText = money.format(finalTotal);
+
+    const history = JSON.parse(localStorage.getItem("orderHistory")) || [];
+    history.push({ fecha: now.toISOString(), total: finalTotal });
+    localStorage.setItem("orderHistory", JSON.stringify(history));
+
+    html2canvas(document.getElementById('ticket-container')).then(canvas => {
+        const link = document.createElement('a');
+        link.download = 'Ticket_SantShop.png';
+        link.href = canvas.toDataURL();
+        link.click();
+        window.open(`https://wa.me/529641034714?text=Nuevo Pedido SantShop: ${money.format(finalTotal)}`, '_blank');
+        cart = []; saveCart();
+    });
+}
+
+// Carga inicial
 renderProducts();
 renderCart();
 </script>
