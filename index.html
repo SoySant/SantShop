@@ -1,39 +1,253 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <title>SantShop | Tech & Accesorios</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <link rel="icon" type="hhttps://scontent-qro1-1.xx.fbcdn.net/v/t39.30808-6/611195501_856107633702557_8027363233463585295_n.jpg?_nc_cat=110&_nc_cb=99be929b-ad57045b&ccb=1-7&_nc_sid=127cfc&_nc_eui2=AeEXVK1mCJJiEb1A9IW2jmLs2z27XeT5xZfbPbtd5PnFl9pnhc1X9iqmHlAPkoO_GqESrn1hfmxc3_QfV_UTdLVR&_nc_ohc=ViH4YPbc1nQQ7kNvwFbHI6S&_nc_oc=AdkXQ8cL9OeSEUrvcDIdGp5cOaEXEjHMFlp7_90KMDwo4QNdpJx1ZKfaG1K3Nv_E5rA&_nc_zt=23&_nc_ht=scontent-qro1-1.xx&_nc_gid=KqJIWavD38x7tr9L161Vzg&oh=00_AfowS0XoCJUFGlO9GG_6Pn1g4JH0WbiK7y9r_Z4iekWhqA&oe=6960B2F6" id="logoHero" alt="Logo" style="width:120px; height:120px; border-radius:50%; border:3px solid var(--blue); cursor:pointer;" onclick="adminTrigger()" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3081/3081559.png'">
-  
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<meta charset="UTF-8">
+<title>SantShop | Tech & Accesorios</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <style>
-    :root {
-      --dark-bg: #020617;
-      --card-glass: rgba(15, 23, 42, 0.8);
-      --blue: #3b82f6;
-      --neon-blue: #00f2ff;
-      --neon-purple: #7000ff;
-      --text: #f1f5f9;
-      --gray: #94a3b8;
-    }
+<link rel="icon" href="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSbscQ_rMoejZyXgdGknQ-HUAs1VgGD3Qe-IQ&s" type="image/jpeg">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
-    @keyframes reveal { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
-    @keyframes neonBorder { 
-      0%, 100% { border-color: rgba(0, 242, 255, 0.3); box-shadow: 0 0 5px rgba(0, 242, 255, 0.2); }
-      50% { border-color: var(--neon-blue); box-shadow: 0 0 15px rgba(0, 242, 255, 0.5); }
-    }
+<style>
+:root{
+--bg:#020617;--card:rgba(15,23,42,.85);--blue:#3b82f6;
+--neon:#00f2ff;--txt:#f1f5f9;--gray:#94a3b8}
+*{margin:0;padding:0;box-sizing:border-box;font-family:Inter}
+body{background:radial-gradient(circle at top,#1e293b,#020617);color:var(--txt);padding-bottom:140px}
+h1,h2,h3{font-family:Orbitron}
+header{position:sticky;top:0;z-index:10;display:flex;justify-content:space-between;
+align-items:center;padding:15px 20px;background:rgba(2,6,23,.85);
+backdrop-filter:blur(12px);border-bottom:1px solid rgba(59,130,246,.2)}
+.brand{color:var(--blue);font-weight:bold}
+.products{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
+gap:15px;padding:20px}
+.card{background:var(--card);border-radius:22px;padding:12px;
+border:1px solid rgba(255,255,255,.05);transition:.3s}
+.card:hover{transform:scale(1.04);box-shadow:0 0 15px rgba(0,242,255,.25)}
+.card img{width:100%;height:160px;object-fit:contain;border-radius:16px;cursor:pointer}
+.price{font-size:1.3rem;font-weight:bold;margin:10px 0}
+.add-btn{width:100%;padding:12px;border:none;border-radius:12px;
+background:var(--blue);color:#fff;font-weight:bold;cursor:pointer}
+.categories{display:flex;gap:10px;overflow-x:auto;padding:15px 20px}
+.cat-btn{padding:10px 20px;border-radius:12px;background:#1e293b;
+border:1px solid #334155;color:var(--gray);cursor:pointer}
+.cat-btn.active{color:var(--neon);border-color:var(--neon)}
+.checkout{margin:20px;background:rgba(30,41,59,.3);
+padding:25px;border-radius:30px}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.95);
+display:none;justify-content:center;align-items:center;z-index:2000}
+.modal-content{background:#020617;width:100%;height:100%;overflow:auto;padding:30px}
+.wa{position:fixed;bottom:25px;right:25px;background:#25D366;
+width:60px;height:60px;border-radius:50%;display:flex;
+align-items:center;justify-content:center;font-size:28px}
+</style>
+</head>
 
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
-    body { background-color: var(--dark-bg); background-image: radial-gradient(circle at 50% 0%, #1e293b 0%, #020617 70%); background-attachment: fixed; color: var(--text); padding-bottom: 120px; }
-    h1, h2, h3, .brand-name { font-family: 'Orbitron', sans-serif; letter-spacing: 1px; }
+<body>
 
-    header {
-      position: sticky; top: 0; z-index: 100;
-      background: rgba(2, 6, 23, 0.8); backdrop-filter: blur(15px);
-      padding: 12px 20px; display: flex; justify-content: space-between; align-items: center;
+<header>
+<div class="brand">SANTSHOP</div>
+<div onclick="document.querySelector('.checkout').scrollIntoView({behavior:'smooth'})" style="cursor:pointer">
+🛒 <span id="cartCount">0</span>
+</div>
+</header>
+
+<div style="text-align:center;padding:40px">
+<img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSbscQ_rMoejZyXgdGknQ-HUAs1VgGD3Qe-IQ&s"
+style="width:120px;border-radius:50%;border:3px solid var(--blue)">
+<h1>SANTSHOP</h1>
+<p style="color:var(--gray)">High-End Technology</p>
+</div>
+
+<input id="search" placeholder="🔍 Buscar productos..."
+onkeyup="renderProducts()"
+style="width:90%;margin:0 5%;padding:15px;border-radius:15px;
+background:#0f172a;border:1px solid #334155;color:white">
+
+<div class="categories">
+<button class="cat-btn active" onclick="filterCat('all',this)">Todo</button>
+<button class="cat-btn" onclick="filterCat('audio',this)">Audio</button>
+<button class="cat-btn" onclick="filterCat('carga',this)">Carga</button>
+<button class="cat-btn" onclick="filterCat('relojes',this)">Relojes</button>
+</div>
+
+<div class="products" id="list"></div>
+
+<div class="checkout">
+<h3>🧾 Resumen de compra</h3>
+<div id="cartList"></div>
+<h2 id="total">$0</h2>
+<button class="add-btn" onclick="procesarPedido()">Generar Ticket</button>
+</div>
+
+<div class="modal" id="modal">
+<div class="modal-content">
+<div onclick="closeModal()" style="font-size:30px;cursor:pointer">✕</div>
+<div id="modalBody"></div>
+</div>
+</div>
+
+<a class="wa" href="https://wa.me/529641034714" target="_blank">💬</a>
+
+<!-- TICKET PRO -->
+<div id="ticket-pro" style="
+position:fixed;left:-9999px;top:0;width:360px;
+background:#020617;color:#fff;padding:20px;
+font-family:Inter;border-radius:20px;
+border:2px dashed #3b82f6">
+<div style="text-align:center">
+<img src="https://scontent-qro1-1.xx.fbcdn.net/v/t39.30808-6/611195501_856107633702557_8027363233463585295_n.jpg"
+style="width:80px;border-radius:50%;border:2px solid #3b82f6">
+<h2 style="color:#3b82f6;margin:10px 0">SANTSHOP</h2>
+<p style="font-size:12px;color:#94a3b8">Tech & Accesorios</p>
+</div>
+
+<hr style="margin:15px 0;border-color:#334155">
+
+<p><strong>Cliente:</strong> <span id="t-cliente"></span></p>
+<p><strong>Fecha:</strong> <span id="t-fecha"></span></p>
+
+<hr style="margin:10px 0;border-color:#334155">
+
+<div id="t-productos"></div>
+
+<hr style="margin:10px 0;border-color:#334155">
+
+<p style="font-size:18px"><strong>Total:</strong>
+<span id="t-total" style="color:#00f2ff"></span></p>
+
+<div style="margin-top:15px;font-size:12px;color:#94a3b8;text-align:center">
+✔ Producto revisado<br>
+🔄 Garantía de satisfacción<br><br>
+Gracias por tu compra 💙<br>
+WhatsApp: 964 103 4714
+</div>
+</div>
+
+<script>
+const products=[
+{id:1,name:'Airpods',category:'audio',price:320,
+img:'https://mx.static.webuy.com/product_images/Electronica/Audifonos%20-%20Apple/194253397472B_l.jpg',
+desc:'Audio Hi-Fi, conexión estable y graves potentes.'},
+
+{id:2,name:'Power Bank 30000 mAh',category:'carga',price:699,
+img:'https://http2.mlstatic.com/D_NQ_NP_2X_995948-MLA99547949208_122025-F.webp',
+desc:'Alta capacidad, carga rápida y protección inteligente.'},
+
+{id:3,name:'Smartwatch Mujer',category:'relojes',price:549,
+img:'https://http2.mlstatic.com/D_852047-MLA99082336731_112025-N.jpg',
+desc:'Elegante, notificaciones y monitoreo diario.'},
+
+{id:4,name:'Audífonos P9 Pro Max',category:'audio',price:550,
+img:'https://http2.mlstatic.com/D_722013-MLA95660056214_102025-N.jpg',
+desc:'Sonido envolvente y orejeras acolchadas.'},
+
+{id:5,name:'Smartwatch Hombre-Mujer',category:'relojes',price:499,
+img:'https://http2.mlstatic.com/D_NQ_NP_2X_849901-MLA99940357261_112025-F.webp',
+desc:'Pantalla grande, llamadas Bluetooth y batería duradera.'},
+
+{id:6,name:'2 Pzas Relojes De Cuarzo Casuales Impermeables Para Hombre', category:"relojes",price:200,
+img:'https://http2.mlstatic.com/D_NQ_NP_2X_840400-MLM93386215052_092025-F-2-pzas-relojes-de-cuarzo-casuales-impermeables-para-hombre.webp',
+desc:'Trae pulsera de regalo'},
+
+{id:7,name:'5 Piezas Reloj Perlas Elegante Con Caja - Mujer Conjunto De Perlas Blancas',category:'relojes',price:500,
+img:'https://http2.mlstatic.com/D_NQ_NP_2X_927510-MLA101975346478_122025-F.webp',
+desc:'Exquisito set de joyería y reloj de pulsera, diseñado especialmente para la mujer moderna. Incluye 5 piezas elegantes presentadas en una lujosa caja. Perfecto para ocasiones especiales, cumpleaños o como un capricho personal.'}
+
+];
+
+let cart=JSON.parse(localStorage.getItem("cart"))||[];
+let cat='all';
+
+function renderProducts(){
+const term=search.value.toLowerCase();
+list.innerHTML='';
+products.filter(p=>(cat==='all'||p.category===cat)&&p.name.toLowerCase().includes(term))
+.forEach(p=>{
+list.innerHTML+=`
+<div class="card">
+<img src="${p.img}" onclick="openModal(${p.id})">
+<h3>${p.name}</h3>
+<div class="price">$${p.price}</div>
+<button class="add-btn" onclick="add(${p.id})">Agregar</button>
+</div>`})
+}
+
+function filterCat(c,b){
+cat=c;
+document.querySelectorAll('.cat-btn').forEach(x=>x.classList.remove('active'));
+b.classList.add('active');
+renderProducts();
+}
+
+function add(id){
+let i=cart.find(x=>x.id===id);
+if(i)i.qty++;else cart.push({...products.find(p=>p.id===id),qty:1});
+save();
+}
+
+function save(){
+localStorage.setItem("cart",JSON.stringify(cart));
+renderCart();
+}
+
+function renderCart(){
+cartCount.innerText=cart.reduce((a,i)=>a+i.qty,0);
+let t=0;
+cartList.innerHTML=cart.map(i=>{
+t+=i.price*i.qty;
+return `<p>${i.qty} x ${i.name}
+<span onclick="dec(${i.id})" style="color:red;cursor:pointer">➖</span></p>`;
+}).join('');
+total.innerText="$"+t;
+}
+
+function dec(id){
+let i=cart.find(x=>x.id===id);
+i.qty--;
+if(i.qty<=0)cart=cart.filter(x=>x.id!==id);
+save();
+}
+
+function openModal(id){
+const p=products.find(x=>x.id===id);
+modalBody.innerHTML=`
+<img src="${p.img}" style="width:100%">
+<h2>${p.name}</h2>
+<p>${p.desc}</p>
+<button class="add-btn" onclick="add(${id});closeModal()">Agregar</button>`;
+modal.style.display='flex';
+}
+function closeModal(){modal.style.display='none';}
+
+function procesarPedido(){
+if(!cart.length)return alert("Carrito vacío");
+const nombre=prompt("Nombre del cliente:");
+document.getElementById("t-cliente").innerText=nombre||"Cliente SantShop";
+document.getElementById("t-fecha").innerText=new Date().toLocaleString();
+let totalP=0;
+document.getElementById("t-productos").innerHTML=cart.map(i=>{
+totalP+=i.price*i.qty;
+return `<p>${i.qty} x ${i.name} — $${i.price*i.qty}</p>`;
+}).join('');
+document.getElementById("t-total").innerText="$"+totalP;
+
+html2canvas(document.getElementById("ticket-pro")).then(canvas=>{
+const a=document.createElement("a");
+a.download="Ticket_SantShop.png";
+a.href=canvas.toDataURL();
+a.click();
+window.open(`https://wa.me/529641034714?text=Gracias por tu compra en SantShop 💙 Total: $${totalP}`,"_blank");
+cart=[];save();
+});
+}
+
+renderProducts();renderCart();
+</script>
+
+</body>
+</html>
       border-bottom: 1px solid rgba(59, 130, 246, 0.2);
     }
 
@@ -352,4 +566,5 @@ renderCart();
 </script>
 </body>
 </html>
+
 
