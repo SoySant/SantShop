@@ -1,615 +1,438 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<title>SantShop | Tech & Accesorios</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="icon" href="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSbscQ_rMoejZyXgdGknQ-HUAs1VgGD3Qe-IQ&s" type="image/png">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <meta charset="UTF-8">
+    <title>SantShop | Neural System v9.0</title>
+    <link rel="icon" type="image/png" href="https://framerusercontent.com/images/AThoHC9cD7xYXolSv1sqdBmVx0.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;600&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+    
+    <style>
+        :root {
+            --bg-dark: #010409;
+            --panel: rgba(10, 15, 25, 0.98);
+            --main: #00f3ff;
+            --accent: #bc13fe;
+            --glow: 0 0 20px var(--main);
+            --font-tech: 'Orbitron', sans-serif;
+        }
 
-<style>
-/* --- VARIABLES & RESET --- */
-:root {
-  --bg: #0b1120;
-  --card-bg: rgba(30, 41, 59, 0.7);
-  --primary: #3b82f6;
-  --primary-glow: rgba(59, 130, 246, 0.5);
-  --neon: #06b6d4;
-  --text: #f8fafc;
-  --text-muted: #94a3b8;
-  --danger: #ef4444;
-  --success: #10b981;
-}
+        #deliveryZone, #clientName {
+            background: #0a0f19;
+            color: var(--main);
+            border: 1px solid var(--main);
+            padding: 10px;
+            cursor: pointer;
+            border-radius: 10px;
+        }
 
-* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        #deliveryZone option {
+            background: #010409;
+            color: white;
+            padding: 10px;
+        }
 
-/* ANIMACIÓN DE FONDO MEJORADA */
-body {
-  background: linear-gradient(135deg, #0f172a, #1e293b, #0b1120);
-  background-size: 400% 400%;
-  color: var(--text);
-  padding-bottom: 120px;
-  min-height: 100vh;
-  animation: gradientBG 15s ease infinite;
-}
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body { 
+            background: var(--bg-dark); 
+            color: white; 
+            font-family: 'Exo 2', sans-serif; 
+            overflow-x: hidden; 
+            scroll-behavior: smooth;
+            cursor: none;
+        }
 
-@keyframes gradientBG {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}
+        #particle-canvas { position: fixed; top: 0; left: 0; z-index: -1; pointer-events: none; }
+        #custom-cursor { 
+            position: fixed; 
+            width: 15px; 
+            height: 15px; 
+            border: 2px solid var(--main); 
+            border-radius: 50%; 
+            pointer-events: none; 
+            z-index: 99999; 
+            box-shadow: var(--glow); 
+            transform: translate(-50%, -50%); 
+            transition: width 0.2s, height 0.2s; 
+        }
 
-/* --- OTRAS ANIMACIONES --- */
-@keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-@keyframes pop { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
+        .hero { padding: 60px 20px; text-align: center; }
+        .profile-logo { width: 160px; height: 160px; border-radius: 50%; border: 3px solid var(--main); box-shadow: var(--glow); margin-bottom: 25px; object-fit: cover; }
+        .brand-name { font-family: var(--font-tech); font-size: 3.5rem; letter-spacing: 12px; color: var(--main); text-shadow: var(--glow); margin-bottom: 10px; }
 
-@keyframes cartBounce { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.3) rotate(-10deg); } }
+        .search-container { position: relative; max-width: 450px; margin: 0 auto 40px; }
+        .search-box { width: 100%; padding: 18px; background: rgba(255,255,255,0.05); border: 1px solid var(--main); border-radius: 50px; color: white; text-align: center; font-family: 'Share Tech Mono'; outline: none; transition: 0.3s; }
+        .search-box:focus { box-shadow: var(--glow); background: rgba(0, 243, 255, 0.05); }
 
-/* Clases utilitarias para JS */
-.cart-pop { animation: cartBounce 0.4s ease; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 30px; padding: 40px; max-width: 1400px; margin: 0 auto; }
+        .card { background: var(--panel); padding: 25px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.05); text-align: center; transition: 0.4s; position: relative; }
+        .card:hover { transform: translateY(-10px); border-color: var(--main); box-shadow: var(--glow); }
+        .card img { width: 100%; height: 200px; object-fit: contain; margin-bottom: 20px; filter: drop-shadow(0 0 10px rgba(0,0,0,0.5)); }
+        .card-title { font-family: var(--font-tech); font-size: 0.85rem; margin-bottom: 15px; min-height: 40px; }
+        .card-price { font-family: 'Share Tech Mono'; color: var(--main); font-size: 1.8rem; margin-bottom: 20px; }
+        .buy-btn { width: 100%; padding: 12px; background: transparent; border: 1px solid var(--main); color: var(--main); font-family: var(--font-tech); font-weight: bold; border-radius: 10px; transition: 0.3s; cursor: none !important; }
+        .buy-btn:hover { background: var(--main); color: black; box-shadow: var(--glow); }
 
-/* --- HEADER --- */
-header {
-  position: sticky; top: 0; z-index: 100;
-  display: flex; justify-content: space-between; align-items: center;
-  padding: 15px 5%;
-  background: rgba(11, 17, 32, 0.85);
-  backdrop-filter: blur(15px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-}
+        #santi-panel { position: fixed; bottom: 100px; left: 30px; width: 400px; height: 550px; background: var(--panel); border: 2px solid var(--main); border-radius: 24px; display: none; flex-direction: column; z-index: 9500; box-shadow: var(--glow); overflow: hidden; }
+        .chat-header { background: var(--main); color: black; padding: 18px; display: flex; justify-content: space-between; align-items: center; font-family: var(--font-tech); font-weight: 900; font-size: 0.8rem; }
+        .chat-mood-bar { background: #000; color: var(--main); padding: 6px 15px; font-size: 11px; font-family: 'Share Tech Mono'; border-bottom: 1px solid rgba(0, 243, 255, 0.2); }
+        .chat-body { flex: 1; overflow-y: auto; padding: 20px; font-family: 'Share Tech Mono'; font-size: 0.9rem; line-height: 1.5; }
+        .chat-footer { padding: 15px; border-top: 1px solid rgba(255,255,255,0.1); display: flex; gap: 10px; align-items: center; }
+        .chat-input { flex: 1; background: none; border: none; color: white; outline: none; font-size: 0.95rem; }
 
-.brand { 
-  font-family: 'Orbitron', sans-serif; font-weight: 700; font-size: 1.5rem; 
-  background: linear-gradient(90deg, var(--primary), var(--neon));
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-  letter-spacing: 2px;
-}
+        #cartSection { max-width: 700px; margin: 80px auto; padding: 40px; background: var(--panel); border: 1px solid var(--main); border-radius: 25px; box-shadow: var(--glow); }
+        .cart-item { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px dashed rgba(0, 243, 255, 0.3); font-family: 'Share Tech Mono'; }
+        .cart-item button { background:none; border:none; color:#ff4d4d; font-size:1.2rem; cursor:pointer; margin-left:8px; }
 
-.cart-icon {
-  position: relative; cursor: pointer; font-size: 1.5rem;
-  transition: transform 0.2s;
-}
-.cart-icon:hover { transform: scale(1.1); }
+        .f-btn { position: fixed; bottom: 30px; width: 65px; height: 65px; border-radius: 50%; background: var(--main); color: black; display: flex; align-items: center; justify-content: center; z-index: 9000; box-shadow: var(--glow); transition: 0.3s; cursor: none !important; }
+        .f-btn:hover { transform: scale(1.1); }
+        .music-btn { top: 30px; left: 30px; width: 50px; height: 50px; }
 
-#cartCount {
-  position: absolute; top: -5px; right: -10px;
-  background: var(--danger); color: white;
-  font-size: 0.75rem; font-weight: bold;
-  padding: 2px 6px; border-radius: 50%;
-  box-shadow: 0 0 10px rgba(239, 68, 68, 0.6);
-}
+        @media (max-width: 768px) {
+            body { font-size: 14px; }
+            .hero { padding: 40px 15px; }
+            .brand-name { font-size: 2.5rem; letter-spacing: 6px; }
+            .profile-logo { width: 120px; height: 120px; }
+            .search-container { max-width: 100%; padding: 0 10px; }
+            .grid { grid-template-columns: 1fr; padding: 20px; gap: 20px; }
+            .card { padding: 15px; }
+            #cartSection { margin: 40px 15px; padding: 25px 15px; border-radius: 15px; }
+            #santi-panel { width: 92%; left: 4%; bottom: 90px; height: 65vh; border-radius: 16px; }
+            .f-btn { width: 55px; height: 55px; bottom: 20px; }
+            .music-btn { top: 20px; left: 20px; width: 45px; height: 45px; }
+            .buy-btn { font-size: 0.9rem; padding: 10px; }
+        }
 
-/* --- HERO SECTION --- */
-.hero { text-align: center; padding: 50px 20px; animation: fadeIn 0.8s ease; }
-.hero img {
-  width: 140px; height: 140px; object-fit: cover;
-  border-radius: 50%; border: 4px solid var(--primary);
-  box-shadow: 0 0 30px var(--primary-glow);
-  margin-bottom: 20px;
-}
-.hero h1 { font-family: 'Orbitron'; font-size: 2.5rem; margin-bottom: 10px; }
-.hero p { color: var(--neon); letter-spacing: 1px; text-transform: uppercase; font-size: 0.9rem; }
-
-/* --- BUSCADOR & FILTROS --- */
-.controls { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
-
-#search {
-  width: 100%; padding: 16px; border-radius: 15px;
-  background: rgba(30, 41, 59, 0.6); border: 1px solid rgba(255, 255, 255, 0.1);
-  color: white; font-size: 1rem; outline: none;
-  transition: 0.3s; margin-bottom: 20px;
-}
-#search:focus { border-color: var(--primary); box-shadow: 0 0 15px var(--primary-glow); }
-
-.categories {
-  display: flex; gap: 12px; overflow-x: auto; padding-bottom: 15px;
-  scrollbar-width: none;
-}
-.categories::-webkit-scrollbar { display: none; }
-
-.cat-btn {
-  white-space: nowrap; padding: 10px 24px; border-radius: 50px;
-  background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1);
-  color: var(--text-muted); cursor: pointer; transition: 0.3s; font-weight: 600;
-}
-.cat-btn:hover, .cat-btn.active {
-  background: var(--primary); color: white; border-color: var(--primary);
-  box-shadow: 0 0 15px var(--primary-glow);
-}
-
-/* --- PRODUCTOS (GRID) --- */
-.products {
-  display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 25px; padding: 20px; max-width: 1200px; margin: 0 auto;
-  transition: opacity 0.3s ease; /* Transición suave al filtrar */
-}
-
-.card {
-  background: var(--card-bg); border-radius: 20px;
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  padding: 15px;
-  display: flex; flex-direction: column; justify-content: space-between;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  position: relative; overflow: hidden;
-  height: 100%;
-  opacity: 0; /* Para la animación de entrada */
-  animation: fadeIn 0.6s ease forwards;
-}
-
-/* EFECTO DE BRILLO AL PASAR EL MOUSE (NUEVO) */
-.card::before {
-  content: '';
-  position: absolute;
-  top: 0; left: -100%;
-  width: 100%; height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-  transition: 0.5s;
-  pointer-events: none;
-}
-.card:hover::before { left: 100%; }
-
-.card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-  border-color: rgba(59, 130, 246, 0.3);
-}
-
-.card-img-container {
-  height: 200px; width: 100%; background: #fff;
-  border-radius: 15px; margin-bottom: 15px;
-  display: flex; align-items: center; justify-content: center;
-  overflow: hidden;
-}
-
-.card img {
-  width: 100%; height: 100%; object-fit: contain;
-  transition: transform 0.5s; cursor: pointer;
-}
-.card:hover img { transform: scale(1.1); }
-
-.card-info h3 { font-size: 1.1rem; margin-bottom: 5px; line-height: 1.4; }
-.card-price { font-size: 1.4rem; font-weight: 800; color: var(--neon); margin: 10px 0; }
-
-.add-btn {
-  width: 100%; padding: 12px; border: none; border-radius: 12px;
-  background: linear-gradient(135deg, var(--primary), #2563eb);
-  color: white; font-weight: 700; cursor: pointer;
-  transition: 0.3s; text-transform: uppercase; letter-spacing: 1px; font-size: 0.8rem;
-}
-.add-btn:hover { filter: brightness(1.2); box-shadow: 0 5px 15px var(--primary-glow); }
-.add-btn:active { transform: scale(0.95); }
-
-/* --- CHECKOUT / CART --- */
-.checkout-container { max-width: 800px; margin: 40px auto; padding: 20px; }
-.checkout {
-  background: rgba(15, 17, 42, 0.8); border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 24px; padding: 30px;
-}
-.cart-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-.cart-header h3 { font-family: 'Orbitron'; color: var(--text); }
-
-.cart-item {
-  display: flex; justify-content: space-between; align-items: center;
-  background: rgba(255, 255, 255, 0.03); padding: 15px;
-  border-radius: 12px; margin-bottom: 10px; border-left: 3px solid var(--primary);
-  animation: fadeIn 0.3s ease;
-}
-
-.cart-controls button {
-  width: 30px; height: 30px; border: none; border-radius: 8px;
-  background: #334155; color: white; cursor: pointer; font-weight: bold;
-  transition: 0.2s;
-}
-.cart-controls button:hover { background: var(--primary); }
-.cart-controls .del-btn { background: rgba(239, 68, 68, 0.2); color: var(--danger); margin-left: 10px; }
-.cart-controls .del-btn:hover { background: var(--danger); color: white; }
-
-.total-section {
-  margin-top: 25px; padding-top: 20px; border-top: 1px dashed rgba(255, 255, 255, 0.2);
-  display: flex; justify-content: space-between; align-items: center;
-}
-.total-price { font-size: 2rem; font-family: 'Orbitron'; color: var(--neon); }
-
-/* --- TOAST NOTIFICATION --- */
-#toast-container { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); z-index: 2000; display: flex; flex-direction: column; gap: 10px; }
-.toast {
-  background: rgba(16, 185, 129, 0.9); backdrop-filter: blur(5px);
-  color: white; padding: 12px 24px; border-radius: 50px;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.3); font-weight: 600;
-  animation: pop 0.3s ease, fadeIn 0.3s ease;
-}
-
-/* --- MODAL --- */
-.modal {
-  position: fixed; inset: 0; background: rgba(0,0,0,0.85);
-  backdrop-filter: blur(5px); z-index: 3000;
-  display: none; justify-content: center; align-items: center; padding: 20px;
-}
-.modal-content {
-  background: #1e293b; border-radius: 24px; width: 100%; max-width: 500px;
-  padding: 30px; border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-  position: relative; animation: pop 0.3s ease;
-}
-.close-modal { position: absolute; top: 15px; right: 20px; font-size: 24px; cursor: pointer; color: var(--text-muted); }
-
-/* --- TICKET (OCULTO) --- */
-#ticket-pro {
-  position: fixed; left: -9999px; top: 0;
-  width: 400px; background: #0f172a; color: #fff;
-  padding: 30px; font-family: 'Inter', sans-serif;
-  border-radius: 0;
-}
-
-/* --- WHATSAPP FLOATING --- */
-.wa-float {
-  position: fixed; bottom: 30px; right: 30px;
-  background: #25D366; width: 60px; height: 60px; border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 35px; color: white; text-decoration: none;
-  box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4);
-  transition: transform 0.3s; z-index: 1000;
-}
-.wa-float:hover { transform: scale(1.1) rotate(-10deg); }
-
-/* RESPONSIVE */
-@media(max-width: 600px) {
-  .products { grid-template-columns: 1fr 1fr; gap: 10px; padding: 10px; }
-  .card-img-container { height: 140px; }
-  .add-btn { padding: 8px; font-size: 0.7rem; }
-  .card-info h3 { font-size: 0.9rem; }
-  .card-price { font-size: 1.1rem; }
-}
-</style>
+        @media (pointer: coarse) {
+            body { cursor: default !important; }
+            #custom-cursor { display: none !important; }
+            .buy-btn, .f-btn, button, select, input { cursor: pointer !important; -webkit-tap-highlight-color: transparent; }
+        }
+    </style>
 </head>
-
 <body>
 
-<header>
-  <div class="brand">SANTSHOP</div>
-  <div class="cart-icon" onclick="document.querySelector('.checkout-container').scrollIntoView({behavior:'smooth'})">
-    🛒 <span id="cartCount">0</span>
-  </div>
-</header>
+<canvas id="particle-canvas"></canvas>
+<div id="custom-cursor"></div>
+
+<button class="f-btn music-btn" onclick="toggleMusic()"><i data-lucide="music"></i></button>
 
 <div class="hero">
-  <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSbscQ_rMoejZyXgdGknQ-HUAs1VgGD3Qe-IQ&s" alt="Logo">
-  <h1>SANTSHOP</h1>
-  <p>Tecnología Premium & Accesorios</p>
+    <img src="https://framerusercontent.com/images/AThoHC9cD7xYXolSv1sqdBmVx0.png" class="profile-logo" alt="SantShop Logo">
+    <h1 class="brand-name">SANTSHOP</h1>
+    <div class="search-container">
+        <input type="text" id="mainSearch" class="search-box" placeholder="[ BUSCAR PRODUCTOS... ]" onkeyup="liveSearch()">
+    </div>
 </div>
 
-<div class="controls">
-  <input id="search" placeholder="🔍 ¿Qué estás buscando hoy?..." onkeyup="renderProducts()">
-  
-  <div class="categories">
-    <button class="cat-btn active" onclick="filterCat('all',this)">🔥 Todo</button>
-    <button class="cat-btn" onclick="filterCat('audio',this)">🎧 Audio</button>
-    <button class="cat-btn" onclick="filterCat('carga',this)">⚡ Carga</button>
-    <button class="cat-btn" onclick="filterCat('relojes',this)">⌚ Relojes</button>
-  </div>
-</div>
+<div class="grid" id="mainGrid"></div>
 
-<div class="products" id="list"></div>
-
-<div class="checkout-container">
-  <div class="checkout">
-    <div class="cart-header">
-      <h3>🧾 Resumen de tu pedido</h3>
-      <button onclick="clearCart()" style="background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:0.9rem">Limpiar todo</button>
+<div id="cartSection">
+    <h2 style="font-family:var(--font-tech); color:var(--main); margin-bottom:25px;">[ DETALLE DE TU PEDIDO ]</h2>
+    
+    <div style="margin: 25px 0;">
+        <label style="font-size: 0.7rem; color: var(--main); font-family: var(--font-tech);">NOMBRE COMPLETO:</label>
+        <input type="text" id="clientName" class="search-box" placeholder="Escribe tu nombre completo" style="margin-top:10px;" required>
     </div>
     
-    <div id="cartList">
-      <p style="text-align:center; color:var(--text-muted); padding: 20px;">El carrito está vacío 🛒</p>
+    <div style="margin: 25px 0;">
+        <label style="font-size: 0.7rem; color: var(--main); font-family: var(--font-tech);">ZONA DE ENTREGA:</label>
+        <select id="deliveryZone" class="search-box" style="margin-top:10px;">
+            <option value="none">-- Selecciona tu zona --</option>
+            <option value="Cuyamiapa">Cuyamiapa</option>
+            <option value="Chamulapa">Chamulapa</option>
+            <option value="Estación Huehuetán">Estación Huehuetán</option>
+            <option value="Huehuetán Pueblo">Huehuetán Pueblo</option>
+        </select>
     </div>
-
-    <div class="total-section">
-      <span>Total a Pagar:</span>
-      <span id="total" class="total-price">$0</span>
+    
+    <div id="cartList"></div>
+    
+    <div style="margin: 25px 0; display:flex; justify-content:space-between; align-items:flex-end;">
+        <div>
+            <p style="font-size:0.6rem; opacity:0.5;">TOTAL:</p>
+            <h2 id="cartTotal" style="font-family:'Share Tech Mono'; font-size:3rem; color:var(--main);">$0</h2>
+        </div>
+        <button class="buy-btn" style="width: 250px;" onclick="generateAdvancedTicket()">GENERAR PEDIDO</button>
     </div>
-
-    <button class="add-btn" onclick="generarTicket()" style="margin-top: 20px; font-size: 1.1rem; padding: 15px;">
-      📄 Generar y Descargar Ticket
-    </button>
-  </div>
 </div>
 
-<div class="modal" id="modal">
-  <div class="modal-content">
-    <span class="close-modal" onclick="closeModal()">✕</span>
-    <div id="modalBody"></div>
-  </div>
+<div class="f-btn" style="left:30px;" onclick="toggleSanti()"><i data-lucide="bot"></i></div>
+<div id="santi-panel">
+    <div class="chat-header">
+        <span>SANTI - Asistente de SantShop</span>
+    </div>
+    <div class="chat-mood-bar" id="moodBar">SANTI: En línea ⚡ [Disponible 24/7]</div>
+    <div class="chat-body" id="chatBody">
+        <div style="color:var(--main); margin-bottom:15px;">¡Hola! Bienvenido(a) a SantShop. Estoy aquí para ayudarte con cualquier duda sobre nuestros productos, precios, disponibilidad o tu pedido. ¿En qué puedo ayudarte hoy?</div>
+    </div>
+    <div class="chat-footer">
+        <input type="text" id="chatInput" class="chat-input" placeholder="Escribe tu pregunta aquí..." onkeypress="if(event.key==='Enter') santiText()">
+        <button onclick="santiText()" style="background:none; border:none; color:var(--main);"><i data-lucide="send"></i></button>
+    </div>
 </div>
 
-<div id="toast-container"></div>
-<a class="wa-float" href="https://wa.me/529641034714" target="_blank">💬</a>
+<div id="ticket-capture" style="position:absolute; left:-9999px; width:500px; background:#010409; color:white; padding:50px; border:4px solid #00f3ff; font-family:'Orbitron';"></div>
 
-<div id="ticket-pro">
-  <div style="text-align:center; border-bottom: 2px dashed #334155; padding-bottom: 15px; margin-bottom: 15px;">
-    <h2 style="color:#3b82f6; font-family:'Orbitron'; margin:0;">SANTSHOP</h2>
-    <p style="color:#94a3b8; font-size:12px; margin-top:5px;">Tech Store & Accesorios</p>
-    <p style="color:#94a3b8; font-size:12px;">WhatsApp: 964 103 4714</p>
-  </div>
-
-  <div style="font-size:13px; color:#cbd5e1; margin-bottom:15px;">
-    <p><strong>Cliente:</strong> <span id="t-cliente">...</span></p>
-    <p><strong>Fecha:</strong> <span id="t-fecha">...</span></p>
-    <p><strong>ID Pedido:</strong> <span id="t-id">...</span></p>
-  </div>
-
-  <table style="width:100%; font-size:13px; color:#fff; border-collapse: collapse; margin-bottom: 15px;">
-    <thead>
-      <tr style="border-bottom: 1px solid #334155; text-align:left;">
-        <th style="padding-bottom:5px;">Prod</th>
-        <th style="padding-bottom:5px; text-align:right;">Cant</th>
-        <th style="padding-bottom:5px; text-align:right;">Total</th>
-      </tr>
-    </thead>
-    <tbody id="t-productos"></tbody>
-  </table>
-
-  <div style="border-top: 2px dashed #334155; padding-top: 10px; display:flex; justify-content:space-between; align-items:center;">
-    <span style="font-size:16px; font-weight:bold;">TOTAL:</span>
-    <span id="t-total" style="font-size:24px; font-weight:bold; color:#3b82f6;"></span>
-  </div>
-
-  <div style="text-align:center; margin-top:20px; font-size:11px; color:#64748b;">
-    <p>¡Gracias por tu compra! 💙</p>
-    <p>Este comprobante es válido para garantía.</p>
-  </div>
-</div>
+<audio id="bgMusic" loop src="https://cdn.freesoundslibrary.com/wp-content/uploads/2023/07/cyberpunk-2077-lofi.mp3"></audio>
 
 <script>
-// DATOS DE PRODUCTOS
-const products = [
-{id:1,name:'Airpods',category:'audio',price:320,
-img:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSLtV_pnUElYNMdkOw0-Wm9_e8bgBeTCKlB_w&s',
-desc:'Audio Hi-Fi, conexión estable y graves potentes.'},
+    // --- PRODUCTOS ---
+    const products = [
+        {id:1, name:'Airpods', cat:'audio', price:320, tags:['airpod', 'oreja', 'audifono'], img:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSLtV_pnUElYNMdkOw0-Wm9_e8bgBeTCKlB_w&s', desc:'Audio Hi-Fi, conexión estable.', specs:'Chip H1, Bluetooth 5.0, 5h autonomía.', inv:'Este modelo destaca por su balance dinámico de frecuencias.'},
+        {id:2, name:'Power Bank 30k mAh', cat:'carga', price:699, tags:['power', 'bateria', 'carga', '30000'], img:'https://http2.mlstatic.com/D_NQ_NP_2X_995948-MLA99547949208_122025-F.webp', desc:'30,000 mAh, carga rápida PD.', specs:'Salida 22.5W, USB-C PD, Display LED.', inv:'Utiliza celdas de polímero de Litio de grado A+.'},
+        {id:3, name:'Smartwatch Mujer', cat:'relojes', price:549, tags:['reloj', 'relojs', 'mujer', 'pink'], img:'https://http2.mlstatic.com/D_852047-MLA99082336731_112025-N.jpg', desc:'Elegante, monitoreo de salud.', specs:'Pantalla 1.7", Sensor HR, IP67.', inv:'Modelo optimizado para seguimiento de salud femenina.'},
+        {id:4, name:'Audífonos P9 Pro Max', cat:'audio', price:550, tags:['p9', 'cascos', 'diadema', 'max'], img:'https://http2.mlstatic.com/D_722013-MLA95660056214_102025-N.jpg', desc:'Envolventes, diseño premium.', specs:'Drivers 40mm, ANC pasivo.', inv:'Arquitectura que imita la acústica de estudio.'},
+        {id:5, name:'Smartwatch Ultra', cat:'relojes', price:499, tags:['ultra', 'reloj', 'deportivo', 'gps'], img:'https://http2.mlstatic.com/D_NQ_NP_2X_849901-MLA99940357261_112025-F.webp', desc:'Pantalla HD, llamadas Bluetooth.', specs:'Caja 49mm, Gorilla Glass.', inv:'Procesador dual-core ultra fluido.'},
+        {id:6, name:'Reloj Cuarzo Hombre', cat:'relojes', price:200, tags:['cuarzo', 'hombre', 'analogico'], img:'https://http2.mlstatic.com/D_NQ_NP_2X_840400-MLM93386215052_092025-F-2-pzas-relojes-de-cuarzo-casuales-impermeables-para-hombre.webp', desc:'Set de 2 piezas impermeables.', specs:'Maquinaria japonesa, Acero.', inv:'Incluye un diseño casual y uno deportivo.'},
+        {id:7, name:'Set Perlas Watch', cat:'relojes', price:500, tags:['perlas', 'joya', 'reloj', 'set'], img:'https://http2.mlstatic.com/D_NQ_NP_2X_927510-MLA101975346478_122025-F.webp', desc:'Conjunto de lujo de 5 piezas.', specs:'Incluye pulseras, collar y aretes.', inv:'Diseñado con incrustaciones de zirconia.'}
+    ];
 
-{id:2,name:'Power Bank 30000 mAh',category:'carga',price:699,
-img:'https://http2.mlstatic.com/D_NQ_NP_2X_995948-MLA99547949208_122025-F.webp',
-desc:'Alta capacidad, carga rápida y protección inteligente.'},
+    let cart = JSON.parse(localStorage.getItem('santshop_cart')) || [];
+    let santiMood = 100;
 
-{id:3,name:'Smartwatch Mujer',category:'relojes',price:549,
-img:'https://http2.mlstatic.com/D_852047-MLA99082336731_112025-N.jpg',
-desc:'Elegante, notificaciones y monitoreo diario.'},
+    // === CONFIGURACIÓN API GROK (cámbialo por tu key real) ===
+    const GROK_API_KEY = "xai-tu-key-aquí";  // ← Pon tu API key de https://console.x.ai aquí
+    const GROK_API_URL = "https://api.x.ai/v1/chat/completions";
 
-{id:4,name:'Audífonos P9 Pro Max',category:'audio',price:550,
-img:'https://http2.mlstatic.com/D_722013-MLA95660056214_102025-N.jpg',
-desc:'Sonido envolvente y orejeras acolchadas.'},
+    const SYSTEM_PROMPT = `
+Eres Santi, el asistente virtual oficial de SantShop, una tienda de tecnología y accesorios en Tapachula, Chiapas.
+Hablas siempre en español, de forma amable, profesional, clara y respetuosa, como un excelente agente de atención al cliente.
+Tu objetivo es ayudar a los clientes con sus dudas sobre productos, precios, características, disponibilidad, pedidos y cualquier consulta relacionada con la tienda.
+Responde de manera positiva, útil y cortés en todo momento.
+Usa frases como "Con gusto te ayudo", "Claro que sí", "Estoy a tu disposición", "Gracias por tu consulta", etc.
+Nunca uses groserías, sarcasmos, slang callejero ni expresiones informales fuertes.
+Si la pregunta no está relacionada con la tienda, responde amablemente que estás especializado en ayudar con SantShop y ofreces orientación sobre productos.
+Tienes esta información de productos: ${JSON.stringify(products.map(p => ({nombre: p.name, precio: p.price, descripcion: p.desc, especificaciones: p.specs, investigacion: p.inv})))}.
+Cuando hables de precios o totales, sé preciso.
+Si pueden agregar al carrito desde el chat, sugiere hacerlo amablemente.
+    `;
 
-{id:5,name:'Smartwatch Hombre-Mujer',category:'relojes',price:499,
-img:'https://http2.mlstatic.com/D_NQ_NP_2X_849901-MLA99940357261_112025-F.webp',
-desc:'Pantalla grande, llamadas Bluetooth y batería duradera.'},
+    async function callGrokAPI(userMessage) {
+        if (!GROK_API_KEY || GROK_API_KEY.includes("tu-key")) {
+            // Fallback si no hay key
+            return fallbackResponse(userMessage);
+        }
 
-{id:6,name:'2 Pzas Relojes De Cuarzo Casuales Impermeables Para Hombre', category:"relojes",price:200,
-img:'https://http2.mlstatic.com/D_NQ_NP_2X_840400-MLM93386215052_092025-F-2-pzas-relojes-de-cuarzo-casuales-impermeables-para-hombre.webp',
-desc:'Trae pulsera de regalo'},
+        try {
+            const res = await fetch(GROK_API_URL, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${GROK_API_KEY}`
+                },
+                body: JSON.stringify({
+                    model: "grok-beta",  // o "grok-4" cuando esté disponible
+                    messages: [
+                        { role: "system", content: SYSTEM_PROMPT },
+                        { role: "user", content: userMessage }
+                    ],
+                    temperature: 0.7,
+                    max_tokens: 500
+                })
+            });
 
-{id:7,name:'5 Piezas Reloj Perlas Elegante Con Caja - Mujer Conjunto De Perlas Blancas',category:'relojes',price:500,
-img:'https://http2.mlstatic.com/D_NQ_NP_2X_927510-MLA101975346478_122025-F.webp',
-desc:'Exquisito set de joyería y reloj de pulsera, diseñado especialmente para la mujer moderna. Incluye 5 piezas elegantes presentadas en una lujosa caja. Perfecto para ocasiones especiales, cumpleaños o como un capricho personal.'}
+            if (!res.ok) throw new Error("Error API");
 
-];
-
-let cart = JSON.parse(localStorage.getItem("cart")) || [];
-let cat = 'all';
-
-// --- FUNCIONES DE RENDERIZADO MEJORADAS ---
-function renderProducts(){
-  const container = document.getElementById('list');
-  // Hacemos un fade-out rápido antes de cambiar el contenido
-  container.style.opacity = '0';
-
-  setTimeout(() => {
-    // Normalizar búsqueda
-    const term = document.getElementById('search').value.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-    container.innerHTML = '';
-
-    const filtered = products.filter(p => {
-      const pName = p.name.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-      return (cat==='all' || p.category===cat) && pName.includes(term);
-    });
-
-    if(filtered.length === 0) {
-      container.innerHTML = `<div style="grid-column: 1/-1; text-align:center; padding:40px; color:var(--text-muted)">No encontramos productos con ese nombre 🧐</div>`;
-    } else {
-      filtered.forEach((p, index) => {
-        // Añadimos un "animation-delay" basado en el índice para que aparezcan uno por uno (efecto cascada)
-        container.innerHTML += `
-          <div class="card" style="animation-delay: ${index * 0.1}s">
-            <div class="card-img-container" onclick="openModal(${p.id})">
-              <img src="${p.img}" alt="${p.name}" loading="lazy" crossorigin="anonymous">
-            </div>
-            <div class="card-info">
-              <h3>${p.name}</h3>
-              <div class="card-price">$${p.price}</div>
-            </div>
-            <button class="add-btn" onclick="addToCart(${p.id})">Agregar +</button>
-          </div>`;
-      });
+            const data = await res.json();
+            return data.choices[0].message.content.trim();
+        } catch (err) {
+            console.error(err);
+            return "Lo siento, hubo un pequeño problema técnico. Por favor intenta de nuevo en unos segundos. ¡Gracias por tu paciencia!";
+        }
     }
-    
-    // Regresamos la opacidad
-    container.style.opacity = '1';
-  }, 200);
-}
 
-function filterCat(category, btn){
-  cat = category;
-  document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  renderProducts();
-}
+    // Fallback básico mientras configuras la API
+    function fallbackResponse(query) {
+        const q = query.toLowerCase().trim();
+        if (q.includes("hola") || q.includes("buenos")) return "¡Hola! Bienvenido(a) a SantShop. ¿En qué puedo ayudarte hoy?";
+        if (q.includes("recomienda") || q.includes("mejor")) {
+            const r = products[Math.floor(Math.random() * products.length)];
+            return `Una excelente opción es el ${r.name} por $${r.price}. ${r.desc} ¿Te gustaría conocer más detalles o agregarlo al carrito?`;
+        }
+        let found = products.find(p => q.includes(p.name.toLowerCase()) || p.tags.some(t => q.includes(t)));
+        if (found) {
+            if (q.includes("info") || q.includes("detalle") || q.includes("caracter")) return `Claro, aquí tienes la información del ${found.name}: ${found.desc} Especificaciones: ${found.specs}. Precio: $${found.price}. ¿Quieres agregarlo al carrito?`;
+            return `¡Perfecto! El ${found.name} está disponible por $${found.price}. ¿Te gustaría ver más detalles o agregarlo a tu pedido?`;
+        }
+        return "Estoy aquí para ayudarte con cualquier duda sobre nuestros productos o tu pedido. ¿Me puedes dar más detalles de lo que necesitas?";
+    }
 
-// --- FUNCIONES DEL CARRITO ---
-function addToCart(id){
-  const item = cart.find(x => x.id === id);
-  const product = products.find(p => p.id === id);
-  
-  if(item) item.qty++;
-  else cart.push({...product, qty:1});
+    // --- INICIALIZACIÓN ---
+    function init() {
+        lucide.createIcons();
+        renderProducts(products);
+        initParticles();
+        updateCartUI();
+    }
 
-  showToast(`✅ ${product.name} agregado`);
-  
-  // Animación del carrito
-  const cartIcon = document.querySelector('.cart-icon');
-  cartIcon.classList.add('cart-pop');
-  setTimeout(() => cartIcon.classList.remove('cart-pop'), 400);
+    function renderProducts(data) {
+        document.getElementById('mainGrid').innerHTML = data.map(p => `
+            <div class="card">
+                <img src="${p.img}" alt="${p.name}">
+                <div class="card-title">${p.name.toUpperCase()}</div>
+                <div class="card-price">$${p.price}</div>
+                <button class="buy-btn" onclick="addToCart(${p.id})">AGREGAR AL CARRITO</button>
+            </div>
+        `).join('');
+    }
 
-  saveCart();
-}
+    function liveSearch() {
+        const val = document.getElementById('mainSearch').value.toLowerCase().trim();
+        const filtered = products.filter(p => 
+            p.name.toLowerCase().includes(val) || 
+            p.cat.toLowerCase().includes(val) || 
+            p.tags.some(t => t.toLowerCase().includes(val))
+        );
+        renderProducts(filtered);
+    }
 
-function showToast(msg){
-  const container = document.getElementById('toast-container');
-  const toast = document.createElement('div');
-  toast.className = 'toast';
-  toast.innerText = msg;
-  container.appendChild(toast);
-  setTimeout(() => toast.remove(), 3000);
-}
+    function addToCart(id) {
+        const p = products.find(x => x.id === id);
+        if (!p) return;
 
-function saveCart(){
-  localStorage.setItem("cart", JSON.stringify(cart));
-  renderCart();
-}
+        const existing = cart.find(item => item.id === id);
+        if (existing) {
+            existing.quantity = (existing.quantity || 1) + 1;
+        } else {
+            cart.push({ ...p, quantity: 1 });
+        }
 
-function renderCart(){
-  const count = cart.reduce((acc, item) => acc + item.qty, 0);
-  document.getElementById('cartCount').innerText = count;
+        localStorage.setItem('santshop_cart', JSON.stringify(cart));
+        updateCartUI();
+        confetti({ particleCount: 60, colors: ['#00f3ff', '#bc13fe'] });
+    }
 
-  const list = document.getElementById('cartList');
-  let totalAmount = 0;
+    function removeFromCart(id) {
+        cart = cart.filter(item => item.id !== id);
+        localStorage.setItem('santshop_cart', JSON.stringify(cart));
+        updateCartUI();
+    }
 
-  if(cart.length === 0){
-    list.innerHTML = `<p style="text-align:center; color:var(--text-muted); padding: 20px;">Tu carrito está vacío 🛒</p>`;
-    document.getElementById('total').innerText = "$0";
-    return;
-  }
+    function updateCartUI() {
+        const list = document.getElementById('cartList');
+        let total = 0;
 
-  list.innerHTML = cart.map(i => {
-    totalAmount += i.price * i.qty;
-    return `
-      <div class="cart-item">
-        <div>
-          <strong style="color:white">${i.name}</strong>
-          <div style="color:var(--text-muted); font-size:0.9rem">$${i.price} x ${i.qty}</div>
-        </div>
-        <div class="cart-controls">
-          <button onclick="changeQty(${i.id}, -1)">-</button>
-          <span style="margin:0 10px; font-weight:bold">${i.qty}</span>
-          <button onclick="changeQty(${i.id}, 1)">+</button>
-          <button class="del-btn" onclick="removeItem(${i.id})">🗑</button>
-        </div>
-      </div>`;
-  }).join("");
+        list.innerHTML = cart.map(item => {
+            const itemTotal = item.price * (item.quantity || 1);
+            total += itemTotal;
+            return `
+                <div class="cart-item">
+                    <span>${item.name} ${item.quantity > 1 ? `(${item.quantity}x)` : ''}</span>
+                    <span>$${itemTotal} <button onclick="removeFromCart(${item.id})">×</button></span>
+                </div>
+            `;
+        }).join('');
 
-  document.getElementById('total').innerText = "$" + totalAmount.toLocaleString();
-}
+        document.getElementById('cartTotal').innerText = '$' + total;
+    }
 
-function changeQty(id, delta){
-  const item = cart.find(x => x.id === id);
-  if(!item) return;
-  item.qty += delta;
-  if(item.qty <= 0) cart = cart.filter(x => x.id !== id);
-  saveCart();
-}
+    async function santiText() {
+        const input = document.getElementById('chatInput');
+        const msg = input.value.trim();
+        if (!msg) return;
 
-function removeItem(id){
-  if(confirm("¿Eliminar producto?")){
-    cart = cart.filter(x => x.id !== id);
-    saveCart();
-  }
-}
+        const body = document.getElementById('chatBody');
+        body.innerHTML += `<div style="text-align:right; margin:10px 0; opacity:0.7;">Tú: ${msg}</div>`;
+        input.value = "";
 
-function clearCart(){
-  if(cart.length > 0 && confirm("¿Vaciar todo el carrito?")){
-    cart = [];
-    saveCart();
-  }
-}
+        const loading = document.createElement('div');
+        loading.innerHTML = `<div style="color:var(--main); margin:10px 0;">Santi: Escribiendo...</div>`;
+        body.appendChild(loading);
+        body.scrollTop = body.scrollHeight;
 
-// --- MODAL ---
-function openModal(id){
-  const p = products.find(x => x.id === id);
-  document.getElementById('modalBody').innerHTML = `
-    <div style="text-align:center">
-      <img src="${p.img}" style="width:100%; max-height:250px; object-fit:contain; border-radius:15px; background:white; margin-bottom:15px;" crossorigin="anonymous">
-      <h2 style="font-family:'Orbitron'; color:var(--primary)">${p.name}</h2>
-      <h3 style="color:var(--neon); margin:10px 0">$${p.price}</h3>
-      <p style="color:#cbd5e1; line-height:1.6; margin-bottom:20px">${p.desc}</p>
-      <button class="add-btn" onclick="addToCart(${p.id}); closeModal()">Agregar al Carrito</button>
-    </div>`;
-  document.getElementById('modal').style.display = 'flex';
-}
+        const response = await callGrokAPI(msg);
 
-function closeModal(){
-  document.getElementById('modal').style.display = 'none';
-}
+        body.removeChild(loading);
+        body.innerHTML += `<div style="color:var(--main); margin:10px 0;">Santi: ${response.replace(/\n/g, '<br>')}</div>`;
+        body.scrollTop = body.scrollHeight;
 
-window.onclick = function(e) {
-  if (e.target == document.getElementById('modal')) closeModal();
-}
+        santiMood = Math.min(100, santiMood + 5);
+        document.getElementById('moodBar').innerText = `SANTI: En línea ⚡ [Disponible]`;
+    }
 
-// --- TICKET ---
-async function generarTicket(){
-  if(cart.length === 0) return alert("❌ Agrega productos antes de generar el ticket.");
+    async function generateAdvancedTicket() {
+        const zone = document.getElementById('deliveryZone').value;
+        const name = document.getElementById('clientName').value.trim();
 
-  const nombre = prompt("👤 Nombre del Cliente:", "Cliente");
-  if(!nombre) return;
+        if (cart.length === 0) return alert("Tu carrito está vacío. Agrega productos primero.");
+        if (zone === "none") return alert("Por favor selecciona una zona de entrega.");
+        if (!name) return alert("Ingresa tu nombre completo.");
 
-  const fecha = new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString();
-  const idPedido = Math.floor(Math.random() * 100000);
-  
-  document.getElementById('t-cliente').innerText = nombre;
-  document.getElementById('t-fecha').innerText = fecha;
-  document.getElementById('t-id').innerText = "#" + idPedido;
+        const capture = document.getElementById('ticket-capture');
+        capture.innerHTML = `
+            <div style="text-align:center; padding:30px;">
+                <h1 style="font-size:45px; color:#00f3ff;">SANTSHOP</h1>
+                <p style="font-size:14px; opacity:0.8;">Tecnología y Accesorios - Tapachula, Chiapas</p>
+                <hr style="border:1px dashed #00f3ff; margin:25px 0;">
+                <div style="text-align:left; font-size:15px;">
+                    <p><strong>Cliente:</strong> ${name.toUpperCase()}</p>
+                    <p><strong>Zona de entrega:</strong> ${zone.toUpperCase()}</p>
+                    <p><strong>Fecha:</strong> ${new Date().toLocaleString('es-MX')}</p>
+                </div>
+                <hr style="border:1px dashed #00f3ff; margin:25px 0;">
+                ${cart.map(i => `
+                    <p style="display:flex; justify-content:space-between; margin:8px 0;">
+                        <span>${i.name} ${i.quantity > 1 ? `(${i.quantity}x)` : ''}</span>
+                        <span>$${i.price * (i.quantity || 1)}</span>
+                    </p>
+                `).join('')}
+                <hr style="border:1px dashed #00f3ff; margin:25px 0;">
+                <h2 style="text-align:right; color:#00f3ff;">Total: $${cart.reduce((sum, i) => sum + i.price * (i.quantity || 1), 0)}</h2>
+            </div>
+        `;
 
-  let htmlProds = '';
-  let granTotal = 0;
-  cart.forEach(item => {
-    const subtotal = item.price * item.qty;
-    granTotal += subtotal;
-    htmlProds += `
-      <tr style="border-bottom:1px solid #1e293b;">
-        <td style="padding:8px 0;">${item.name}</td>
-        <td style="text-align:right;">x${item.qty}</td>
-        <td style="text-align:right;">$${subtotal}</td>
-      </tr>`;
-  });
-  document.getElementById('t-productos').innerHTML = htmlProds;
-  document.getElementById('t-total').innerText = "$" + granTotal.toLocaleString();
+        html2canvas(capture, {scale: 2}).then(canvas => {
+            const link = document.createElement('a');
+            link.download = `Pedido_SantShop_${name.replace(/\s+/g, '_')}.png`;
+            link.href = canvas.toDataURL('image/png');
+            link.click();
 
-  const btn = document.querySelector('.checkout .add-btn');
-  const originalText = btn.innerText;
-  btn.innerText = "⏳ Generando...";
+            const text = `Hola, soy ${name}. Adjunto mi pedido de SantShop.\nZona: ${zone}\nTotal: $${cart.reduce((sum, i) => sum + i.price * (i.quantity || 1), 0)}\n¡Gracias!`;
+            window.open(`https://wa.me/529641034714?text=${encodeURIComponent(text)}`, '_blank');
+        });
+    }
 
-  try {
-    const ticketElement = document.getElementById("ticket-pro");
-    const canvas = await html2canvas(ticketElement, {
-      scale: 2,
-      backgroundColor: "#0f172a",
-      useCORS: true // Importante para intentar cargar imágenes externas
+    function toggleSanti() {
+        const panel = document.getElementById('santi-panel');
+        panel.style.display = panel.style.display === 'flex' ? 'none' : 'flex';
+    }
+
+    function toggleMusic() {
+        const audio = document.getElementById('bgMusic');
+        audio.paused ? audio.play() : audio.pause();
+    }
+
+    function initParticles() {
+        const canvas = document.getElementById('particle-canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        const particles = Array.from({length: 60}, () => ({x: Math.random()*canvas.width, y: Math.random()*canvas.height, v: Math.random()*0.6 + 0.2}));
+        function animate() {
+            ctx.clearRect(0,0,canvas.width,canvas.height);
+            particles.forEach(p => {
+                p.y -= p.v;
+                if (p.y < 0) p.y = canvas.height;
+                ctx.fillStyle = 'rgba(0,243,255,0.2)';
+                ctx.beginPath(); ctx.arc(p.x, p.y, 1.2, 0, Math.PI*2); ctx.fill();
+            });
+            requestAnimationFrame(animate);
+        }
+        animate();
+    }
+
+    document.addEventListener('mousemove', e => {
+        document.getElementById('custom-cursor').style.left = e.clientX + 'px';
+        document.getElementById('custom-cursor').style.top = e.clientY + 'px';
     });
 
-    const link = document.createElement('a');
-    link.download = `Ticket_SantShop_${idPedido}.png`;
-    link.href = canvas.toDataURL("image/png");
-    link.click();
-    
-    showToast("✅ Ticket descargado con éxito");
-  } catch (err) {
-    alert("Hubo un error generando la imagen (posible bloqueo de seguridad del navegador).");
-    console.error(err);
-  } finally {
-    btn.innerText = originalText;
-  }
-}
-
-// Inicializar
-renderProducts();
-renderCart();
+    window.onload = init;
 </script>
 </body>
 </html>
