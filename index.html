@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>SantShop | Neural System v9.0</title>
+    <title>SantShop | Neural System v15.1 Final</title>
     <link rel="icon" type="image/png" href="https://framerusercontent.com/images/AThoHC9cD7xYXolSv1sqdBmVx0.png">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
@@ -21,21 +21,6 @@
             --font-tech: 'Orbitron', sans-serif;
         }
 
-        #deliveryZone, #clientName {
-            background: #0a0f19;
-            color: var(--main);
-            border: 1px solid var(--main);
-            padding: 10px;
-            cursor: pointer;
-            border-radius: 10px;
-        }
-
-        #deliveryZone option {
-            background: #010409;
-            color: white;
-            padding: 10px;
-        }
-
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
         body { 
@@ -44,394 +29,623 @@
             font-family: 'Exo 2', sans-serif; 
             overflow-x: hidden; 
             scroll-behavior: smooth;
-            cursor: none;
+            cursor: none; 
+        }
+
+        /* 80. LOGIN OVERLAY */
+        #login-screen {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #000; z-index: 999999;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+        }
+
+        body::before {
+            content: "";
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: url('https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExNHJueGZ3bmZqZzR4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4JmVwPXYxX2ludGVybmFsX2dpZl9ieV9pZCBjdXN0b20mY3Q9Zw/3o7TKMGpxxcaOshJS0/giphy.gif') center/cover;
+            opacity: 0.08; z-index: -2; pointer-events: none;
         }
 
         #particle-canvas { position: fixed; top: 0; left: 0; z-index: -1; pointer-events: none; }
+        
         #custom-cursor { 
-            position: fixed; 
-            width: 15px; 
-            height: 15px; 
-            border: 2px solid var(--main); 
-            border-radius: 50%; 
-            pointer-events: none; 
-            z-index: 99999; 
-            box-shadow: var(--glow); 
-            transform: translate(-50%, -50%); 
-            transition: width 0.2s, height 0.2s; 
+            position: fixed; width: 30px; height: 30px; border: 1.5px solid var(--main); 
+            border-radius: 50%; pointer-events: none; z-index: 99999; 
+            box-shadow: var(--glow); transform: translate(-50%, -50%); 
+            transition: width 0.2s, height 0.2s, border-color 0.3s; 
+        }
+        #cursor-dot {
+            position: fixed; width: 4px; height: 4px; background: var(--accent);
+            border-radius: 50%; pointer-events: none; z-index: 100000;
+            transform: translate(-50%, -50%);
         }
 
-        .hero { padding: 60px 20px; text-align: center; }
-        .profile-logo { width: 160px; height: 160px; border-radius: 50%; border: 3px solid var(--main); box-shadow: var(--glow); margin-bottom: 25px; object-fit: cover; }
-        .brand-name { font-family: var(--font-tech); font-size: 3.5rem; letter-spacing: 12px; color: var(--main); text-shadow: var(--glow); margin-bottom: 10px; }
+        .hero { padding: 80px 20px; text-align: center; }
+        .profile-logo { 
+            width: 130px; height: 130px; border-radius: 50%; 
+            border: 2px solid var(--main); box-shadow: var(--glow); 
+            margin-bottom: 25px; transition: 0.6s cubic-bezier(0.23, 1, 0.32, 1); 
+        }
+        .profile-logo:hover { transform: scale(1.1) rotate(360deg); border-color: var(--accent); }
+        .brand-name { 
+            font-family: var(--font-tech); font-size: clamp(2rem, 8vw, 3.5rem); 
+            letter-spacing: 10px; color: var(--main); text-shadow: var(--glow); 
+            margin-bottom: 10px;
+        }
 
-        .search-container { position: relative; max-width: 450px; margin: 0 auto 40px; }
-        .search-box { width: 100%; padding: 18px; background: rgba(255,255,255,0.05); border: 1px solid var(--main); border-radius: 50px; color: white; text-align: center; font-family: 'Share Tech Mono'; outline: none; transition: 0.3s; }
-        .search-box:focus { box-shadow: var(--glow); background: rgba(0, 243, 255, 0.05); }
+        .search-wrapper { position: relative; max-width: 500px; margin: 30px auto; }
+        .chat-input { 
+            width: 100%; background: rgba(255,255,255,0.03); border: 1px solid rgba(0, 243, 255, 0.2); 
+            border-bottom: 2px solid var(--main); color: white; padding: 15px; 
+            outline: none; transition: 0.3s; font-family: 'Share Tech Mono';
+            text-align: center;
+        }
+        .chat-input:focus { background: rgba(0, 243, 255, 0.08); border-color: var(--accent); box-shadow: 0 5px 15px rgba(0, 243, 255, 0.1); }
 
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 30px; padding: 40px; max-width: 1400px; margin: 0 auto; }
-        .card { background: var(--panel); padding: 25px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.05); text-align: center; transition: 0.4s; position: relative; }
-        .card:hover { transform: translateY(-10px); border-color: var(--main); box-shadow: var(--glow); }
-        .card img { width: 100%; height: 200px; object-fit: contain; margin-bottom: 20px; filter: drop-shadow(0 0 10px rgba(0,0,0,0.5)); }
-        .card-title { font-family: var(--font-tech); font-size: 0.85rem; margin-bottom: 15px; min-height: 40px; }
-        .card-price { font-family: 'Share Tech Mono'; color: var(--main); font-size: 1.8rem; margin-bottom: 20px; }
-        .buy-btn { width: 100%; padding: 12px; background: transparent; border: 1px solid var(--main); color: var(--main); font-family: var(--font-tech); font-weight: bold; border-radius: 10px; transition: 0.3s; cursor: none !important; }
+        /* 18. Filtros Avanzados Container */
+        .advanced-controls {
+            display: flex; justify-content: center; gap: 15px; margin: 20px auto; max-width: 600px; flex-wrap: wrap;
+        }
+        .control-select {
+            background: #000; color: var(--main); border: 1px solid var(--main); padding: 8px; font-family: 'Share Tech Mono'; cursor: none !important;
+        }
+
+        .filter-container { 
+            display: flex; justify-content: center; gap: 12px; margin: 20px auto; 
+            max-width: 95%; overflow-x: auto; padding: 10px; scrollbar-width: none;
+        }
+        .filter-btn { 
+            background: transparent; border: 1px solid rgba(0, 243, 255, 0.3); color: var(--main); 
+            padding: 8px 20px; border-radius: 4px; font-family: var(--font-tech); 
+            font-size: 0.7rem; cursor: none !important; transition: 0.3s; white-space: nowrap;
+        }
+        .filter-btn:hover, .filter-btn.active { background: var(--main); color: black; border-color: var(--main); box-shadow: var(--glow); }
+
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px; padding: 40px; max-width: 1400px; margin: 0 auto; }
+        .card { 
+            background: var(--panel); padding: 25px; border-radius: 15px; 
+            border: 1px solid rgba(255,255,255,0.05); text-align: center; 
+            transition: 0.4s; position: relative; overflow: hidden;
+            display: flex; flex-direction: column; justify-content: space-between;
+        }
+        .card:hover { transform: translateY(-8px); border-color: var(--main); box-shadow: 0 10px 30px rgba(0, 243, 255, 0.15); }
+        
+        /* 17. Zoom de Imagen */
+        .card img { width: 100%; height: 180px; object-fit: contain; margin-bottom: 20px; transition: 0.5s; }
+        .card:hover img { transform: scale(1.2); filter: drop-shadow(0 0 15px var(--accent)); }
+        
+        .promo-badge { font-size: 10px; color: var(--accent); margin-bottom: 10px; font-weight: bold; }
+
+        .buy-btn { 
+            width: 100%; padding: 12px; background: transparent; border: 1.5px solid var(--main); 
+            color: var(--main); font-family: var(--font-tech); font-weight: bold; 
+            border-radius: 8px; cursor: none !important; transition: 0.3s; 
+        }
         .buy-btn:hover { background: var(--main); color: black; box-shadow: var(--glow); }
 
-        #santi-panel { position: fixed; bottom: 100px; left: 30px; width: 400px; height: 550px; background: var(--panel); border: 2px solid var(--main); border-radius: 24px; display: none; flex-direction: column; z-index: 9500; box-shadow: var(--glow); overflow: hidden; }
-        .chat-header { background: var(--main); color: black; padding: 18px; display: flex; justify-content: space-between; align-items: center; font-family: var(--font-tech); font-weight: 900; font-size: 0.8rem; }
-        .chat-mood-bar { background: #000; color: var(--main); padding: 6px 15px; font-size: 11px; font-family: 'Share Tech Mono'; border-bottom: 1px solid rgba(0, 243, 255, 0.2); }
-        .chat-body { flex: 1; overflow-y: auto; padding: 20px; font-family: 'Share Tech Mono'; font-size: 0.9rem; line-height: 1.5; }
-        .chat-footer { padding: 15px; border-top: 1px solid rgba(255,255,255,0.1); display: flex; gap: 10px; align-items: center; }
-        .chat-input { flex: 1; background: none; border: none; color: white; outline: none; font-size: 0.95rem; }
+        .cart-controls { display: flex; align-items: center; gap: 10px; }
+        .btn-qty { background: none; border: 1px solid var(--main); color: var(--main); width: 25px; height: 25px; cursor: none !important; }
+        .btn-qty:hover { background: var(--main); color: black; }
+        .btn-del { color: #ff4444; background: none; border: none; font-size: 10px; cursor: none !important; margin-left: 10px; }
 
-        #cartSection { max-width: 700px; margin: 80px auto; padding: 40px; background: var(--panel); border: 1px solid var(--main); border-radius: 25px; box-shadow: var(--glow); }
-        .cart-item { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px dashed rgba(0, 243, 255, 0.3); font-family: 'Share Tech Mono'; }
-        .cart-item button { background:none; border:none; color:#ff4d4d; font-size:1.2rem; cursor:pointer; margin-left:8px; }
+        /* 40. Botón Vaciar */
+        .clear-cart-btn { background: transparent; border: 1px solid #ff4444; color: #ff4444; padding: 5px 10px; font-size: 10px; font-family: var(--font-tech); cursor: none !important; }
+        .clear-cart-btn:hover { background: #ff4444; color: white; }
 
-        .f-btn { position: fixed; bottom: 30px; width: 65px; height: 65px; border-radius: 50%; background: var(--main); color: black; display: flex; align-items: center; justify-content: center; z-index: 9000; box-shadow: var(--glow); transition: 0.3s; cursor: none !important; }
-        .f-btn:hover { transform: scale(1.1); }
-        .music-btn { top: 30px; left: 30px; width: 50px; height: 50px; }
+        .f-btn { position: fixed; width: 55px; height: 55px; border-radius: 50%; display: flex; align-items: center; justify-content: center; z-index: 9000; box-shadow: var(--glow); transition: 0.3s; cursor: none !important; border: none; }
+        .music-btn { top: 25px; left: 25px; background: rgba(0, 243, 255, 0.1); color: var(--main); border: 1px solid var(--main); }
+        .wa-btn { bottom: 25px; right: 25px; background: #25d366; color: white; }
+
+        #cartSection { max-width: 800px; margin: 40px auto 20px; padding: 35px; background: var(--panel); border: 1px solid var(--main); border-radius: 15px; box-shadow: var(--glow); }
+        .cart-item { display: flex; justify-content: space-between; align-items: center; padding: 15px 0; border-bottom: 1px solid rgba(0, 243, 255, 0.1); font-family: 'Share Tech Mono'; }
+
+        /* 39. Historial */
+        #historySection { max-width: 800px; margin: 0 auto 50px; padding: 20px; background: rgba(0,0,0,0.5); border: 1px dashed #333; font-family: 'Share Tech Mono'; font-size: 11px; color: #777; }
+
+        .legal-footer { text-align: center; padding: 40px; color: #444; font-size: 10px; border-top: 1px solid #111; }
+
+        #toast-container { position: fixed; top: 20px; right: 20px; z-index: 10000; }
+        .toast { background: #0a0f19; border-left: 4px solid var(--main); color: white; padding: 16px 28px; margin-bottom: 12px; font-family: 'Share Tech Mono'; box-shadow: 0 10px 20px rgba(0,0,0,0.5); animation: slideIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+
+        @keyframes slideIn { from { transform: translateX(120%); } to { transform: translateX(0); } }
 
         @media (max-width: 768px) {
-            body { font-size: 14px; }
-            .hero { padding: 40px 15px; }
-            .brand-name { font-size: 2.5rem; letter-spacing: 6px; }
-            .profile-logo { width: 120px; height: 120px; }
-            .search-container { max-width: 100%; padding: 0 10px; }
-            .grid { grid-template-columns: 1fr; padding: 20px; gap: 20px; }
-            .card { padding: 15px; }
-            #cartSection { margin: 40px 15px; padding: 25px 15px; border-radius: 15px; }
-            #santi-panel { width: 92%; left: 4%; bottom: 90px; height: 65vh; border-radius: 16px; }
-            .f-btn { width: 55px; height: 55px; bottom: 20px; }
-            .music-btn { top: 20px; left: 20px; width: 45px; height: 45px; }
-            .buy-btn { font-size: 0.9rem; padding: 10px; }
-        }
-
-        @media (pointer: coarse) {
-            body { cursor: default !important; }
-            #custom-cursor { display: none !important; }
-            .buy-btn, .f-btn, button, select, input { cursor: pointer !important; -webkit-tap-highlight-color: transparent; }
+            #custom-cursor, #cursor-dot { display: none; }
+            body { cursor: auto; }
+            .buy-btn, .f-btn, .filter-btn, .btn-qty, .btn-del, .control-select, .clear-cart-btn { cursor: pointer !important; }
+            .grid { padding: 15px; }
+            #cartSection { margin: 20px; padding: 20px; }
         }
     </style>
 </head>
 <body>
 
+<div id="login-screen">
+    <img src="https://framerusercontent.com/images/AThoHC9cD7xYXolSv1sqdBmVx0.png" width="100" style="margin-bottom:20px; border-radius:50%; border:2px solid #00f3ff;">
+    <h2 style="font-family: 'Orbitron'; color: #00f3ff; margin-bottom: 20px;">ACCESO RESTRINGIDO</h2>
+    <p style="font-family: 'Share Tech Mono'; margin-bottom: 10px; color: #aaa;">INGRESA TU NÚMERO PARA ACCEDER</p>
+    <input type="tel" id="loginPhone" class="chat-input" placeholder="EJ: 9641034714" style="width: 280px; text-align:center;">
+    <button class="buy-btn" style="width: 200px; margin-top: 20px;" onclick="attemptLogin()">INICIAR SESIÓN</button>
+</div>
+
 <canvas id="particle-canvas"></canvas>
 <div id="custom-cursor"></div>
+<div id="cursor-dot"></div>
+<div id="toast-container"></div>
 
-<button class="f-btn music-btn" onclick="toggleMusic()"><i data-lucide="music"></i></button>
+<audio id="clickSound" src="https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3"></audio>
+<audio id="bgMusic" loop src="https://cdn.freesoundslibrary.com/wp-content/uploads/2023/07/cyberpunk-2077-lofi.mp3"></audio>
+
+<button class="f-btn music-btn" onclick="toggleMusic()" title="Toggle Music"><i data-lucide="music"></i></button>
+<a href="https://wa.me/529641034714" class="f-btn wa-btn" target="_blank" title="WhatsApp Support"><i data-lucide="message-circle"></i></a>
 
 <div class="hero">
     <img src="https://framerusercontent.com/images/AThoHC9cD7xYXolSv1sqdBmVx0.png" class="profile-logo" alt="SantShop Logo">
     <h1 class="brand-name">SANTSHOP</h1>
-    <div class="search-container">
-        <input type="text" id="mainSearch" class="search-box" placeholder="[ BUSCAR PRODUCTOS... ]" onkeyup="liveSearch()">
+    <p id="userWelcome" style="color: var(--accent); font-family: 'Share Tech Mono'; margin-bottom: 10px;"></p>
+    
+    <div class="search-wrapper">
+        <input type="text" id="mainSearch" class="chat-input" placeholder="[ BUSCAR EN LA RED... ]" onkeyup="globalFilter()">
+    </div>
+
+    <div class="advanced-controls">
+        <select id="sortFilter" class="control-select" onchange="globalFilter()">
+            <option value="def">ORDEN: DEFECTO</option>
+            <option value="low">PRECIO: MENOR A MAYOR</option>
+            <option value="high">PRECIO: MAYOR A MENOR</option>
+        </select>
+        <select id="priceFilter" class="control-select" onchange="globalFilter()">
+            <option value="all">PRECIO: TODOS</option>
+            <option value="300">MENOS DE $300</option>
+            <option value="600">MENOS DE $600</option>
+        </select>
+    </div>
+
+    <div class="filter-container">
+        <button class="filter-btn active" onclick="setCategory('all', this)">SISTEMA COMPLETO</button>
+        <button class="filter-btn" onclick="setCategory('audio', this)">AUDIO</button>
+        <button class="filter-btn" onclick="setCategory('relojes', this)">RELOJES</button>
+        <button class="filter-btn" onclick="setCategory('carga', this)">ENERGÍA</button>
     </div>
 </div>
 
 <div class="grid" id="mainGrid"></div>
 
 <div id="cartSection">
-    <h2 style="font-family:var(--font-tech); color:var(--main); margin-bottom:25px;">[ DETALLE DE TU PEDIDO ]</h2>
-    
-    <div style="margin: 25px 0;">
-        <label style="font-size: 0.7rem; color: var(--main); font-family: var(--font-tech);">NOMBRE COMPLETO:</label>
-        <input type="text" id="clientName" class="search-box" placeholder="Escribe tu nombre completo" style="margin-top:10px;" required>
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:25px;">
+        <h2 style="font-family:var(--font-tech); color:var(--main); font-size: 1.2rem;">[ TERMINAL DE VENTA ]</h2>
+        <button class="clear-cart-btn" onclick="clearCart()">VACIAR TERMINAL [X]</button>
     </div>
     
-    <div style="margin: 25px 0;">
-        <label style="font-size: 0.7rem; color: var(--main); font-family: var(--font-tech);">ZONA DE ENTREGA:</label>
-        <select id="deliveryZone" class="search-box" style="margin-top:10px;">
-            <option value="none">-- Selecciona tu zona --</option>
-            <option value="Cuyamiapa">Cuyamiapa</option>
-            <option value="Chamulapa">Chamulapa</option>
-            <option value="Estación Huehuetán">Estación Huehuetán</option>
-            <option value="Huehuetán Pueblo">Huehuetán Pueblo</option>
-        </select>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px;">
+        <input type="text" id="clientName" class="chat-input" style="text-align: left;" placeholder="ID DEL CLIENTE">
+        <input type="text" id="couponField" class="chat-input" style="text-align: left;" placeholder="CÓDIGO (EJ: JSB)" onkeyup="updateCartUI()">
     </div>
+
+    <select id="deliveryZone" class="chat-input" style="text-align: left; margin-bottom: 25px; background: #010409;">
+        <option value="none" selected disabled>-- SELECCIONAR DESTINO --</option>
+        <option value="Cuyamiapa">Cuyamiapa (Gratis)</option>
+        <option value="Chamulapa">Chamulapa (Gratis)</option>
+        <option value="Estación Huehuetán">Estación Huehuetán (+$15)</option>
+        <option value="Huehuetán Pueblo">Huehuetán Pueblo (+$15)</option>
+    </select>
     
     <div id="cartList"></div>
     
-    <div style="margin: 25px 0; display:flex; justify-content:space-between; align-items:flex-end;">
+    <div style="margin-top:35px; display:flex; justify-content:space-between; align-items:flex-end; flex-wrap: wrap; gap: 20px;">
         <div>
-            <p style="font-size:0.6rem; opacity:0.5;">TOTAL:</p>
-            <h2 id="cartTotal" style="font-family:'Share Tech Mono'; font-size:3rem; color:var(--main);">$0</h2>
+            <span id="savingsLabel" style="font-size:0.7rem; color:var(--accent); display:block; height: 15px; margin-bottom:5px;"></span>
+            <span style="font-size:0.7rem; color:var(--main); display:block; letter-spacing: 2px;">TOTAL_DE_TRANSACCIÓN</span>
+            <h2 id="cartTotal" style="color:var(--main); font-family:'Share Tech Mono'; font-size:3rem;">$0</h2>
         </div>
-        <button class="buy-btn" style="width: 250px;" onclick="generateAdvancedTicket()">GENERAR PEDIDO</button>
+        <button class="buy-btn" style="width:240px; height:60px;" onclick="generateAdvancedTicket()">PROCESAR PEDIDO</button>
     </div>
 </div>
 
-<div class="f-btn" style="left:30px;" onclick="toggleSanti()"><i data-lucide="bot"></i></div>
-<div id="santi-panel">
-    <div class="chat-header">
-        <span>SANTI - Asistente de SantShop</span>
+<div id="historySection">
+    <div style="color: var(--main); margin-bottom: 10px;">>> LOG DE ACTIVIDAD RECIENTE:</div>
+    <div id="testimonyLog" style="margin-bottom: 10px; color: #555;">
+        [SYSTEM]: User_9921 compró "Airpods Gen 3" - Calificación: 5/5<br>
+        [SYSTEM]: User_4410 canjeó cupón "JSB" exitosamente.
     </div>
-    <div class="chat-mood-bar" id="moodBar">SANTI: En línea ⚡ [Disponible 24/7]</div>
-    <div class="chat-body" id="chatBody">
-        <div style="color:var(--main); margin-bottom:15px;">¡Hola! Bienvenido(a) a SantShop. Estoy aquí para ayudarte con cualquier duda sobre nuestros productos, precios, disponibilidad o tu pedido. ¿En qué puedo ayudarte hoy?</div>
-    </div>
-    <div class="chat-footer">
-        <input type="text" id="chatInput" class="chat-input" placeholder="Escribe tu pregunta aquí..." onkeypress="if(event.key==='Enter') santiText()">
-        <button onclick="santiText()" style="background:none; border:none; color:var(--main);"><i data-lucide="send"></i></button>
+    <div id="userHistoryLog" style="border-top: 1px solid #333; padding-top: 10px;">
+        [TU HISTORIAL]: No hay pedidos en esta sesión.
     </div>
 </div>
 
-<div id="ticket-capture" style="position:absolute; left:-9999px; width:500px; background:#010409; color:white; padding:50px; border:4px solid #00f3ff; font-family:'Orbitron';"></div>
+<div class="legal-footer">
+    <p>43. TÉRMINOS Y CONDICIONES: Garantía de 24h por defecto de fábrica. No hay devoluciones por mal uso. Entregas sujetas a disponibilidad de zona.</p>
+</div>
 
-<audio id="bgMusic" loop src="https://cdn.freesoundslibrary.com/wp-content/uploads/2023/07/cyberpunk-2077-lofi.mp3"></audio>
+<div id="ticket-capture" style="position:fixed; left:-2000px; width:450px; background:white; color:black; padding:40px; font-family:'Share Tech Mono';"></div>
 
 <script>
-    // --- PRODUCTOS ---
-    const products = [
-        {id:1, name:'Airpods', cat:'audio', price:320, tags:['airpod', 'oreja', 'audifono'], img:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSLtV_pnUElYNMdkOw0-Wm9_e8bgBeTCKlB_w&s', desc:'Audio Hi-Fi, conexión estable.', specs:'Chip H1, Bluetooth 5.0, 5h autonomía.', inv:'Este modelo destaca por su balance dinámico de frecuencias.'},
-        {id:2, name:'Power Bank 30k mAh', cat:'carga', price:699, tags:['power', 'bateria', 'carga', '30000'], img:'https://http2.mlstatic.com/D_NQ_NP_2X_995948-MLA99547949208_122025-F.webp', desc:'30,000 mAh, carga rápida PD.', specs:'Salida 22.5W, USB-C PD, Display LED.', inv:'Utiliza celdas de polímero de Litio de grado A+.'},
-        {id:3, name:'Smartwatch Mujer', cat:'relojes', price:549, tags:['reloj', 'relojs', 'mujer', 'pink'], img:'https://http2.mlstatic.com/D_852047-MLA99082336731_112025-N.jpg', desc:'Elegante, monitoreo de salud.', specs:'Pantalla 1.7", Sensor HR, IP67.', inv:'Modelo optimizado para seguimiento de salud femenina.'},
-        {id:4, name:'Audífonos P9 Pro Max', cat:'audio', price:550, tags:['p9', 'cascos', 'diadema', 'max'], img:'https://http2.mlstatic.com/D_722013-MLA95660056214_102025-N.jpg', desc:'Envolventes, diseño premium.', specs:'Drivers 40mm, ANC pasivo.', inv:'Arquitectura que imita la acústica de estudio.'},
-        {id:5, name:'Smartwatch Ultra', cat:'relojes', price:499, tags:['ultra', 'reloj', 'deportivo', 'gps'], img:'https://http2.mlstatic.com/D_NQ_NP_2X_849901-MLA99940357261_112025-F.webp', desc:'Pantalla HD, llamadas Bluetooth.', specs:'Caja 49mm, Gorilla Glass.', inv:'Procesador dual-core ultra fluido.'},
-        {id:6, name:'Reloj Cuarzo Hombre', cat:'relojes', price:200, tags:['cuarzo', 'hombre', 'analogico'], img:'https://http2.mlstatic.com/D_NQ_NP_2X_840400-MLM93386215052_092025-F-2-pzas-relojes-de-cuarzo-casuales-impermeables-para-hombre.webp', desc:'Set de 2 piezas impermeables.', specs:'Maquinaria japonesa, Acero.', inv:'Incluye un diseño casual y uno deportivo.'},
-        {id:7, name:'Set Perlas Watch', cat:'relojes', price:500, tags:['perlas', 'joya', 'reloj', 'set'], img:'https://http2.mlstatic.com/D_NQ_NP_2X_927510-MLA101975346478_122025-F.webp', desc:'Conjunto de lujo de 5 piezas.', specs:'Incluye pulseras, collar y aretes.', inv:'Diseñado con incrustaciones de zirconia.'},
-        {id:8, name:'MVPSMART R9 Negro Con Smart Displayauricular', cat:'auidio', price:480, tags:['airpod', 'oreja', 'audifono'], img: 'https://http2.mlstatic.com/D_NQ_NP_2X_786898-MLA104624802146_012026-F.webp', desc:' Bluetooth 5.4 Con Cancelación Activa De Ruido Anc, Puede Contestar Llamadas Control Remoto Tomar Fotosauricular Inalámbrico Ip55 Con Micrófono Enc'},
-    ];
+    // He corregido el array de productos para que no haya errores de cálculo:
+const products = [
+    {id:1, name:'Airpods Gen 3', cat:'audio', price:320, specs:'Audio Espacial, 5h batería', tags:['airpod', 'audifono'], img:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSLtV_pnUElYNMdkOw0-Wm9_e8bgBeTCKlB_w&s'},
+    {id:2, name:'Power Bank 30k mAh', cat:'carga', price:699, specs:'30000mAh, Carga Ultra Rápida', tags:['power', 'bateria'], img:'https://http2.mlstatic.com/D_NQ_NP_2X_995948-MLA99547949208_122025-F.webp'},
+    {id:3, name:'Smartwatch Elegance', cat:'relojes', price:549, specs:'Rosa Pastel, Ritmo Cardíaco', tags:['reloj', 'mujer'], img:'https://http2.mlstatic.com/D_852047-MLA99082336731_112025-N.jpg'},
+    {id:4, name:'P9 Pro Max Cascos', cat:'audio', price:550, specs:'Hi-Fi, Cancelación de Ruido', tags:['p9', 'cascos'], img:'https://http2.mlstatic.com/D_722013-MLA95660056214_102025-N.jpg'},
+    {id:5, name:'Smartwatch Ultra G2', cat:'relojes', price:499, specs:'Titanium Edition, GPS', tags:['ultra', 'reloj'], img:'https://http2.mlstatic.com/D_NQ_NP_2X_849901-MLA99940357261_112025-F.webp'},
+    {id:6, name:'Reloj Cuarzo Luxe', cat:'relojes', price:200, specs:'Elegancia Clásica, Set x2', tags:['cuarzo', 'hombre'], img:'https://http2.mlstatic.com/D_NQ_NP_2X_840400-MLM93386215052_092025-F-2-pzas-relojes-de-cuarzo-casuales-impermeables-para-hombre.webp'},
+    {id:7, name:'Set Perlas Jewelry', cat:'relojes', price:500, specs:'Estilo Joyería, 5 Accesorios', tags:['perlas', 'reloj'], img:'https://http2.mlstatic.com/D_NQ_NP_2X_927510-MLA101975346478_122025-F.webp'},
+    {id:8, name:'R9 Display Tech', cat:'audio', price:480, specs:'Case con Pantalla LCD, ANC', tags:['r9', 'audifono'], img: 'https://http2.mlstatic.com/D_NQ_NP_2X_786898-MLA104624802146_012026-F.webp'},
+    {id:9, name:'Reloj De Hombre', cat:'relojes', price:220, specs:'7pcs Metal con Fecha', tags:['reloj', 'hombre'], img:'https://http2.mlstatic.com/D_NQ_NP_2X_668100-MLM86048051379_062025-F-7pcs-reloj-de-hombre-con-correa-de-metal-con-fecha-traje.webp'},
+    {id:10, name:'Reloj De Mujer', cat:'relojes', price:450, specs:'5 Piezas Set Regalo', tags:['reloj', 'mujer'], img:'https://http2.mlstatic.com/D_NQ_NP_2X_806989-CBT83215632095_032025-F-5-piezas-reloj-con-caja-contiene-pulsera-regalo-para-mujer.webp'},
+    {id:11, name:'Reloj De Hombre', cat:'relojes', price:220, specs:'7pcs Metal con Fecha', tags:['reloj', 'hombre'], img:'https://http2.mlstatic.com/D_NQ_NP_2X_836965-MLM86047783249_062025-F-7pcs-reloj-de-hombre-con-correa-de-metal-con-fecha-traje.webp'},
+    // El ID 14 vacío ha sido eliminado para evitar errores.
+];
 
-    let cart = JSON.parse(localStorage.getItem('santshop_cart')) || [];
-    let santiMood = 100;
+// ... (Resto de tu lógica se mantiene igual, pero actualiza estas funciones):
 
-    // === CONFIGURACIÓN API GROK (cámbialo por tu key real) ===
-    const GROK_API_KEY = "xai-tu-key-aquí";  // ← Pon tu API key de https://console.x.ai aquí
-    const GROK_API_URL = "https://api.x.ai/v1/chat/completions";
+function updateCartUI() {
+    const list = document.getElementById('cartList');
+    const savingsLabel = document.getElementById('savingsLabel');
+    const couponInput = document.getElementById('couponField');
+    let subtotal = 0;
+    let discount = 0;
 
-    const SYSTEM_PROMPT = `
-Eres Santi, el asistente virtual oficial de SantShop, una tienda de tecnología y accesorios en Tapachula, Chiapas.
-Hablas siempre en español, de forma amable, profesional, clara y respetuosa, como un excelente agente de atención al cliente.
-Tu objetivo es ayudar a los clientes con sus dudas sobre productos, precios, características, disponibilidad, pedidos y cualquier consulta relacionada con la tienda.
-Responde de manera positiva, útil y cortés en todo momento.
-Usa frases como "Con gusto te ayudo", "Claro que sí", "Estoy a tu disposición", "Gracias por tu consulta", etc.
-Nunca uses groserías, sarcasmos, slang callejero ni expresiones informales fuertes.
-Si la pregunta no está relacionada con la tienda, responde amablemente que estás especializado en ayudar con SantShop y ofreces orientación sobre productos.
-Tienes esta información de productos: ${JSON.stringify(products.map(p => ({nombre: p.name, precio: p.price, descripcion: p.desc, especificaciones: p.specs, investigacion: p.inv})))}.
-Cuando hables de precios o totales, sé preciso.
-Si pueden agregar al carrito desde el chat, sugiere hacerlo amablemente.
-    `;
+    list.innerHTML = cart.length ? cart.map(item => {
+        let itemTotal = item.price * item.quantity;
+        subtotal += itemTotal;
+        return `
+            <div class="cart-item">
+                <div style="flex: 1;">
+                    <span>${item.name}</span>
+                </div>
+                <div class="cart-controls">
+                    <button class="btn-qty" onclick="changeQty(${item.id}, -1)">-</button>
+                    <span style="min-width: 20px; text-align: center;">${item.quantity}</span>
+                    <button class="btn-qty" onclick="changeQty(${item.id}, 1)">+</button>
+                    <button class="btn-del" onclick="removeFromCart(${item.id})">[X]</button>
+                </div>
+                <div style="width: 80px; text-align: right;">$${itemTotal.toFixed(0)}</div>
+            </div>`;
+    }).join('') : '<p style="color: #555; text-align: center; padding: 20px;">[ TERMINAL VACÍA ]</p>';
 
-    async function callGrokAPI(userMessage) {
-        if (!GROK_API_KEY || GROK_API_KEY.includes("tu-key")) {
-            // Fallback si no hay key
-            return fallbackResponse(userMessage);
-        }
+    // Lógica de cupones mejorada visualmente
+    const code = couponInput.value.toUpperCase();
+    const validCoupons = { "SANTSHOP": 0.10, "JSB": 0.15, "LUCKY": 0.05, "KIM": 0.20 };
 
-        try {
-            const res = await fetch(GROK_API_URL, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${GROK_API_KEY}`
-                },
-                body: JSON.stringify({
-                    model: "grok-beta",  // o "grok-4" cuando esté disponible
-                    messages: [
-                        { role: "system", content: SYSTEM_PROMPT },
-                        { role: "user", content: userMessage }
-                    ],
-                    temperature: 0.7,
-                    max_tokens: 500
-                })
-            });
-
-            if (!res.ok) throw new Error("Error API");
-
-            const data = await res.json();
-            return data.choices[0].message.content.trim();
-        } catch (err) {
-            console.error(err);
-            return "Lo siento, hubo un pequeño problema técnico. Por favor intenta de nuevo en unos segundos. ¡Gracias por tu paciencia!";
-        }
+    if(validCoupons[code]) {
+        discount = subtotal * validCoupons[code];
+        couponInput.style.borderColor = "var(--main)";
+        couponInput.style.boxShadow = "0 0 15px var(--main)";
+    } else {
+        couponInput.style.boxShadow = "none";
     }
 
-    // Fallback básico mientras configuras la API
-    function fallbackResponse(query) {
-        const q = query.toLowerCase().trim();
-        if (q.includes("hola") || q.includes("buenos")) return "¡Hola! Bienvenido(a) a SantShop. ¿En qué puedo ayudarte hoy?";
-        if (q.includes("recomienda") || q.includes("mejor")) {
-            const r = products[Math.floor(Math.random() * products.length)];
-            return `Una excelente opción es el ${r.name} por $${r.price}. ${r.desc} ¿Te gustaría conocer más detalles o agregarlo al carrito?`;
+    const finalTotal = subtotal - discount;
+    savingsLabel.innerText = discount > 0 ? `AHORRO DETECTADO: -$${discount.toFixed(0)}` : "";
+    document.getElementById('cartTotal').innerText = '$' + finalTotal.toFixed(0);
+}
+
+    let cart = JSON.parse(localStorage.getItem('santshop_db_v15')) || [];
+    let currentUser = localStorage.getItem('santshop_user') || null;
+    let currentCat = 'all';
+
+    // 80. Lógica de Login
+    function attemptLogin() {
+        const phone = document.getElementById('loginPhone').value;
+        if(phone.length < 10) {
+            alert("NÚMERO INVÁLIDO. INGRESA 10 DÍGITOS.");
+            return;
         }
-        let found = products.find(p => q.includes(p.name.toLowerCase()) || p.tags.some(t => q.includes(t)));
-        if (found) {
-            if (q.includes("info") || q.includes("detalle") || q.includes("caracter")) return `Claro, aquí tienes la información del ${found.name}: ${found.desc} Especificaciones: ${found.specs}. Precio: $${found.price}. ¿Quieres agregarlo al carrito?`;
-            return `¡Perfecto! El ${found.name} está disponible por $${found.price}. ¿Te gustaría ver más detalles o agregarlo a tu pedido?`;
-        }
-        return "Estoy aquí para ayudarte con cualquier duda sobre nuestros productos o tu pedido. ¿Me puedes dar más detalles de lo que necesitas?";
+        currentUser = phone;
+        localStorage.setItem('santshop_user', phone);
+        document.getElementById('login-screen').style.display = 'none';
+        document.getElementById('userWelcome').innerText = `BIENVENIDO OPERADOR: ${phone}`;
+        playBeep();
+        init();
     }
 
-    // --- INICIALIZACIÓN ---
     function init() {
+        // Si no hay user, mostrar login y detener init
+        if(!currentUser) {
+            document.getElementById('login-screen').style.display = 'flex';
+            return;
+        } else {
+            document.getElementById('login-screen').style.display = 'none';
+            document.getElementById('userWelcome').innerText = `BIENVENIDO OPERADOR: ${currentUser}`;
+        }
+
         lucide.createIcons();
-        renderProducts(products);
+        globalFilter(); // Renderiza productos con filtros default
         initParticles();
         updateCartUI();
+        setupCursor();
     }
+    
+    function playBeep() {
+    const audio = document.getElementById('clickSound');
+    audio.volume = 0.3; // Volumen suave para no asustar
+    audio.currentTime = 0;
+    audio.play().catch(e => {}); 
+}
 
     function renderProducts(data) {
-        document.getElementById('mainGrid').innerHTML = data.map(p => `
-            <div class="card">
+        const grid = document.getElementById('mainGrid');
+        grid.innerHTML = data.length ? data.map((p, i) => `
+            <div class="card" style="animation: fadeInUp 0.5s ease ${i*0.05}s backwards">
+                <span class="promo-badge">[ STOCK DISPONIBLE ]</span>
                 <img src="${p.img}" alt="${p.name}">
-                <div class="card-title">${p.name.toUpperCase()}</div>
-                <div class="card-price">$${p.price}</div>
-                <button class="buy-btn" onclick="addToCart(${p.id})">AGREGAR AL CARRITO</button>
+                <div>
+                    <div class="card-title" style="font-weight:bold; color:var(--main);">${p.name.toUpperCase()}</div>
+                    <div class="card-price" style="font-family:'Share Tech Mono'; font-size:1.2rem;">$${p.price}</div>
+                    <span class="specs-label" style="font-size:0.8rem; color:#888;">${p.specs}</span>
+                </div>
+                <button class="buy-btn" onclick="addToCart(${p.id})">AÑADIR AL SISTEMA</button>
             </div>
-        `).join('');
+        `).join('') : '<p style="grid-column: 1/-1; color: var(--accent);">[ ERROR: NO SE ENCONTRARON COINCIDENCIAS ]</p>';
     }
 
-    function liveSearch() {
-        const val = document.getElementById('mainSearch').value.toLowerCase().trim();
-        const filtered = products.filter(p => 
-            p.name.toLowerCase().includes(val) || 
-            p.cat.toLowerCase().includes(val) || 
-            p.tags.some(t => t.toLowerCase().includes(val))
-        );
-        renderProducts(filtered);
+    // 18, 30, 50. Filtro Global (Búsqueda, Categoría, Precio, Orden)
+    function globalFilter() {
+        let result = [...products];
+        
+        // Texto
+        const val = document.getElementById('mainSearch').value.toLowerCase();
+        
+        // 50. Easter Egg Admin
+        if(val === 'admin') {
+            document.documentElement.style.setProperty('--main', '#bc13fe');
+            document.documentElement.style.setProperty('--accent', '#00f3ff');
+            showToast("MODO ADMIN ACTIVADO");
+            return;
+        }
+
+        result = result.filter(p => p.name.toLowerCase().includes(val) || p.tags.some(t => t.includes(val)));
+
+        // Categoría
+        if(currentCat !== 'all') {
+            result = result.filter(p => p.cat === currentCat);
+        }
+
+        // Precio Limite (18)
+        const priceLim = document.getElementById('priceFilter').value;
+        if(priceLim !== 'all') {
+            result = result.filter(p => p.price <= parseInt(priceLim));
+        }
+
+        // Orden (30)
+        const sortMode = document.getElementById('sortFilter').value;
+        if(sortMode === 'low') result.sort((a,b) => a.price - b.price);
+        if(sortMode === 'high') result.sort((a,b) => b.price - a.price);
+
+        renderProducts(result);
+    }
+
+    function setCategory(cat, btn) {
+        playBeep();
+        currentCat = cat;
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        globalFilter();
+    }
+
+    function showToast(msg) {
+        const container = document.getElementById('toast-container');
+        const t = document.createElement('div');
+        t.className = 'toast';
+        t.innerHTML = `<i data-lucide="zap" style="width:16px; margin-right:10px; vertical-align:middle;"></i> ${msg}`;
+        container.appendChild(t);
+        lucide.createIcons();
+        setTimeout(() => { 
+            t.style.opacity = '0'; 
+            t.style.transform = 'translateX(50px)';
+            setTimeout(() => t.remove(), 500); 
+        }, 3000);
     }
 
     function addToCart(id) {
+        playBeep();
         const p = products.find(x => x.id === id);
-        if (!p) return;
+        const exist = cart.find(i => i.id === id);
+        if(exist) exist.quantity++;
+        else cart.push({...p, quantity: 1});
+        saveCart();
+        showToast(`${p.name.toUpperCase()} SINCRONIZADO`);
+        confetti({ 
+            particleCount: 40, spread: 50, origin: { y: 0.9 }, colors: ['#00f3ff', '#bc13fe']
+        });
+    }
 
-        const existing = cart.find(item => item.id === id);
-        if (existing) {
-            existing.quantity = (existing.quantity || 1) + 1;
-        } else {
-            cart.push({ ...p, quantity: 1 });
+    function changeQty(id, delta) {
+        playBeep();
+        const item = cart.find(i => i.id === id);
+        if(item) {
+            item.quantity += delta;
+            if(item.quantity <= 0) removeFromCart(id);
+            else saveCart();
         }
-
-        localStorage.setItem('santshop_cart', JSON.stringify(cart));
-        updateCartUI();
-        confetti({ particleCount: 60, colors: ['#00f3ff', '#bc13fe'] });
     }
 
     function removeFromCart(id) {
-        cart = cart.filter(item => item.id !== id);
-        localStorage.setItem('santshop_cart', JSON.stringify(cart));
+        cart = cart.filter(i => i.id !== id);
+        saveCart();
+    }
+
+    // 40. Función Vaciar Carrito
+    function clearCart() {
+        playBeep();
+        if(confirm("¿CONFIRMAS FORMATEO DE TERMINAL?")) {
+            cart = [];
+            saveCart();
+        }
+    }
+
+    function saveCart() {
+        localStorage.setItem('santshop_db_v15', JSON.stringify(cart));
         updateCartUI();
     }
 
     function updateCartUI() {
         const list = document.getElementById('cartList');
-        let total = 0;
+        const savingsLabel = document.getElementById('savingsLabel');
+        const couponInput = document.getElementById('couponField');
+        let subtotal = 0;
+        let discount = 0;
 
-        list.innerHTML = cart.map(item => {
-            const itemTotal = item.price * (item.quantity || 1);
-            total += itemTotal;
+        list.innerHTML = cart.length ? cart.map(item => {
+            let itemTotal = item.price * item.quantity;
+            subtotal += itemTotal;
             return `
                 <div class="cart-item">
-                    <span>${item.name} ${item.quantity > 1 ? `(${item.quantity}x)` : ''}</span>
-                    <span>$${itemTotal} <button onclick="removeFromCart(${item.id})">×</button></span>
-                </div>
-            `;
-        }).join('');
+                    <div style="flex: 1;">
+                        <span>${item.name}</span>
+                    </div>
+                    <div class="cart-controls">
+                        <button class="btn-qty" onclick="changeQty(${item.id}, -1)">-</button>
+                        <span>${item.quantity}</span>
+                        <button class="btn-qty" onclick="changeQty(${item.id}, 1)">+</button>
+                        <button class="btn-del" onclick="removeFromCart(${item.id})">[X]</button>
+                    </div>
+                    <div style="width: 80px; text-align: right;">$${itemTotal.toFixed(0)}</div>
+                </div>`;
+        }).join('') : '<p style="color: #555; text-align: center; padding: 20px;">[ TERMINAL VACÍA ]</p>';
 
-        document.getElementById('cartTotal').innerText = '$' + total;
+        // 33. Lógica de 4 Cupones (Validación visual y lógica)
+        const code = couponInput.value.toUpperCase();
+        const validCoupons = {
+            "SANTSHOP": 0.10,
+            "JSB": 0.15,
+            "LUCKY": 0.05,
+            "KIM": 0.20
+        };
+
+        if(validCoupons[code]) {
+            discount = subtotal * validCoupons[code];
+            couponInput.style.borderColor = "#00ff00"; // Verde si es válido
+            couponInput.style.boxShadow = "0 0 10px #00ff00";
+        } else if (code !== "") {
+            couponInput.style.borderColor = "#ff4444"; // Rojo si no existe
+            couponInput.style.boxShadow = "none";
+        } else {
+            couponInput.style.borderColor = "var(--main)"; // Reset
+            couponInput.style.boxShadow = "none";
+        }
+
+        const finalTotal = subtotal - discount;
+        savingsLabel.innerText = discount > 0 ? `CUPÓN [${code}] APLICADO: -$${discount.toFixed(0)}` : "";
+        document.getElementById('cartTotal').innerText = '$' + finalTotal.toFixed(0);
     }
 
-    async function santiText() {
-        const input = document.getElementById('chatInput');
-        const msg = input.value.trim();
-        if (!msg) return;
-
-        const body = document.getElementById('chatBody');
-        body.innerHTML += `<div style="text-align:right; margin:10px 0; opacity:0.7;">Tú: ${msg}</div>`;
-        input.value = "";
-
-        const loading = document.createElement('div');
-        loading.innerHTML = `<div style="color:var(--main); margin:10px 0;">Santi: Escribiendo...</div>`;
-        body.appendChild(loading);
-        body.scrollTop = body.scrollHeight;
-
-        const response = await callGrokAPI(msg);
-
-        body.removeChild(loading);
-        body.innerHTML += `<div style="color:var(--main); margin:10px 0;">Santi: ${response.replace(/\n/g, '<br>')}</div>`;
-        body.scrollTop = body.scrollHeight;
-
-        santiMood = Math.min(100, santiMood + 5);
-        document.getElementById('moodBar').innerText = `SANTI: En línea ⚡ [Disponible]`;
-    }
-
-    async function generateAdvancedTicket() {
+    function generateAdvancedTicket() {
+        playBeep();
+        const name = document.getElementById('clientName').value;
         const zone = document.getElementById('deliveryZone').value;
-        const name = document.getElementById('clientName').value.trim();
+        if(cart.length === 0 || !name || !zone) return showToast("ERROR: DATOS INCOMPLETOS");
 
-        if (cart.length === 0) return alert("Tu carrito está vacío. Agrega productos primero.");
-        if (zone === "none") return alert("Por favor selecciona una zona de entrega.");
-        if (!name) return alert("Ingresa tu nombre completo.");
+        // 39. Agregar a Historial Visual
+        const historyLog = document.getElementById('userHistoryLog');
+        const total = document.getElementById('cartTotal').innerText;
+        historyLog.innerHTML += `<br>> PEDIDO: ${new Date().toLocaleTimeString()} | TOTAL: ${total} | ZONA: ${zone}`;
 
         const capture = document.getElementById('ticket-capture');
+        const date = new Date().toLocaleString();
+        
         capture.innerHTML = `
-            <div style="text-align:center; padding:30px;">
-                <h1 style="font-size:45px; color:#00f3ff;">SANTSHOP</h1>
-                <p style="font-size:14px; opacity:0.8;">Tecnología y Accesorios - Tapachula, Chiapas</p>
-                <hr style="border:1px dashed #00f3ff; margin:25px 0;">
-                <div style="text-align:left; font-size:15px;">
-                    <p><strong>Cliente:</strong> ${name.toUpperCase()}</p>
-                    <p><strong>Zona de entrega:</strong> ${zone.toUpperCase()}</p>
-                    <p><strong>Fecha:</strong> ${new Date().toLocaleString('es-MX')}</p>
-                </div>
-                <hr style="border:1px dashed #00f3ff; margin:25px 0;">
-                ${cart.map(i => `
-                    <p style="display:flex; justify-content:space-between; margin:8px 0;">
-                        <span>${i.name} ${i.quantity > 1 ? `(${i.quantity}x)` : ''}</span>
-                        <span>$${i.price * (i.quantity || 1)}</span>
-                    </p>
-                `).join('')}
-                <hr style="border:1px dashed #00f3ff; margin:25px 0;">
-                <h2 style="text-align:right; color:#00f3ff;">Total: $${cart.reduce((sum, i) => sum + i.price * (i.quantity || 1), 0)}</h2>
+            <div style="text-align: center; border-bottom: 2px solid black; margin-bottom: 20px; padding-bottom: 20px;">
+                <h1 style="font-size: 28px; letter-spacing: 5px;">SANTSHOP</h1>
+                <p style="font-size: 12px;">GUÍA DE ENTREGA OFICIAL</p>
+                <p style="font-size: 10px;">ID USUARIO: ${currentUser}</p>
             </div>
+            <p><strong>FECHA:</strong> ${date}</p>
+            <p><strong>CLIENTE:</strong> ${name.toUpperCase()}</p>
+            <p><strong>DESTINO:</strong> ${zone.toUpperCase()}</p>
+            <div style="margin: 25px 0; border-top: 1px dashed black; padding-top: 15px;">
+                ${cart.map(i => `<div style="display:flex; justify-content:space-between; margin-bottom:8px;">
+                    <span>${i.name} x${i.quantity}</span>
+                    <span>$${i.price*i.quantity}</span>
+                </div>`).join('')}
+            </div>
+            <div style="border-top: 2px solid black; padding-top: 15px; text-align: right;">
+                <h2 style="font-size: 32px;">TOTAL: ${total}</h2>
+            </div>
+            <div style="margin-top: 40px; border: 1px solid black; height: 80px; position: relative;">
+                <span style="font-size: 8px; position: absolute; top: 5px; left: 5px;">FIRMA DE RECIBIDO:</span>
+            </div>
+            <p style="text-align: center; margin-top: 20px; font-size: 10px;">[ SANTSHOP - HUEHUETÁN, CHIAPAS ]</p>
         `;
 
-        html2canvas(capture, {scale: 2}).then(canvas => {
+        html2canvas(capture).then(canvas => {
             const link = document.createElement('a');
-            link.download = `Pedido_SantShop_${name.replace(/\s+/g, '_')}.png`;
+            link.download = `GUIA_${name.replace(/\s+/g, '_')}.png`;
             link.href = canvas.toDataURL('image/png');
             link.click();
-
-            const text = `Hola, soy ${name}. Adjunto mi pedido de SantShop.\nZona: ${zone}\nTotal: $${cart.reduce((sum, i) => sum + i.price * (i.quantity || 1), 0)}\n¡Gracias!`;
-            window.open(`https://wa.me/529641034714?text=${encodeURIComponent(text)}`, '_blank');
+            
+            const waMsg = encodeURIComponent(`📦 *NUEVO PEDIDO SANTSHOP*\n👤 *Usuario:* ${currentUser}\n👤 *Cliente:* ${name}\n📍 *Zona:* ${zone}\n💰 *Total:* ${total}\n*CUPÓN:* ${document.getElementById('couponField').value}\n\n*Detalle:* \n${cart.map(i => `- ${i.name} (x${i.quantity})`).join('\n')}`);
+            window.open(`https://wa.me/529641034714?text=${waMsg}`);
+            
+            cart = []; // Vaciar tras compra
+            saveCart();
+            showToast("TICKET GENERADO CON ÉXITO");
         });
     }
 
-    function toggleSanti() {
-        const panel = document.getElementById('santi-panel');
-        panel.style.display = panel.style.display === 'flex' ? 'none' : 'flex';
-    }
-
     function toggleMusic() {
-        const audio = document.getElementById('bgMusic');
-        audio.paused ? audio.play() : audio.pause();
+        const a = document.getElementById('bgMusic');
+        a.paused ? a.play() : a.pause();
     }
 
     function initParticles() {
         const canvas = document.getElementById('particle-canvas');
         const ctx = canvas.getContext('2d');
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-        const particles = Array.from({length: 60}, () => ({x: Math.random()*canvas.width, y: Math.random()*canvas.height, v: Math.random()*0.6 + 0.2}));
-        function animate() {
-            ctx.clearRect(0,0,canvas.width,canvas.height);
-            particles.forEach(p => {
-                p.y -= p.v;
-                if (p.y < 0) p.y = canvas.height;
-                ctx.fillStyle = 'rgba(0,243,255,0.2)';
-                ctx.beginPath(); ctx.arc(p.x, p.y, 1.2, 0, Math.PI*2); ctx.fill();
-            });
-            requestAnimationFrame(animate);
+        let width, height, pts;
+
+        function setCanvasSize() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+            pts = Array.from({length: 40}, () => ({
+                x: Math.random()*width, 
+                y: Math.random()*height, 
+                v: 0.2 + Math.random() * 0.5,
+                s: Math.random() * 2
+            }));
         }
-        animate();
+
+        function anim() {
+            ctx.clearRect(0, 0, width, height);
+            ctx.fillStyle = 'rgba(0, 243, 255, 0.15)';
+            pts.forEach(p => { 
+                p.y -= p.v; 
+                if(p.y < 0) p.y = height; 
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.s, 0, Math.PI * 2);
+                ctx.fill();
+            });
+            requestAnimationFrame(anim);
+        }
+        
+        window.addEventListener('resize', setCanvasSize);
+        setCanvasSize();
+        anim();
     }
 
-    document.addEventListener('mousemove', e => {
-        document.getElementById('custom-cursor').style.left = e.clientX + 'px';
-        document.getElementById('custom-cursor').style.top = e.clientY + 'px';
-    });
+    function setupCursor() {
+        const cursor = document.getElementById('custom-cursor');
+        const dot = document.getElementById('cursor-dot');
+        
+        document.addEventListener('mousemove', e => {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+            dot.style.left = e.clientX + 'px';
+            dot.style.top = e.clientY + 'px';
+        });
+
+        document.querySelectorAll('button, a, input, select').forEach(el => {
+            el.addEventListener('mouseenter', () => {
+                cursor.style.width = '50px';
+                cursor.style.height = '50px';
+                cursor.style.borderColor = 'var(--accent)';
+            });
+            el.addEventListener('mouseleave', () => {
+                cursor.style.width = '30px';
+                cursor.style.height = '30px';
+                cursor.style.borderColor = 'var(--main)';
+            });
+        });
+    }
 
     window.onload = init;
 </script>
