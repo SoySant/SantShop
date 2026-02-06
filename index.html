@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>SantShop | Neural System v15.1 Final</title>
+    <title>SantShop | Neural System v16.0 Ultimate</title>
     <link rel="icon" type="image/png" href="https://framerusercontent.com/images/AThoHC9cD7xYXolSv1sqdBmVx0.png">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
@@ -14,11 +14,36 @@
     <style>
         :root {
             --bg-dark: #010409;
-            --panel: rgba(10, 15, 25, 0.98);
+            --panel: rgba(10, 15, 25, 0.95);
             --main: #00f3ff;
             --accent: #bc13fe;
             --glow: 0 0 20px var(--main);
             --font-tech: 'Orbitron', sans-serif;
+        }
+
+        /* 17. MATRIX MODE (VERDE) */
+        body.matrix-mode {
+            --main: #00ff41;
+            --accent: #008f11;
+            --glow: 0 0 15px #00ff41;
+            --panel: rgba(0, 20, 0, 0.95);
+        }
+
+        /* MODO INFILTRACIÓN (ROJO) */
+        body.infiltration-mode {
+            --main: #ff003c;
+            --accent: #ffae00;
+            --glow: 0 0 25px #ff003c;
+            --panel: rgba(20, 0, 0, 0.95);
+        }
+        
+        /* 6. PROGRESSIVE BLUR (Foco en Carrito) */
+        body.cart-focus .hero, 
+        body.cart-focus .grid, 
+        body.cart-focus .advanced-controls {
+            filter: blur(5px) grayscale(80%);
+            transition: 0.5s;
+            pointer-events: none; /* Evita clicks en el fondo */
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -30,21 +55,52 @@
             overflow-x: hidden; 
             scroll-behavior: smooth;
             cursor: none; 
+            transition: background 0.5s;
         }
 
-        /* 80. LOGIN OVERLAY */
+        /* 12. SCANLINES OVERLAY */
+        body::after {
+            content: " ";
+            display: block; position: fixed; top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), 
+                        linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            z-index: 100000; background-size: 100% 2px, 3px 100%; pointer-events: none;
+        }
+
+        @keyframes glitch {
+            0% { text-shadow: 2px 0 var(--main), -2px 0 var(--accent); }
+            25% { text-shadow: -2px 0 var(--main), 2px 0 var(--accent); }
+            50% { text-shadow: -2px 0 var(--accent), 2px 0 var(--main); }
+            75% { text-shadow: 2px 0 var(--accent), -2px 0 var(--main); }
+            100% { text-shadow: 2px 0 var(--main), -2px 0 var(--accent); }
+        }
+
+        /* LOGIN & BIO-AUTH */
         #login-screen {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: #000; z-index: 999999;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
         }
-
-        body::before {
-            content: "";
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: url('https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExNHJueGZ3bmZqZzR4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4JmVwPXYxX2ludGVybmFsX2dpZl9ieV9pZCBjdXN0b20mY3Q9Zw/3o7TKMGpxxcaOshJS0/giphy.gif') center/cover;
-            opacity: 0.08; z-index: -2; pointer-events: none;
+        .fingerprint-scanner {
+            width: 80px; height: 80px; border: 2px dashed var(--main);
+            border-radius: 50%; margin-top: 20px;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; transition: 0.3s;
         }
+        .fingerprint-scanner:hover { background: rgba(0, 243, 255, 0.1); box-shadow: var(--glow); }
+        .scanning { animation: pulseScan 1s infinite; border-style: solid; }
+        @keyframes pulseScan { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
+
+        /* 5. HUD BATERÍA */
+        #battery-hud {
+            position: fixed; top: 20px; right: 20px; 
+            display: flex; align-items: center; gap: 5px;
+            font-family: 'Share Tech Mono'; color: var(--main); font-size: 12px;
+            z-index: 9000; border: 1px solid var(--main); padding: 5px 10px; border-radius: 4px;
+            background: rgba(0,0,0,0.5);
+        }
+        .battery-level { width: 30px; height: 10px; border: 1px solid var(--main); padding: 1px; }
+        .battery-fill { height: 100%; background: var(--main); width: 85%; transition: 0.5s; }
 
         #particle-canvas { position: fixed; top: 0; left: 0; z-index: -1; pointer-events: none; }
         
@@ -60,40 +116,31 @@
             transform: translate(-50%, -50%);
         }
 
-        .hero { padding: 80px 20px; text-align: center; }
+        .hero { padding: 80px 20px; text-align: center; transition: 0.5s; }
         .profile-logo { 
             width: 130px; height: 130px; border-radius: 50%; 
             border: 2px solid var(--main); box-shadow: var(--glow); 
             margin-bottom: 25px; transition: 0.6s cubic-bezier(0.23, 1, 0.32, 1); 
         }
         .profile-logo:hover { transform: scale(1.1) rotate(360deg); border-color: var(--accent); }
+        
         .brand-name { 
             font-family: var(--font-tech); font-size: clamp(2rem, 8vw, 3.5rem); 
             letter-spacing: 10px; color: var(--main); text-shadow: var(--glow); 
-            margin-bottom: 10px;
+            margin-bottom: 10px; animation: glitch 3s infinite alternate;
         }
 
-        .search-wrapper { position: relative; max-width: 500px; margin: 30px auto; }
         .chat-input { 
             width: 100%; background: rgba(255,255,255,0.03); border: 1px solid rgba(0, 243, 255, 0.2); 
             border-bottom: 2px solid var(--main); color: white; padding: 15px; 
-            outline: none; transition: 0.3s; font-family: 'Share Tech Mono';
-            text-align: center;
+            outline: none; transition: 0.3s; font-family: 'Share Tech Mono'; text-align: center;
         }
         .chat-input:focus { background: rgba(0, 243, 255, 0.08); border-color: var(--accent); box-shadow: 0 5px 15px rgba(0, 243, 255, 0.1); }
 
-        /* 18. Filtros Avanzados Container */
-        .advanced-controls {
-            display: flex; justify-content: center; gap: 15px; margin: 20px auto; max-width: 600px; flex-wrap: wrap;
-        }
-        .control-select {
-            background: #000; color: var(--main); border: 1px solid var(--main); padding: 8px; font-family: 'Share Tech Mono'; cursor: none !important;
-        }
+        .advanced-controls { display: flex; justify-content: center; gap: 15px; margin: 20px auto; max-width: 600px; flex-wrap: wrap; transition: 0.5s; }
+        .control-select { background: #000; color: var(--main); border: 1px solid var(--main); padding: 8px; font-family: 'Share Tech Mono'; cursor: none !important; }
 
-        .filter-container { 
-            display: flex; justify-content: center; gap: 12px; margin: 20px auto; 
-            max-width: 95%; overflow-x: auto; padding: 10px; scrollbar-width: none;
-        }
+        .filter-container { display: flex; justify-content: center; gap: 12px; margin: 20px auto; max-width: 95%; overflow-x: auto; padding: 10px; scrollbar-width: none; }
         .filter-btn { 
             background: transparent; border: 1px solid rgba(0, 243, 255, 0.3); color: var(--main); 
             padding: 8px 20px; border-radius: 4px; font-family: var(--font-tech); 
@@ -101,7 +148,7 @@
         }
         .filter-btn:hover, .filter-btn.active { background: var(--main); color: black; border-color: var(--main); box-shadow: var(--glow); }
 
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px; padding: 40px; max-width: 1400px; margin: 0 auto; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px; padding: 40px; max-width: 1400px; margin: 0 auto; transition: 0.5s; }
         .card { 
             background: var(--panel); padding: 25px; border-radius: 15px; 
             border: 1px solid rgba(255,255,255,0.05); text-align: center; 
@@ -110,12 +157,29 @@
         }
         .card:hover { transform: translateY(-8px); border-color: var(--main); box-shadow: 0 10px 30px rgba(0, 243, 255, 0.15); }
         
-        /* 17. Zoom de Imagen */
-        .card img { width: 100%; height: 180px; object-fit: contain; margin-bottom: 20px; transition: 0.5s; }
-        .card:hover img { transform: scale(1.2); filter: drop-shadow(0 0 15px var(--accent)); }
+        /* 5. LASER SCANNER + 1. LAZY LOAD */
+        .card .img-container { position: relative; overflow: hidden; width: 100%; height: 180px; margin-bottom: 20px; }
+        .card img { width: 100%; height: 100%; object-fit: contain; transition: 0.5s; opacity: 0; }
+        .card img.loaded { opacity: 1; }
+        .card:hover img { transform: scale(1.1); }
         
-        .promo-badge { font-size: 10px; color: var(--accent); margin-bottom: 10px; font-weight: bold; }
+        .laser-scanner {
+            position: absolute; top: -100%; left: 0; width: 100%; height: 10px;
+            background: var(--main); box-shadow: 0 0 15px var(--main);
+            z-index: 10; opacity: 0; transition: 0.3s;
+        }
+        .card:hover .laser-scanner { animation: laserMove 1.5s infinite linear; opacity: 0.8; }
+        @keyframes laserMove { 0% { top: -10%; } 100% { top: 110%; } }
 
+        /* 14. WISHLIST BTN */
+        .wish-btn {
+            position: absolute; top: 15px; right: 15px; background: rgba(0,0,0,0.6);
+            border: none; color: #555; cursor: none !important; z-index: 20;
+            padding: 5px; border-radius: 50%; transition: 0.3s;
+        }
+        .wish-btn:hover, .wish-btn.active { color: #ff003c; transform: scale(1.2); }
+
+        .promo-badge { font-size: 10px; color: var(--accent); margin-bottom: 10px; font-weight: bold; }
         .buy-btn { 
             width: 100%; padding: 12px; background: transparent; border: 1.5px solid var(--main); 
             color: var(--main); font-family: var(--font-tech); font-weight: bold; 
@@ -127,34 +191,53 @@
         .btn-qty { background: none; border: 1px solid var(--main); color: var(--main); width: 25px; height: 25px; cursor: none !important; }
         .btn-qty:hover { background: var(--main); color: black; }
         .btn-del { color: #ff4444; background: none; border: none; font-size: 10px; cursor: none !important; margin-left: 10px; }
+        
+        .f-btn { position: fixed; width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; z-index: 9000; box-shadow: var(--glow); transition: 0.3s; cursor: none !important; border: none; font-size: 12px; }
+        
+        /* BOTONES DE TEMA */
+        .theme-btn-group { position: fixed; top: 100px; left: 20px; display: flex; flex-direction: column; gap: 10px; z-index: 9000; }
+        .theme-btn { width: 40px; height: 40px; border-radius: 50%; border: 1px solid #555; background: #000; color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.3s; }
+        
+        .infil-btn.active { background: #ff003c; border-color: #ff003c; box-shadow: 0 0 15px #ff003c; }
+        .matrix-btn.active { background: #00ff41; border-color: #00ff41; box-shadow: 0 0 15px #00ff41; color: black; }
 
-        /* 40. Botón Vaciar */
-        .clear-cart-btn { background: transparent; border: 1px solid #ff4444; color: #ff4444; padding: 5px 10px; font-size: 10px; font-family: var(--font-tech); cursor: none !important; }
-        .clear-cart-btn:hover { background: #ff4444; color: white; }
+        .cart-float-btn {
+            position: fixed; bottom: 30px; right: 30px; width: 60px; height: 60px;
+            background: var(--panel); border: 2px solid var(--main); border-radius: 50%;
+            display: flex; align-items: center; justify-content: center; color: var(--main);
+            z-index: 9000; cursor: none !important; box-shadow: var(--glow);
+        }
+        #float-badge {
+            position: absolute; top: -5px; right: -5px; background: var(--accent);
+            color: white; border-radius: 50%; width: 24px; height: 24px; font-size: 11px;
+            display: flex; align-items: center; justify-content: center; font-weight: bold; border: 2px solid #000;
+        }
 
-        .f-btn { position: fixed; width: 55px; height: 55px; border-radius: 50%; display: flex; align-items: center; justify-content: center; z-index: 9000; box-shadow: var(--glow); transition: 0.3s; cursor: none !important; border: none; }
-        .music-btn { top: 25px; left: 25px; background: rgba(0, 243, 255, 0.1); color: var(--main); border: 1px solid var(--main); }
-        .wa-btn { bottom: 25px; right: 25px; background: #25d366; color: white; }
-
-        #cartSection { max-width: 800px; margin: 40px auto 20px; padding: 35px; background: var(--panel); border: 1px solid var(--main); border-radius: 15px; box-shadow: var(--glow); }
+        #cartSection { max-width: 800px; margin: 40px auto 20px; padding: 35px; background: var(--panel); border: 1px solid var(--main); border-radius: 15px; box-shadow: var(--glow); transition: 0.5s; }
         .cart-item { display: flex; justify-content: space-between; align-items: center; padding: 15px 0; border-bottom: 1px solid rgba(0, 243, 255, 0.1); font-family: 'Share Tech Mono'; }
 
-        /* 39. Historial */
         #historySection { max-width: 800px; margin: 0 auto 50px; padding: 20px; background: rgba(0,0,0,0.5); border: 1px dashed #333; font-family: 'Share Tech Mono'; font-size: 11px; color: #777; }
-
         .legal-footer { text-align: center; padding: 40px; color: #444; font-size: 10px; border-top: 1px solid #111; }
-
         #toast-container { position: fixed; top: 20px; right: 20px; z-index: 10000; }
         .toast { background: #0a0f19; border-left: 4px solid var(--main); color: white; padding: 16px 28px; margin-bottom: 12px; font-family: 'Share Tech Mono'; box-shadow: 0 10px 20px rgba(0,0,0,0.5); animation: slideIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-
         @keyframes slideIn { from { transform: translateX(120%); } to { transform: translateX(0); } }
 
         @media (max-width: 768px) {
             #custom-cursor, #cursor-dot { display: none; }
             body { cursor: auto; }
-            .buy-btn, .f-btn, .filter-btn, .btn-qty, .btn-del, .control-select, .clear-cart-btn { cursor: pointer !important; }
+            .buy-btn, .f-btn, .filter-btn, .btn-qty, .btn-del, .control-select, .cart-float-btn, .theme-btn { cursor: pointer !important; }
             .grid { padding: 15px; }
             #cartSection { margin: 20px; padding: 20px; }
+            .theme-btn-group { top: auto; bottom: 100px; left: 20px; }
+        }
+        
+        @media print {
+            body { background: white; color: black; }
+            .hero, .theme-btn-group, .f-btn, .cart-float-btn, #cartSection, #login-screen { display: none; }
+            .grid { display: block; }
+            .card { border: 1px solid #000; page-break-inside: avoid; margin-bottom: 20px; box-shadow: none; color: black; }
+            .card-title { color: black !important; }
+            .buy-btn { display: none; }
         }
     </style>
 </head>
@@ -162,10 +245,17 @@
 
 <div id="login-screen">
     <img src="https://framerusercontent.com/images/AThoHC9cD7xYXolSv1sqdBmVx0.png" width="100" style="margin-bottom:20px; border-radius:50%; border:2px solid #00f3ff;">
-    <h2 style="font-family: 'Orbitron'; color: #00f3ff; margin-bottom: 20px;">ACCESO RESTRINGIDO</h2>
-    <p style="font-family: 'Share Tech Mono'; margin-bottom: 10px; color: #aaa;">INGRESA TU NÚMERO PARA ACCEDER</p>
-    <input type="tel" id="loginPhone" class="chat-input" placeholder="EJ: 9641034714" style="width: 280px; text-align:center;">
-    <button class="buy-btn" style="width: 200px; margin-top: 20px;" onclick="attemptLogin()">INICIAR SESIÓN</button>
+    <h2 style="font-family: 'Orbitron'; color: #00f3ff; margin-bottom: 20px;">SYSTEM LOCKED</h2>
+    <p style="font-family: 'Share Tech Mono'; margin-bottom: 10px; color: #aaa;">IDENTIFICACIÓN REQUERIDA</p>
+    
+    <input type="tel" id="loginPhone" class="chat-input" placeholder="INGRESA ID DE ACCESO" style="width: 280px; text-align:center; margin-bottom: 20px;">
+    
+    <div style="text-align:center;">
+        <p style="font-size:10px; color:#555; margin-bottom:10px;">O ESCANEA HUELLA DACTILAR</p>
+        <div class="fingerprint-scanner" onclick="bioLogin()">
+            <i data-lucide="fingerprint" style="width: 40px; height: 40px; color: var(--main);"></i>
+        </div>
+    </div>
 </div>
 
 <canvas id="particle-canvas"></canvas>
@@ -173,11 +263,32 @@
 <div id="cursor-dot"></div>
 <div id="toast-container"></div>
 
+<div id="battery-hud">
+    <i data-lucide="zap" style="width:12px;"></i>
+    <span>SYS_PWR:</span>
+    <div class="battery-level"><div class="battery-fill" id="batteryFill"></div></div>
+    <span id="batteryPct">85%</span>
+</div>
+
+<div class="theme-btn-group">
+    <button class="theme-btn infil-btn" onclick="setTheme('infiltration')" title="Modo Infiltración [Rojo]">
+        <i data-lucide="eye-off" style="width:18px;"></i>
+    </button>
+    <button class="theme-btn matrix-btn" onclick="setTheme('matrix')" title="Modo Matrix [Verde]">
+        <i data-lucide="terminal" style="width:18px;"></i>
+    </button>
+</div>
+
 <audio id="clickSound" src="https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3"></audio>
 <audio id="bgMusic" loop src="https://cdn.freesoundslibrary.com/wp-content/uploads/2023/07/cyberpunk-2077-lofi.mp3"></audio>
 
-<button class="f-btn music-btn" onclick="toggleMusic()" title="Toggle Music"><i data-lucide="music"></i></button>
-<a href="https://wa.me/529641034714" class="f-btn wa-btn" target="_blank" title="WhatsApp Support"><i data-lucide="message-circle"></i></a>
+<button class="f-btn" style="top: 20px; left: 20px; background: rgba(0,243,255,0.1);" onclick="toggleMusic()"><i data-lucide="music"></i></button>
+<a href="https://wa.me/529641034714" class="f-btn" style="bottom: 25px; left: 25px; background: #25d366; color: white;" target="_blank"><i data-lucide="message-circle"></i></a>
+
+<button class="cart-float-btn" onclick="focusCart()">
+    <i data-lucide="shopping-cart"></i>
+    <div id="float-badge">0</div>
+</button>
 
 <div class="hero">
     <img src="https://framerusercontent.com/images/AThoHC9cD7xYXolSv1sqdBmVx0.png" class="profile-logo" alt="SantShop Logo">
@@ -189,6 +300,8 @@
     </div>
 
     <div class="advanced-controls">
+        <button class="filter-btn" onclick="exportDB()"><i data-lucide="printer" style="width:12px; vertical-align:middle;"></i> IMPRIMIR CATÁLOGO</button>
+        
         <select id="sortFilter" class="control-select" onchange="globalFilter()">
             <option value="def">ORDEN: DEFECTO</option>
             <option value="low">PRECIO: MENOR A MAYOR</option>
@@ -219,7 +332,7 @@
     
     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px;">
         <input type="text" id="clientName" class="chat-input" style="text-align: left;" placeholder="ID DEL CLIENTE">
-        <input type="text" id="couponField" class="chat-input" style="text-align: left;" placeholder="CÓDIGO (EJ: JSB)" onkeyup="updateCartUI()">
+        <input type="text" id="couponField" class="chat-input" style="text-align: left;" placeholder="CUPON DE DESCUENTO" onkeyup="updateCartUI()">
     </div>
 
     <select id="deliveryZone" class="chat-input" style="text-align: left; margin-bottom: 25px; background: #010409;">
@@ -232,13 +345,17 @@
     
     <div id="cartList"></div>
     
-    <div style="margin-top:35px; display:flex; justify-content:space-between; align-items:flex-end; flex-wrap: wrap; gap: 20px;">
-        <div>
-            <span id="savingsLabel" style="font-size:0.7rem; color:var(--accent); display:block; height: 15px; margin-bottom:5px;"></span>
-            <span style="font-size:0.7rem; color:var(--main); display:block; letter-spacing: 2px;">TOTAL_DE_TRANSACCIÓN</span>
-            <h2 id="cartTotal" style="color:var(--main); font-family:'Share Tech Mono'; font-size:3rem;">$0</h2>
+    <div style="margin-top:35px;">
+        <p id="bundle-alert" style="color:var(--accent); font-size:12px; margin-bottom:10px; font-family:'Share Tech Mono'; text-align:right;"></p>
+        
+        <div style="display:flex; justify-content:space-between; align-items:flex-end; flex-wrap: wrap; gap: 20px;">
+            <div>
+                <span id="savingsLabel" style="font-size:0.7rem; color:var(--accent); display:block; height: 15px; margin-bottom:5px;"></span>
+                <span style="font-size:0.7rem; color:var(--main); display:block; letter-spacing: 2px;">TOTAL_DE_TRANSACCIÓN</span>
+                <h2 id="cartTotal" style="color:var(--main); font-family:'Share Tech Mono'; font-size:3rem;">$0</h2>
+            </div>
+            <button class="buy-btn" style="width:240px; height:60px;" onclick="generateAdvancedTicket()">PROCESAR PEDIDO</button>
         </div>
-        <button class="buy-btn" style="width:240px; height:60px;" onclick="generateAdvancedTicket()">PROCESAR PEDIDO</button>
     </div>
 </div>
 
@@ -257,10 +374,9 @@
     <p>43. TÉRMINOS Y CONDICIONES: Garantía de 24h por defecto de fábrica. No hay devoluciones por mal uso. Entregas sujetas a disponibilidad de zona.</p>
 </div>
 
-<div id="ticket-capture" style="position:fixed; left:-2000px; width:450px; background:white; color:black; padding:40px; font-family:'Share Tech Mono';"></div>
+<div id="ticket-capture" style="position:fixed; left:-5000px; width:450px; background:white; color:black; padding:40px; font-family:'Share Tech Mono';"></div>
 
 <script>
-    // He corregido el array de productos para que no haya errores de cálculo:
 const products = [
     {id:1, name:'Airpods Gen 3', cat:'audio', price:320, specs:'Audio Espacial, 5h batería', tags:['airpod', 'audifono'], img:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSLtV_pnUElYNMdkOw0-Wm9_e8bgBeTCKlB_w&s'},
     {id:2, name:'Power Bank 30k mAh', cat:'carga', price:699, specs:'30000mAh, Carga Ultra Rápida', tags:['power', 'bateria'], img:'https://http2.mlstatic.com/D_NQ_NP_2X_995948-MLA99547949208_122025-F.webp'},
@@ -273,64 +389,34 @@ const products = [
     {id:9, name:'Reloj De Hombre', cat:'relojes', price:220, specs:'7pcs Metal con Fecha', tags:['reloj', 'hombre'], img:'https://http2.mlstatic.com/D_NQ_NP_2X_668100-MLM86048051379_062025-F-7pcs-reloj-de-hombre-con-correa-de-metal-con-fecha-traje.webp'},
     {id:10, name:'Reloj De Mujer', cat:'relojes', price:450, specs:'5 Piezas Set Regalo', tags:['reloj', 'mujer'], img:'https://http2.mlstatic.com/D_NQ_NP_2X_806989-CBT83215632095_032025-F-5-piezas-reloj-con-caja-contiene-pulsera-regalo-para-mujer.webp'},
     {id:11, name:'Reloj De Hombre', cat:'relojes', price:220, specs:'7pcs Metal con Fecha', tags:['reloj', 'hombre'], img:'https://http2.mlstatic.com/D_NQ_NP_2X_836965-MLM86047783249_062025-F-7pcs-reloj-de-hombre-con-correa-de-metal-con-fecha-traje.webp'},
-    // El ID 14 vacío ha sido eliminado para evitar errores.
+    {id:12, name:'Rosas Rojas Eternas Decorativas Pendientes +collar Mujer Negro', cat:'relojes', price:349, specs:'Son rosas eternas con joyería incluida, es un regalo que no se marchita', tags:['reloj', 'mujer'], img:'https://http2.mlstatic.com/D_NQ_NP_2X_945334-MLM82184401503_012025-F.webp'}
 ];
 
-// ... (Resto de tu lógica se mantiene igual, pero actualiza estas funciones):
-
-function updateCartUI() {
-    const list = document.getElementById('cartList');
-    const savingsLabel = document.getElementById('savingsLabel');
-    const couponInput = document.getElementById('couponField');
-    let subtotal = 0;
-    let discount = 0;
-
-    list.innerHTML = cart.length ? cart.map(item => {
-        let itemTotal = item.price * item.quantity;
-        subtotal += itemTotal;
-        return `
-            <div class="cart-item">
-                <div style="flex: 1;">
-                    <span>${item.name}</span>
-                </div>
-                <div class="cart-controls">
-                    <button class="btn-qty" onclick="changeQty(${item.id}, -1)">-</button>
-                    <span style="min-width: 20px; text-align: center;">${item.quantity}</span>
-                    <button class="btn-qty" onclick="changeQty(${item.id}, 1)">+</button>
-                    <button class="btn-del" onclick="removeFromCart(${item.id})">[X]</button>
-                </div>
-                <div style="width: 80px; text-align: right;">$${itemTotal.toFixed(0)}</div>
-            </div>`;
-    }).join('') : '<p style="color: #555; text-align: center; padding: 20px;">[ TERMINAL VACÍA ]</p>';
-
-    // Lógica de cupones mejorada visualmente
-    const code = couponInput.value.toUpperCase();
-    const validCoupons = { "SANTSHOP": 0.10, "JSB": 0.15, "LUCKY": 0.05, "KIM": 0.20 };
-
-    if(validCoupons[code]) {
-        discount = subtotal * validCoupons[code];
-        couponInput.style.borderColor = "var(--main)";
-        couponInput.style.boxShadow = "0 0 15px var(--main)";
-    } else {
-        couponInput.style.boxShadow = "none";
-    }
-
-    const finalTotal = subtotal - discount;
-    savingsLabel.innerText = discount > 0 ? `AHORRO DETECTADO: -$${discount.toFixed(0)}` : "";
-    document.getElementById('cartTotal').innerText = '$' + finalTotal.toFixed(0);
-}
-
-    let cart = JSON.parse(localStorage.getItem('santshop_db_v15')) || [];
+    let cart = JSON.parse(localStorage.getItem('santshop_db_v16')) || [];
+    let wishlist = JSON.parse(localStorage.getItem('santshop_wish_v16')) || [];
     let currentUser = localStorage.getItem('santshop_user') || null;
     let currentCat = 'all';
 
-    // 80. Lógica de Login
+    // 1. BIO-LOGIN
+    function bioLogin() {
+        const scanner = document.querySelector('.fingerprint-scanner');
+        scanner.classList.add('scanning');
+        playBeep();
+        
+        // Simular escaneo
+        setTimeout(() => {
+            scanner.classList.remove('scanning');
+            currentUser = "INVITADO_BIO_99";
+            localStorage.setItem('santshop_user', currentUser);
+            document.getElementById('login-screen').style.display = 'none';
+            document.getElementById('userWelcome').innerText = `ACCESO BIOMÉTRICO CONCEDIDO`;
+            init();
+        }, 1500);
+    }
+
     function attemptLogin() {
         const phone = document.getElementById('loginPhone').value;
-        if(phone.length < 10) {
-            alert("NÚMERO INVÁLIDO. INGRESA 10 DÍGITOS.");
-            return;
-        }
+        if(phone.length < 5) return alert("ID INVÁLIDO");
         currentUser = phone;
         localStorage.setItem('santshop_user', phone);
         document.getElementById('login-screen').style.display = 'none';
@@ -340,35 +426,71 @@ function updateCartUI() {
     }
 
     function init() {
-        // Si no hay user, mostrar login y detener init
         if(!currentUser) {
             document.getElementById('login-screen').style.display = 'flex';
             return;
         } else {
             document.getElementById('login-screen').style.display = 'none';
-            document.getElementById('userWelcome').innerText = `BIENVENIDO OPERADOR: ${currentUser}`;
         }
 
         lucide.createIcons();
-        globalFilter(); // Renderiza productos con filtros default
+        globalFilter(); 
         initParticles();
         updateCartUI();
         setupCursor();
+        updateBattery(); // 5. Start Battery
     }
     
     function playBeep() {
-    const audio = document.getElementById('clickSound');
-    audio.volume = 0.3; // Volumen suave para no asustar
-    audio.currentTime = 0;
-    audio.play().catch(e => {}); 
-}
+        const audio = document.getElementById('clickSound');
+        audio.volume = 0.3;
+        audio.currentTime = 0;
+        audio.play().catch(e => {}); 
+    }
+
+    // 17. THEME MANAGER
+    function setTheme(mode) {
+        document.body.classList.remove('infiltration-mode', 'matrix-mode');
+        document.querySelectorAll('.theme-btn').forEach(b => b.classList.remove('active'));
+        
+        if(mode === 'infiltration') {
+            document.body.classList.add('infiltration-mode');
+            document.querySelector('.infil-btn').classList.add('active');
+            showToast("ALERTA: PROTOCOLO DE INFILTRACIÓN ACTIVO");
+        } else if(mode === 'matrix') {
+            document.body.classList.add('matrix-mode');
+            document.querySelector('.matrix-btn').classList.add('active');
+            showToast("CONEXIÓN MATRIX ESTABLECIDA");
+        } else {
+            showToast("SISTEMA RESTAURADO");
+        }
+    }
+
+    // 6. PROGRESSIVE BLUR LOGIC
+    function focusCart() {
+        document.getElementById('cartSection').scrollIntoView({behavior: 'smooth'});
+        document.body.classList.add('cart-focus');
+        setTimeout(() => {
+            document.body.classList.remove('cart-focus');
+        }, 2000); // Quita el blur después de 2 segs
+    }
 
     function renderProducts(data) {
         const grid = document.getElementById('mainGrid');
-        grid.innerHTML = data.length ? data.map((p, i) => `
+        const placeholder = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=";
+
+        grid.innerHTML = data.length ? data.map((p, i) => {
+            const isWished = wishlist.includes(p.id) ? 'active' : '';
+            return `
             <div class="card" style="animation: fadeInUp 0.5s ease ${i*0.05}s backwards">
-                <span class="promo-badge">[ STOCK DISPONIBLE ]</span>
-                <img src="${p.img}" alt="${p.name}">
+                <span class="promo-badge">[ UNIT_${p.id} ]</span>
+                <button class="wish-btn ${isWished}" onclick="toggleWish(${p.id}, this)">
+                    <i data-lucide="heart" style="width:14px;"></i>
+                </button>
+                <div class="img-container">
+                    <div class="laser-scanner"></div>
+                    <img src="${placeholder}" data-src="${p.img}" class="lazy-img" alt="${p.name}">
+                </div>
                 <div>
                     <div class="card-title" style="font-weight:bold; color:var(--main);">${p.name.toUpperCase()}</div>
                     <div class="card-price" style="font-family:'Share Tech Mono'; font-size:1.2rem;">$${p.price}</div>
@@ -376,38 +498,68 @@ function updateCartUI() {
                 </div>
                 <button class="buy-btn" onclick="addToCart(${p.id})">AÑADIR AL SISTEMA</button>
             </div>
-        `).join('') : '<p style="grid-column: 1/-1; color: var(--accent);">[ ERROR: NO SE ENCONTRARON COINCIDENCIAS ]</p>';
+        `}).join('') : '<p>NO DATA FOUND</p>';
+
+        const observer = new IntersectionObserver((entries, obs) => {
+            entries.forEach(entry => {
+                if(entry.isIntersecting) {
+                    const img = entry.target;
+                    img.src = img.dataset.src;
+                    img.onload = () => img.classList.add('loaded');
+                    obs.unobserve(img);
+                }
+            });
+        });
+        document.querySelectorAll('.lazy-img').forEach(img => observer.observe(img));
+        lucide.createIcons();
     }
 
-    // 18, 30, 50. Filtro Global (Búsqueda, Categoría, Precio, Orden)
+    // 14. WISHLIST LOGIC
+    function toggleWish(id, btn) {
+        if(wishlist.includes(id)) {
+            wishlist = wishlist.filter(w => w !== id);
+            btn.classList.remove('active');
+            showToast("ELIMINADO DE MEMORIA");
+        } else {
+            wishlist.push(id);
+            btn.classList.add('active');
+            showToast("GUARDADO EN MEMORIA PERMANENTE");
+        }
+        localStorage.setItem('santshop_wish_v16', JSON.stringify(wishlist));
+    }
+
+    // 5. BATTERY LOGIC
+    function updateBattery() {
+        let level = 100;
+        const fill = document.getElementById('batteryFill');
+        const text = document.getElementById('batteryPct');
+        
+        setInterval(() => {
+            if(level > 20) level -= 1;
+            fill.style.width = level + '%';
+            text.innerText = level + '%';
+            if(level < 30) fill.style.background = '#ff003c';
+        }, 60000); // Drains every minute
+    }
+
+    // 16. EXPORT PDF (PRINT)
+    function exportDB() {
+        window.print();
+    }
+
     function globalFilter() {
         let result = [...products];
-        
-        // Texto
         const val = document.getElementById('mainSearch').value.toLowerCase();
         
-        // 50. Easter Egg Admin
-        if(val === 'admin') {
-            document.documentElement.style.setProperty('--main', '#bc13fe');
-            document.documentElement.style.setProperty('--accent', '#00f3ff');
-            showToast("MODO ADMIN ACTIVADO");
-            return;
-        }
+        if(val === 'admin') return setTheme('infiltration');
+        if(val === 'matrix') return setTheme('matrix');
 
         result = result.filter(p => p.name.toLowerCase().includes(val) || p.tags.some(t => t.includes(val)));
-
-        // Categoría
-        if(currentCat !== 'all') {
-            result = result.filter(p => p.cat === currentCat);
-        }
-
-        // Precio Limite (18)
+        if(currentCat !== 'all') result = result.filter(p => p.cat === currentCat);
+        
         const priceLim = document.getElementById('priceFilter').value;
-        if(priceLim !== 'all') {
-            result = result.filter(p => p.price <= parseInt(priceLim));
-        }
+        if(priceLim !== 'all') result = result.filter(p => p.price <= parseInt(priceLim));
 
-        // Orden (30)
         const sortMode = document.getElementById('sortFilter').value;
         if(sortMode === 'low') result.sort((a,b) => a.price - b.price);
         if(sortMode === 'high') result.sort((a,b) => b.price - a.price);
@@ -430,11 +582,7 @@ function updateCartUI() {
         t.innerHTML = `<i data-lucide="zap" style="width:16px; margin-right:10px; vertical-align:middle;"></i> ${msg}`;
         container.appendChild(t);
         lucide.createIcons();
-        setTimeout(() => { 
-            t.style.opacity = '0'; 
-            t.style.transform = 'translateX(50px)';
-            setTimeout(() => t.remove(), 500); 
-        }, 3000);
+        setTimeout(() => { t.style.opacity = '0'; t.style.transform = 'translateX(50px)'; setTimeout(() => t.remove(), 500); }, 3000);
     }
 
     function addToCart(id) {
@@ -443,11 +591,13 @@ function updateCartUI() {
         const exist = cart.find(i => i.id === id);
         if(exist) exist.quantity++;
         else cart.push({...p, quantity: 1});
+        
+        if(navigator.vibrate) navigator.vibrate(30);
         saveCart();
         showToast(`${p.name.toUpperCase()} SINCRONIZADO`);
-        confetti({ 
-            particleCount: 40, spread: 50, origin: { y: 0.9 }, colors: ['#00f3ff', '#bc13fe']
-        });
+        
+        const confettiColor = p.cat === 'relojes' ? '#bc13fe' : '#00f3ff';
+        confetti({ particleCount: 40, spread: 50, origin: { y: 0.9 }, colors: [confettiColor, '#ffffff'] });
     }
 
     function changeQty(id, delta) {
@@ -465,17 +615,13 @@ function updateCartUI() {
         saveCart();
     }
 
-    // 40. Función Vaciar Carrito
     function clearCart() {
         playBeep();
-        if(confirm("¿CONFIRMAS FORMATEO DE TERMINAL?")) {
-            cart = [];
-            saveCart();
-        }
+        if(confirm("¿PURGAR SISTEMA?")) { cart = []; saveCart(); }
     }
 
     function saveCart() {
-        localStorage.setItem('santshop_db_v15', JSON.stringify(cart));
+        localStorage.setItem('santshop_db_v16', JSON.stringify(cart));
         updateCartUI();
     }
 
@@ -483,17 +629,19 @@ function updateCartUI() {
         const list = document.getElementById('cartList');
         const savingsLabel = document.getElementById('savingsLabel');
         const couponInput = document.getElementById('couponField');
+        const floatBadge = document.getElementById('float-badge');
+        const bundleAlert = document.getElementById('bundle-alert');
+        
         let subtotal = 0;
-        let discount = 0;
+        let totalItems = 0;
 
         list.innerHTML = cart.length ? cart.map(item => {
             let itemTotal = item.price * item.quantity;
             subtotal += itemTotal;
+            totalItems += item.quantity;
             return `
                 <div class="cart-item">
-                    <div style="flex: 1;">
-                        <span>${item.name}</span>
-                    </div>
+                    <div style="flex: 1;"><span>${item.name}</span></div>
                     <div class="cart-controls">
                         <button class="btn-qty" onclick="changeQty(${item.id}, -1)">-</button>
                         <span>${item.quantity}</span>
@@ -502,31 +650,36 @@ function updateCartUI() {
                     </div>
                     <div style="width: 80px; text-align: right;">$${itemTotal.toFixed(0)}</div>
                 </div>`;
-        }).join('') : '<p style="color: #555; text-align: center; padding: 20px;">[ TERMINAL VACÍA ]</p>';
+        }).join('') : '<p style="color: #555; text-align: center; padding: 20px;">[ VACÍO ]</p>';
 
-        // 33. Lógica de 4 Cupones (Validación visual y lógica)
-        const code = couponInput.value.toUpperCase();
-        const validCoupons = {
-            "SANTSHOP": 0.10,
-            "JSB": 0.15,
-            "LUCKY": 0.05,
-            "KIM": 0.20
-        };
+        floatBadge.innerText = totalItems;
 
-        if(validCoupons[code]) {
-            discount = subtotal * validCoupons[code];
-            couponInput.style.borderColor = "#00ff00"; // Verde si es válido
-            couponInput.style.boxShadow = "0 0 10px #00ff00";
-        } else if (code !== "") {
-            couponInput.style.borderColor = "#ff4444"; // Rojo si no existe
-            couponInput.style.boxShadow = "none";
+        const hasAudio = cart.some(i => i.cat === 'audio');
+        const hasWatch = cart.some(i => i.cat === 'relojes');
+        let bundleDiscount = 0;
+        
+        if(hasAudio && hasWatch) {
+            bundleDiscount = subtotal * 0.05;
+            bundleAlert.innerText = `>> LINK NEURAL (AUDIO+RELOJ): -5% ACTIVADO`;
         } else {
-            couponInput.style.borderColor = "var(--main)"; // Reset
-            couponInput.style.boxShadow = "none";
+            bundleAlert.innerText = "";
         }
 
-        const finalTotal = subtotal - discount;
-        savingsLabel.innerText = discount > 0 ? `CUPÓN [${code}] APLICADO: -$${discount.toFixed(0)}` : "";
+        const code = couponInput.value.toUpperCase();
+        const validCoupons = { "SANTSHOP": 0.10, "JSB": 0.15, "LUCKY": 0.05, "KIM": 0.20 };
+        let couponDiscount = 0;
+
+        if(validCoupons[code]) {
+            couponDiscount = subtotal * validCoupons[code];
+            couponInput.style.borderColor = "#00ff00";
+        } else {
+            couponInput.style.borderColor = "var(--main)";
+        }
+
+        const totalDiscount = bundleDiscount + couponDiscount;
+        const finalTotal = subtotal - totalDiscount;
+        
+        savingsLabel.innerText = totalDiscount > 0 ? `AHORRO: -$${totalDiscount.toFixed(0)}` : "";
         document.getElementById('cartTotal').innerText = '$' + finalTotal.toFixed(0);
     }
 
@@ -536,10 +689,8 @@ function updateCartUI() {
         const zone = document.getElementById('deliveryZone').value;
         if(cart.length === 0 || !name || !zone) return showToast("ERROR: DATOS INCOMPLETOS");
 
-        // 39. Agregar a Historial Visual
-        const historyLog = document.getElementById('userHistoryLog');
         const total = document.getElementById('cartTotal').innerText;
-        historyLog.innerHTML += `<br>> PEDIDO: ${new Date().toLocaleTimeString()} | TOTAL: ${total} | ZONA: ${zone}`;
+        document.getElementById('userHistoryLog').innerHTML += `<br>> PEDIDO: ${new Date().toLocaleTimeString()} | TOTAL: ${total} | ZONA: ${zone}`;
 
         const capture = document.getElementById('ticket-capture');
         const date = new Date().toLocaleString();
@@ -547,46 +698,43 @@ function updateCartUI() {
         capture.innerHTML = `
             <div style="text-align: center; border-bottom: 2px solid black; margin-bottom: 20px; padding-bottom: 20px;">
                 <h1 style="font-size: 28px; letter-spacing: 5px;">SANTSHOP</h1>
-                <p style="font-size: 12px;">GUÍA DE ENTREGA OFICIAL</p>
-                <p style="font-size: 10px;">ID USUARIO: ${currentUser}</p>
+                <p style="font-size: 10px;">ID OPERADOR: ${currentUser}</p>
             </div>
-            <p><strong>FECHA:</strong> ${date}</p>
+            <div style="display:flex; justify-content:space-between; font-size:12px;">
+                <p><strong>FECHA:</strong> ${date}</p>
+                <p><strong>FOLIO:</strong> #${Math.floor(Math.random()*10000)}</p>
+            </div>
             <p><strong>CLIENTE:</strong> ${name.toUpperCase()}</p>
             <p><strong>DESTINO:</strong> ${zone.toUpperCase()}</p>
-            <div style="margin: 25px 0; border-top: 1px dashed black; padding-top: 15px;">
-                ${cart.map(i => `<div style="display:flex; justify-content:space-between; margin-bottom:8px;">
-                    <span>${i.name} x${i.quantity}</span>
+            <div style="margin: 25px 0; border-top: 2px dashed black; border-bottom: 2px dashed black; padding: 15px 0;">
+                ${cart.map(i => `<div style="display:flex; justify-content:space-between; margin-bottom:5px;">
+                    <span>${i.name} (x${i.quantity})</span>
                     <span>$${i.price*i.quantity}</span>
                 </div>`).join('')}
             </div>
-            <div style="border-top: 2px solid black; padding-top: 15px; text-align: right;">
+            <div style="text-align: right;">
                 <h2 style="font-size: 32px;">TOTAL: ${total}</h2>
             </div>
-            <div style="margin-top: 40px; border: 1px solid black; height: 80px; position: relative;">
-                <span style="font-size: 8px; position: absolute; top: 5px; left: 5px;">FIRMA DE RECIBIDO:</span>
+            <div style="margin-top: 40px; text-align:center;">
+                <p style="font-size: 10px;">SANTSHOP - HUEHUETÁN, CHIAPAS</p>
             </div>
-            <p style="text-align: center; margin-top: 20px; font-size: 10px;">[ SANTSHOP - HUEHUETÁN, CHIAPAS ]</p>
         `;
 
         html2canvas(capture).then(canvas => {
             const link = document.createElement('a');
-            link.download = `GUIA_${name.replace(/\s+/g, '_')}.png`;
+            link.download = `TICKET_${name}.png`;
             link.href = canvas.toDataURL('image/png');
             link.click();
             
-            const waMsg = encodeURIComponent(`📦 *NUEVO PEDIDO SANTSHOP*\n👤 *Usuario:* ${currentUser}\n👤 *Cliente:* ${name}\n📍 *Zona:* ${zone}\n💰 *Total:* ${total}\n*CUPÓN:* ${document.getElementById('couponField').value}\n\n*Detalle:* \n${cart.map(i => `- ${i.name} (x${i.quantity})`).join('\n')}`);
+            const waMsg = encodeURIComponent(`📦 *NUEVO PEDIDO SANTSHOP*\n👤 *User:* ${currentUser}\n👤 *Cliente:* ${name}\n📍 *Zona:* ${zone}\n💰 *Total:* ${total}\n*CUPÓN:* ${document.getElementById('couponField').value}\n\n*Detalle:* \n${cart.map(i => `- ${i.name} (x${i.quantity})`).join('\n')}`);
             window.open(`https://wa.me/529641034714?text=${waMsg}`);
             
-            cart = []; // Vaciar tras compra
-            saveCart();
-            showToast("TICKET GENERADO CON ÉXITO");
+            cart = []; saveCart();
+            showToast("TICKET GENERADO");
         });
     }
 
-    function toggleMusic() {
-        const a = document.getElementById('bgMusic');
-        a.paused ? a.play() : a.pause();
-    }
+    function toggleMusic() { const a = document.getElementById('bgMusic'); a.paused ? a.play() : a.pause(); }
 
     function initParticles() {
         const canvas = document.getElementById('particle-canvas');
@@ -596,54 +744,33 @@ function updateCartUI() {
         function setCanvasSize() {
             width = canvas.width = window.innerWidth;
             height = canvas.height = window.innerHeight;
-            pts = Array.from({length: 40}, () => ({
-                x: Math.random()*width, 
-                y: Math.random()*height, 
-                v: 0.2 + Math.random() * 0.5,
-                s: Math.random() * 2
-            }));
+            pts = Array.from({length: 40}, () => ({ x: Math.random()*width, y: Math.random()*height, v: 0.2 + Math.random() * 0.5, s: Math.random() * 2 }));
         }
 
         function anim() {
             ctx.clearRect(0, 0, width, height);
             ctx.fillStyle = 'rgba(0, 243, 255, 0.15)';
             pts.forEach(p => { 
-                p.y -= p.v; 
-                if(p.y < 0) p.y = height; 
-                ctx.beginPath();
-                ctx.arc(p.x, p.y, p.s, 0, Math.PI * 2);
-                ctx.fill();
+                p.y -= p.v; if(p.y < 0) p.y = height; 
+                ctx.beginPath(); ctx.arc(p.x, p.y, p.s, 0, Math.PI * 2); ctx.fill();
             });
             requestAnimationFrame(anim);
         }
         
         window.addEventListener('resize', setCanvasSize);
-        setCanvasSize();
-        anim();
+        setCanvasSize(); anim();
     }
 
     function setupCursor() {
         const cursor = document.getElementById('custom-cursor');
         const dot = document.getElementById('cursor-dot');
-        
         document.addEventListener('mousemove', e => {
-            cursor.style.left = e.clientX + 'px';
-            cursor.style.top = e.clientY + 'px';
-            dot.style.left = e.clientX + 'px';
-            dot.style.top = e.clientY + 'px';
+            cursor.style.left = e.clientX + 'px'; cursor.style.top = e.clientY + 'px';
+            dot.style.left = e.clientX + 'px'; dot.style.top = e.clientY + 'px';
         });
-
         document.querySelectorAll('button, a, input, select').forEach(el => {
-            el.addEventListener('mouseenter', () => {
-                cursor.style.width = '50px';
-                cursor.style.height = '50px';
-                cursor.style.borderColor = 'var(--accent)';
-            });
-            el.addEventListener('mouseleave', () => {
-                cursor.style.width = '30px';
-                cursor.style.height = '30px';
-                cursor.style.borderColor = 'var(--main)';
-            });
+            el.addEventListener('mouseenter', () => { cursor.style.width = '50px'; cursor.style.height = '50px'; });
+            el.addEventListener('mouseleave', () => { cursor.style.width = '30px'; cursor.style.height = '30px'; });
         });
     }
 
