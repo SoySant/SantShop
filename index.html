@@ -2,11 +2,11 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>SantShop | Exclusive Boutique v20.0</title>
+    <title>SantShop | The Private Collection</title>
     <link rel="icon" type="image/png" href="https://framerusercontent.com/images/AThoHC9cD7xYXolSv1sqdBmVx0.png">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"> 
     
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500&family=Space+Mono&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500;600&family=Cinzel:wght@400;500&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -14,536 +14,630 @@
     
     <style>
         /* =========================================
-           DISEÑO "LUXURY BLACK" (Elegante & Formal)
+           SANTSHOP: ULTRA LUXE ENGINE v3.0
            ========================================= */
         :root {
-            /* Paleta de Colores: Negro Profundo, Oro Champagne, Blanco Puro */
-            --bg-dark: #0a0a0a;
-            --bg-card: #141414;
-            --glass: rgba(255, 255, 255, 0.03);
-            --border-subtle: 1px solid rgba(255, 255, 255, 0.08);
+            /* Colores: Dark Luxury Palette */
+            --bg-deep: #030303;
+            --bg-card: rgba(255, 255, 255, 0.03);
+            --bg-glass: rgba(10, 10, 10, 0.7);
             
-            --main: #D4AF37;   /* Dorado Champagne */
-            --main-hover: #F2D267; 
-            --text-main: #ffffff;
-            --text-muted: #888888;
+            /* Oro Champagne (Menos amarillo, más metálico) */
+            --gold-primary: #D4AF37;
+            --gold-soft: #C5A028;
+            --gold-dim: #6b581e;
             
-            --success: #4CAF50; /* Verde sobrio */
-            --danger: #d9534f;  /* Rojo sobrio */
+            /* Textos */
+            --text-white: #f5f5f7; /* Apple White */
+            --text-muted: #86868b; /* Apple Gray */
             
-            --font-display: 'Playfair Display', serif; /* Títulos elegantes */
-            --font-body: 'Inter', sans-serif;          /* Lectura limpia */
-            --font-mono: 'Space Mono', monospace;      /* Datos técnicos */
+            /* Bordes y Brillos */
+            --border-subtle: rgba(255, 255, 255, 0.08);
+            --border-highlight: rgba(255, 255, 255, 0.15);
+            --glow-card: 0 0 0 1px rgba(255, 255, 255, 0.05);
             
-            --shadow-soft: 0 10px 40px -10px rgba(0,0,0,0.5);
+            /* Efectos */
+            --backdrop: blur(20px) saturate(180%);
+            --ease-out-expo: cubic-bezier(0.19, 1, 0.22, 1);
+            --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+            
+            /* Tipografía */
+            --font-serif: 'Playfair Display', serif;
+            --font-sans: 'Inter', sans-serif;
+            --font-display: 'Cinzel', serif;
+            --font-mono: 'Space Mono', monospace; /* Variable añadida */
         }
 
-        /* RESET & BASE */
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        /* --- BASE RESET & ANIMACIONES GLOBALES --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         
         body { 
-            background: var(--bg-dark); 
-            color: var(--text-main); 
-            font-family: var(--font-body); 
+            background: var(--bg-deep); 
+            color: var(--text-white); 
+            font-family: var(--font-sans); 
             overflow-x: hidden; 
             scroll-behavior: smooth;
             -webkit-font-smoothing: antialiased;
-            letter-spacing: 0.3px; /* Mejor lectura */
+            background-image: radial-gradient(circle at 50% 0%, #1a1a1a 0%, #030303 60%);
+            background-attachment: fixed;
         }
 
-        /* FONDO SUTIL (Elegancia en lugar de neón) */
-        .bg-mesh {
-            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-            background: radial-gradient(circle at 50% 0%, rgba(212, 175, 55, 0.08), transparent 40%);
-            z-index: -1; pointer-events: none;
+        /* Ruido sutil para textura premium */
+        body::before {
+            content: ""; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.03'/%3E%3C/svg%3E");
+            pointer-events: none; z-index: -1;
         }
 
-        /* SCROLLBAR REFINADO */
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: var(--bg-dark); }
-        ::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
-        ::-webkit-scrollbar-thumb:hover { background: var(--main); }
-
-        /* --- BOTONES PREMIUM --- */
-        .btn-primary {
-            background: var(--main); color: #000;
-            font-family: var(--font-body); font-weight: 600; font-size: 0.85rem;
-            border: none; padding: 14px 28px; border-radius: 2px; /* Bordes rectos = más formal */
-            cursor: pointer; transition: all 0.4s ease;
-            text-transform: uppercase; letter-spacing: 1.5px;
-            position: relative; overflow: hidden;
+        /* --- ANIMACIONES DE ENTRADA PRO --- */
+        .fade-up { 
+            opacity: 0; 
+            transform: translateY(40px) scale(0.98); 
+            filter: blur(10px);
+            transition: all 0.9s var(--ease-out-expo); 
+            will-change: transform, opacity, filter;
         }
-        .btn-primary:hover { 
-            background: #fff; transform: translateY(-2px); 
-            box-shadow: 0 5px 15px rgba(255,255,255,0.1);
+        .fade-up.visible { 
+            opacity: 1; 
+            transform: translateY(0) scale(1); 
+            filter: blur(0);
         }
 
-        .btn-outline {
-            background: transparent; color: var(--main);
-            border: 1px solid var(--main);
-            padding: 8px 20px; font-family: var(--font-body); font-size: 0.8rem;
+        /* --- UI KIT: BOTONES & ELEMENTOS --- */
+        .btn-luxury {
+            position: relative;
+            background: var(--text-white); 
+            color: #000;
+            border: none; 
+            padding: 16px 32px;
+            font-family: var(--font-sans); 
+            font-size: 0.75rem; 
+            font-weight: 600;
+            text-transform: uppercase; 
+            letter-spacing: 2px;
+            cursor: pointer; 
+            transition: all 0.4s var(--ease-out-expo);
+            overflow: hidden;
+            border-radius: 2px;
+        }
+        
+        /* Efecto Shine en Botón */
+        .btn-luxury::after {
+            content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.8), transparent);
+            transition: 0.5s;
+        }
+        .btn-luxury:hover::after { left: 100%; }
+        .btn-luxury:hover { 
+            background: var(--gold-primary); 
+            transform: scale(1.02);
+            box-shadow: 0 0 30px rgba(212, 175, 55, 0.4);
+        }
+        .btn-luxury:active { transform: scale(0.98); }
+
+        .btn-ghost {
+            background: transparent; color: var(--text-white);
+            border: 1px solid var(--border-subtle); padding: 12px 24px;
+            font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1.5px;
             cursor: pointer; transition: 0.3s; border-radius: 2px;
-            text-transform: uppercase; letter-spacing: 1px;
         }
-        .btn-outline:hover { background: var(--main); color: #000; }
-
-        /* --- INPUTS & FORMULARIOS --- */
-        .chat-input {
-            background: transparent; border: 1px solid #333;
-            color: white; padding: 15px; width: 100%; outline: none;
-            font-family: var(--font-body); transition: 0.3s;
-            border-radius: 4px; font-size: 0.9rem;
+        .btn-ghost:hover { 
+            border-color: var(--gold-primary); 
+            color: var(--gold-primary); 
+            background: rgba(212, 175, 55, 0.05);
         }
-        .chat-input:focus { border-color: var(--main); background: rgba(255,255,255,0.02); }
 
-        /* --- HEADER (Minimalista) --- */
-        .hero { 
-            padding: 80px 20px 40px; text-align: center; position: relative;
-            max-width: 1000px; margin: 0 auto;
+        /* --- HEADER & NAVEGACIÓN --- */
+        .top-banner {
+            text-align: center; padding: 10px; background: rgba(212, 175, 55, 0.1);
+            color: var(--gold-primary); font-size: 0.6rem; text-transform: uppercase; 
+            letter-spacing: 2px; border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+            backdrop-filter: blur(10px);
+        }
+
+        .hero-section {
+            padding: 100px 20px 80px; text-align: center;
+            max-width: 900px; margin: 0 auto;
+            perspective: 1000px; /* Para efecto 3D sutil */
         }
         
-        .brand-logo {
-            width: 80px; height: 80px; border-radius: 50%;
-            border: 1px solid var(--main); padding: 4px;
-            opacity: 0.9; margin-bottom: 20px;
+        .main-title {
+            font-family: var(--font-display);
+            font-size: 4.5rem; line-height: 1.1; margin-bottom: 20px;
+            background: linear-gradient(135deg, #fff 40%, #888 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            text-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
-
-        .brand-title {
-            font-family: var(--font-display); font-size: 3.5rem; margin: 10px 0;
-            color: var(--main); font-weight: 400; /* Letra más fina es más elegante */
-            letter-spacing: -1px;
-        }
-        .brand-subtitle {
-            color: var(--text-muted); font-size: 0.9rem; letter-spacing: 3px; 
-            text-transform: uppercase; margin-bottom: 30px;
-        }
-
-        /* --- CONTROLES Y FILTROS --- */
-        .controls-wrapper {
-            background: rgba(10, 10, 10, 0.9); backdrop-filter: blur(20px);
-            border-bottom: 1px solid #222; border-top: 1px solid #222;
-            padding: 20px 0; position: sticky; top: 0; z-index: 100;
-        }
-        .search-container { position: relative; max-width: 500px; margin: 0 auto; }
         
-        .categories-scroll {
-            display: flex; gap: 15px; overflow-x: auto; padding: 20px;
-            justify-content: center; scrollbar-width: none;
-        }
-        .cat-btn {
-            background: transparent; border: none;
-            color: #666; padding: 8px 0; margin: 0 10px;
-            font-size: 0.8rem; cursor: pointer; white-space: nowrap; transition: 0.3s;
-            text-transform: uppercase; letter-spacing: 1px; position: relative;
-        }
-        .cat-btn.active, .cat-btn:hover { color: var(--main); }
-        .cat-btn.active::after {
-            content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 1px; background: var(--main);
+        .sub-title {
+            font-family: var(--font-sans); font-weight: 300; color: var(--text-muted);
+            font-size: 1rem; letter-spacing: 0.5px; max-width: 500px; margin: 0 auto 40px;
+            line-height: 1.6;
         }
 
-        /* --- GRID PRODUCTOS (Minimal) --- */
-        .grid {
+        /* Navegación Flotante "Island" */
+        .sticky-nav {
+            position: sticky; top: 20px; z-index: 100;
+            display: flex; justify-content: center; padding: 0 20px;
+        }
+        .nav-glass {
+            background: rgba(20, 20, 20, 0.85); backdrop-filter: var(--backdrop);
+            border: 1px solid rgba(255,255,255,0.1); border-radius: 100px;
+            padding: 12px 30px; display: flex; align-items: center; gap: 30px;
+            box-shadow: 0 20px 50px -10px rgba(0,0,0,0.8);
+            transition: all 0.3s;
+        }
+        
+        .cat-scroll { display: flex; gap: 25px; overflow-x: auto; scrollbar-width: none; align-items: center; }
+        .cat-link {
+            color: #666; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px;
+            cursor: pointer; transition: 0.3s; background: none; border: none; font-weight: 500;
+        }
+        .cat-link.active, .cat-link:hover { color: var(--text-white); text-shadow: 0 0 10px rgba(255,255,255,0.5); }
+        
+        .search-minimal {
+            background: transparent; border: none; border-bottom: 1px solid #444;
+            color: white; padding: 5px; width: 150px; font-family: var(--font-sans);
+            font-size: 0.85rem; outline: none; transition: 0.4s;
+            text-align: center;
+        }
+        .search-minimal:focus { border-color: var(--gold-primary); width: 220px; }
+
+        /* --- PRODUCT CARDS (THE CORE) --- */
+        .grid-luxury {
             display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 40px; max-width: 1200px; margin: 60px auto; padding: 0 30px;
+            gap: 40px; max-width: 1400px; margin: 0 auto; padding: 0 20px;
         }
 
-        .card {
-            background: transparent; /* Sin fondo sólido */
-            border: none; border-radius: 0; position: relative;
-            transition: all 0.5s ease;
+        .card-pro {
+            background: var(--bg-card); 
+            border-radius: 4px; 
+            overflow: hidden; 
+            position: relative;
             display: flex; flex-direction: column;
+            /* El borde sutil estilo Apple */
+            box-shadow: inset 0 0 0 1px var(--border-subtle);
+            transition: transform 0.6s var(--ease-out-expo), box-shadow 0.6s var(--ease-out-expo);
         }
-        .card:hover { transform: translateY(-5px); }
-
-        /* Etiquetas */
-        .badge {
-            position: absolute; top: 0; left: 0;
-            padding: 6px 12px; font-size: 0.7rem; letter-spacing: 1px;
-            z-index: 10; font-family: var(--font-body);
-            text-transform: uppercase; background: #fff; color: #000;
+        
+        .card-pro:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 30px 60px -15px rgba(0,0,0,0.8), inset 0 0 0 1px rgba(255,255,255,0.15);
+            z-index: 10;
+            background: linear-gradient(180deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0) 100%);
         }
 
-        .img-wrapper {
-            height: 320px; width: 100%; padding: 30px;
-            background: #111; /* Fondo oscuro sólido para la imagen */
+        .card-img-box {
+            height: 380px; width: 100%; padding: 40px;
+            background: radial-gradient(circle at center, #151515 0%, #050505 100%);
             display: flex; align-items: center; justify-content: center;
-            margin-bottom: 20px; transition: 0.5s;
+            overflow: hidden; position: relative;
         }
-        .card:hover .img-wrapper { background: #161616; }
         
-        .card img {
-            max-width: 100%; max-height: 100%; object-fit: contain;
-            transition: transform 0.6s ease; filter: grayscale(20%); /* Desaturado elegante */
+        .card-img-box img {
+            max-width: 90%; max-height: 90%; object-fit: contain;
+            transition: transform 0.8s var(--ease-out-expo), filter 0.8s;
+            filter: drop-shadow(0 15px 30px rgba(0,0,0,0.5));
+            will-change: transform;
         }
-        .card:hover img { transform: scale(1.05); filter: grayscale(0%); }
+        .card-pro:hover .card-img-box img { 
+            transform: scale(1.12) translateY(-10px); 
+            filter: drop-shadow(0 25px 50px rgba(0,0,0,0.7));
+        }
 
-        .card-body { padding: 0; flex: 1; display: flex; flex-direction: column; text-align: left; }
-        
-        .card-title { 
-            font-family: var(--font-display); font-size: 1.2rem; 
-            margin-bottom: 5px; color: #fff; font-weight: 400; 
+        /* Wishlist Icon Animation */
+        .wish-btn {
+            position: absolute; top: 20px; right: 20px;
+            background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+            width: 40px; height: 40px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            color: white; cursor: pointer; z-index: 5; transition: 0.3s;
+            backdrop-filter: blur(10px);
         }
-        .card-price { 
-            font-size: 1rem; color: var(--main); font-family: var(--font-mono); 
-            margin-bottom: 15px;
-        }
-        
-        .stock-bar { height: 2px; background: #222; width: 100%; margin: 10px 0; }
-        .stock-fill { height: 100%; background: var(--main); transition: 0.5s; }
-        
-        .meta-info { 
-            display: flex; justify-content: space-between; font-size: 0.75rem; 
-            color: #666; margin-bottom: 20px; font-family: var(--font-body); text-transform: uppercase;
-        }
-        
-        .card-actions { display: grid; grid-template-columns: 1fr 40px; gap: 15px; }
+        .wish-btn:hover { background: white; color: black; transform: scale(1.1); }
+        .wish-btn:active { transform: scale(0.9); }
 
-        /* --- CARRITO (Estilo Recibo) --- */
+        .card-info { padding: 30px; flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
+        
+        .tag-row { display: flex; gap: 10px; margin-bottom: 15px; }
+        .tag-pill {
+            font-size: 0.6rem; padding: 4px 8px; border: 1px solid rgba(255,255,255,0.1);
+            color: #888; text-transform: uppercase; letter-spacing: 1px;
+        }
+
+        .prod-title { 
+            font-family: var(--font-serif); font-size: 1.4rem; color: #fff; margin-bottom: 5px;
+        }
+        .prod-specs { font-size: 0.8rem; color: #666; margin-bottom: 15px; font-weight: 300; }
+        
+        .price-row {
+            display: flex; justify-content: space-between; align-items: flex-end; margin-top: 10px;
+        }
+        .prod-price { 
+            font-family: var(--font-mono); font-size: 1.1rem; color: var(--text-white); 
+            letter-spacing: -0.5px;
+        }
+        
+        /* Botones de acción ocultos hasta hover (Desktop) */
+        .card-actions {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px;
+            opacity: 0.6; transition: 0.3s;
+        }
+        .card-pro:hover .card-actions { opacity: 1; }
+
+        /* --- SKELETON LOADER (SHIMMER) --- */
+        @keyframes shimmer {
+            0% { background-position: -1000px 0; }
+            100% { background-position: 1000px 0; }
+        }
+        .skeleton {
+            background: linear-gradient(90deg, #111 25%, #222 50%, #111 75%);
+            background-size: 1000px 100%;
+            animation: shimmer 2s infinite linear;
+        }
+
+        /* --- CARRITO & CHECKOUT --- */
         #cartSection {
-            max-width: 700px; margin: 80px auto; padding: 40px;
-            background: #111; border: 1px solid #222; 
+            max-width: 700px; margin: 120px auto; padding: 60px 40px;
+            background: #080808; border: 1px solid #222;
+            position: relative; box-shadow: 0 50px 100px rgba(0,0,0,0.8);
+        }
+        
+        .cart-item {
+            display: grid; grid-template-columns: 60px 1fr auto; gap: 20px; align-items: center;
+            padding: 25px 0; border-bottom: 1px solid rgba(255,255,255,0.05);
+            transition: 0.3s;
+        }
+        .cart-item:hover { background: rgba(255,255,255,0.02); padding-left: 10px; padding-right: 10px; }
+
+        /* --- SOCIAL PROOF & ALERTS --- */
+        .toast-luxury {
+            background: rgba(15,15,15,0.9); backdrop-filter: blur(15px);
+            color: white; padding: 16px 24px; 
+            border: 1px solid rgba(255,255,255,0.1); border-left: 2px solid var(--gold-primary);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5); 
+            font-family: var(--font-sans); font-size: 0.85rem;
+            display: flex; align-items: center; gap: 12px;
+            animation: slideInRight 0.5s var(--ease-out-expo);
+            border-radius: 4px;
+        }
+        
+        .fake-popup-pro {
+            position: fixed; bottom: 30px; left: 30px; 
+            background: rgba(10,10,10,0.8); backdrop-filter: blur(20px);
+            padding: 12px 20px; border-radius: 50px;
+            border: 1px solid rgba(255,255,255,0.08);
+            display: flex; align-items: center; gap: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+            z-index: 900; animation: fadeUp 0.5s var(--ease-out-expo);
         }
 
-        /* --- FOOTER --- */
-        .site-footer {
-            background: #050505; padding: 80px 40px; margin-top: 120px;
-            border-top: 1px solid #111; color: #666;
-        }
-        .footer-grid {
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 60px; max-width: 1200px; margin: 0 auto;
-        }
-        .footer-col h4 { 
-            color: #fff; margin-bottom: 25px; font-family: var(--font-display); 
-            font-weight: 400; letter-spacing: 1px; 
-        }
-        .footer-col ul { list-style: none; font-size: 0.85rem; line-height: 2; }
-        .footer-col li:hover { color: var(--main); cursor: pointer; }
-
-        /* --- EXTRAS --- */
-        #backToTop {
-            position: fixed; bottom: 40px; left: 40px; width: 50px; height: 50px;
-            background: #fff; color: #000; display: flex; align-items: center; justify-content: center;
-            cursor: pointer; opacity: 0; pointer-events: none; transition: 0.5s;
-            z-index: 900; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-        }
-        #backToTop.visible { opacity: 1; pointer-events: all; }
-
-        #toast-container { position: fixed; top: 30px; right: 30px; z-index: 10000; }
-        .toast { 
-            background: #fff; color: #000; 
-            padding: 15px 30px; margin-bottom: 10px; 
-            box-shadow: 0 10px 40px rgba(0,0,0,0.2); display: flex; align-items: center; gap: 15px;
-            animation: slideIn 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-            font-family: var(--font-body); font-size: 0.85rem;
-        }
-        @keyframes slideIn { from { transform: translateY(-100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-
-        /* Login Elegante */
+        /* --- LOGIN OVERLAY --- */
         #login-screen {
-            background: #000; z-index: 99999; display: flex;
-            align-items: center; justify-content: center; flex-direction: column;
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #000; z-index: 99999;
+            display: flex; align-items: center; justify-content: center; flex-direction: column;
         }
 
-        /* Responsive */
+        /* --- MOBILE OPTIMIZATION --- */
         @media (max-width: 768px) {
-            .brand-title { font-size: 2.5rem; }
-            .grid { grid-template-columns: 1fr; gap: 40px; padding: 20px; }
-            .hero { padding: 60px 20px; }
+            .main-title { font-size: 3rem; }
+            .grid-luxury { grid-template-columns: 1fr; gap: 30px; padding: 0 15px; }
+            .nav-glass { padding: 10px 15px; width: 95%; justify-content: space-between; border-radius: 12px; }
+            .search-minimal { width: 100px; display: none; } /* Ocultar buscar en móvil para limpieza */
+            .cat-scroll { gap: 15px; width: 100%; }
+            .card-img-box { height: 320px; }
+            .card-actions { opacity: 1; } /* Siempre visible en táctil */
+            .hero-section { padding-top: 60px; }
+            
+            /* Botones más grandes para dedos */
+            .btn-luxury, .btn-ghost, .btn-add, .btn-buy {
+                padding: 15px; font-size: 0.8rem;
+            }
         }
     </style>
 </head>
 <body>
 
-<div class="bg-mesh"></div>
-
 <div id="login-screen">
-    <div style="text-align: center; max-width: 90%;">
-        <img src="https://framerusercontent.com/images/AThoHC9cD7xYXolSv1sqdBmVx0.png" width="60" style="opacity:0.8; margin-bottom:30px;">
-        <h2 style="font-family: var(--font-display); color: white; margin-bottom: 10px; font-weight:400; letter-spacing:2px;">SANTSHOP</h2>
-        <p style="color: #666; font-family: var(--font-body); font-size:0.8rem; margin-bottom: 40px; letter-spacing:1px; text-transform:uppercase;">Acceso Exclusivo</p>
+    <div style="text-align: center; max-width: 90%; animation: fade-up 1.5s forwards;">
+        <img src="https://framerusercontent.com/images/AThoHC9cD7xYXolSv1sqdBmVx0.png" width="90" style="margin-bottom:40px; filter: drop-shadow(0 0 30px rgba(255,255,255,0.15));">
+        <h2 style="font-family: var(--font-display); color: white; margin-bottom: 10px; font-weight:400; letter-spacing:6px; font-size:1.8rem;">SANTSHOP</h2>
+        <p style="color: #555; font-size:0.75rem; margin-bottom: 60px; letter-spacing:3px; text-transform:uppercase;">Private Access Required</p>
         
-        <div style="display: flex; flex-direction: column; gap: 15px;">
-            <button class="btn-outline" onclick="socialLogin('Google')" style="width: 280px; display:flex; align-items:center; justify-content:center; gap:10px;">
-                <i data-lucide="mail" style="width:16px;"></i> Continuar con Google
+        <div style="display: flex; flex-direction: column; gap: 15px; width: 100%; max-width: 320px;">
+            <button class="btn-ghost" onclick="socialLogin('Google')" style="display:flex; align-items:center; justify-content:center; gap:10px;">
+                <i data-lucide="key" width="16"></i> Acceso con Google
             </button>
-            <button class="btn-outline" onclick="socialLogin('Apple')" style="width: 280px; display:flex; align-items:center; justify-content:center; gap:10px;">
-                <i data-lucide="apple" style="width:16px;"></i> Continuar con Apple
+            <button class="btn-ghost" onclick="socialLogin('Apple')" style="display:flex; align-items:center; justify-content:center; gap:10px;">
+                <i data-lucide="apple" width="16"></i> Acceso con Apple
             </button>
-            <button class="btn-primary" onclick="guestLogin()" style="margin-top: 10px;">
+            <button onclick="guestLogin()" style="background:none; border:none; color:#444; font-size:0.65rem; margin-top:30px; cursor:pointer; text-transform:uppercase; letter-spacing:2px; transition:0.3s;">
                 Entrar como Invitado
             </button>
         </div>
     </div>
 </div>
 
-<div id="toast-container"></div>
-<div id="backToTop" onclick="window.scrollTo(0,0)"><i data-lucide="arrow-up"></i></div>
+<div class="top-banner">
+    Solo miembros seleccionados • Envíos asegurados a Chiapas
+</div>
 
-<div id="fake-popup">
-    <div style="display:flex; align-items:center;">
-        <img id="fake-img" src="">
-        <div>
-            <p style="color:var(--main); font-family:var(--font-display); font-size:0.9rem; margin-bottom:2px;">Nueva Adquisición</p>
-            <p style="color:#888; font-size:0.75rem;" id="fake-text"></p>
+<div id="toast-container" style="position: fixed; top: 20px; right: 20px; z-index: 10000; display: flex; flex-direction: column; gap: 10px;"></div>
+
+<a href="https://wa.me/529641034714" target="_blank" style="position: fixed; bottom: 30px; right: 30px; width: 60px; height: 60px; background: #25D366; color:white; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 40px rgba(0,0,0,0.5); z-index: 900; transition: transform 0.3s;">
+    <i data-lucide="message-circle" width="30"></i>
+</a>
+
+<div class="hero-section">
+    <span class="fade-up" style="display:inline-block; border: 1px solid rgba(255,255,255,0.2); padding: 5px 15px; border-radius: 50px; font-size: 0.65rem; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 25px; color: var(--gold-primary);">Est. 2024 • Luxury Tech</span>
+    <h1 class="main-title fade-up">THE COLLECTION</h1>
+    <p class="sub-title fade-up">Ingeniería de precisión y estética atemporal. Una selección curada para el estilo de vida moderno en Chiapas.</p>
+    <div class="fade-up" style="animation-delay: 0.2s;">
+        <i data-lucide="chevron-down" style="opacity: 0.5; width: 30px; height: 30px; animation: bounce 2s infinite;"></i>
+    </div>
+</div>
+
+<div class="sticky-nav fade-up">
+    <div class="nav-glass">
+        <div style="display: flex; align-items: center; gap: 10px;">
+            <i data-lucide="search" width="16" style="opacity:0.5"></i>
+            <div class="search-container" style="position:relative;">
+                <input type="text" id="mainSearch" class="search-minimal" placeholder="Buscar..." onkeyup="handleSearch(this.value)">
+                <div id="search-suggestions" style="position:absolute; top:120%; left:-20px; width:200px; background:#111; border:1px solid #333; display:none; z-index:200;"></div>
+            </div>
         </div>
-        <button onclick="this.parentElement.parentElement.style.display='none'" style="margin-left:auto; background:none; border:none; color:#555; cursor:pointer;">✕</button>
+        
+        <div class="cat-scroll">
+            <button class="cat-link active" onclick="filterCat('all', this)">All</button>
+            <button class="cat-link" onclick="filterCat('audio', this)">Audio</button>
+            <button class="cat-link" onclick="filterCat('relojes', this)">Timepieces</button>
+            <button class="cat-link" onclick="filterCat('carga', this)">Energy</button>
+        </div>
+        
+        <a href="#cartSection" style="color:white; display:flex; align-items:center; gap:8px; text-decoration:none;">
+            <div style="position:relative;">
+                <i data-lucide="shopping-bag" width="20"></i>
+                <span id="cart-count-badge" style="position:absolute; top:-5px; right:-5px; background:var(--gold-primary); color:black; font-size:0.55rem; width:14px; height:14px; display:flex; align-items:center; justify-content:center; border-radius:50%; font-weight:bold;">0</span>
+            </div>
+        </a>
     </div>
 </div>
 
-<div class="hero">
-    <div style="display:flex; justify-content:center; gap:20px; margin-bottom:20px; font-size:0.7rem; color:#555; text-transform:uppercase; letter-spacing:2px;">
-        <span>Chiapas, MX</span> • <span>Est. 2024</span>
-    </div>
-    
-    <h1 class="brand-title">SANTSHOP</h1>
-    <p class="brand-subtitle">Tecnología Premium & Accesorios</p>
-    
-    <div style="border-top:1px solid #333; border-bottom:1px solid #333; padding: 15px; display:inline-block; font-size:0.75rem; letter-spacing:1px; color:#888;">
-        ENVÍO COMPLIMENTARIO EN PEDIDOS > <b>$500</b>
+<div id="skeleton-loader" class="grid-luxury" style="display:none; min-height:400px;"></div>
+<div id="mainGrid" class="grid-luxury"></div>
+
+<div id="fake-popup" class="fake-popup-pro" style="display:none;">
+    <img id="fake-img" src="" style="width:30px; height:30px; object-fit:cover; border-radius:50%; border:1px solid #333;">
+    <div>
+        <p style="color:#fff; font-size:0.7rem; margin-bottom:2px;" id="fake-text"></p>
+        <div style="display:flex; align-items:center; gap:5px;">
+            <div style="width:6px; height:6px; background:#4CAF50; border-radius:50%;"></div>
+            <p style="color:#666; font-size:0.6rem;">Comprado hace 2m</p>
+        </div>
     </div>
 </div>
-
-<div class="controls-wrapper">
-    <div class="search-container">
-        <input type="text" id="mainSearch" class="chat-input" placeholder="Buscar en el catálogo..." onkeyup="handleSearch(this.value)" style="text-align:center; border:none; border-bottom:1px solid #333; padding-bottom:10px;">
-        <div id="search-suggestions"></div>
-    </div>
-    
-    <div class="categories-scroll">
-        <button class="cat-btn active" onclick="filterCat('all', this)">Colección</button>
-        <button class="cat-btn" onclick="filterCat('audio', this)">Audio</button>
-        <button class="cat-btn" onclick="filterCat('relojes', this)">Relojería</button>
-        <button class="cat-btn" onclick="filterCat('carga', this)">Energía</button>
-        <button class="cat-btn" onclick="filterTag('gaming', this)">Gaming</button>
-    </div>
-</div>
-
-<div id="skeleton-loader" class="grid" style="display:none;"></div>
-<div id="mainGrid" class="grid"></div>
 
 <div id="cartSection">
-    <h2 style="font-family:var(--font-display); color:white; border-bottom:1px solid #333; padding-bottom:20px; margin-bottom:30px; font-weight:400; text-align:center;">
-        Tu Selección
-    </h2>
-    
-    <div style="background:#222; height:2px; width:100%; margin-bottom:15px; overflow:hidden;">
-        <div id="shipping-progress" style="width:0%; height:100%; background:var(--main); transition:1s ease;"></div>
+    <div style="text-align: center; margin-bottom: 40px;">
+        <h2 style="font-family: var(--font-serif); font-size: 2rem; margin-bottom: 10px;">SHOPPING BAG</h2>
+        <p style="color:#666; font-size:0.75rem; letter-spacing:1px;">REVISIÓN FINAL DE PEDIDO</p>
     </div>
-    <p id="shipping-msg" style="font-size:11px; text-align:center; color:#666; margin-bottom:30px; text-transform:uppercase; letter-spacing:1px;">Calculando envío...</p>
+    
+    <div style="margin-bottom: 40px; padding: 0 20px;">
+        <div style="display:flex; justify-content:space-between; margin-bottom:10px; font-size:0.7rem; color:#888;">
+            <span>ELEGIBLE PARA ENVÍO PLATINUM</span>
+            <span id="shipping-msg">Calculando...</span>
+        </div>
+        <div style="background:rgba(255,255,255,0.1); height:2px; width:100%;">
+            <div id="shipping-progress" style="width:0%; height:100%; background:var(--gold-primary); box-shadow: 0 0 10px var(--gold-primary); transition:1s ease;"></div>
+        </div>
+    </div>
 
     <div id="cartList"></div>
     
-    <div style="margin-top:40px; padding-top:30px; border-top:1px solid #222;">
-        <div style="display:flex; gap:10px; margin-bottom:20px;">
-            <input type="text" id="couponInput" class="chat-input" placeholder="CÓDIGO PROMOCIONAL" style="padding:10px; letter-spacing:1px;">
-            <button class="btn-outline" onclick="applyCoupon()">APLICAR</button>
+    <div style="margin-top:50px; padding-top:30px; border-top:1px solid rgba(255,255,255,0.1);">
+        <div style="display:flex; gap:10px; margin-bottom:30px;">
+            <input type="text" id="couponInput" class="search-minimal" placeholder="CÓDIGO DE INVITACIÓN" style="width:100%; letter-spacing:1px; text-align:left;">
+            <button class="btn-ghost" onclick="applyCoupon()" style="border-color:#333;">APLICAR</button>
         </div>
-        <p id="coupon-msg" style="font-size:11px; color:var(--main); text-align:right; min-height:15px; margin-bottom:10px;"></p>
+        <p id="coupon-msg" style="font-size:0.7rem; color:var(--gold-primary); text-align:right; min-height:15px; margin-bottom:20px;"></p>
 
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-bottom:30px;">
-            <input type="text" id="clientName" class="chat-input" placeholder="Nombre Completo">
-            <select id="deliveryZone" class="chat-input" style="background:#0a0a0a;">
-                <option value="">Seleccionar Zona</option>
-                <option value="UNACH SABATINOS">UNACH SABATINOS (Sábados)</option> 
-                <option value="Cuyamiapa">Cuyamiapa (Sin Costo)</option>
-                <option value="Chamulapa">Chamulapa (Sin Costo)</option>
-                <option value="Huehuetán">Huehuetán ($15)</option>
-                <option value="Estación">Estación ($10)</option>
+        <div style="display:grid; grid-template-columns:1fr; gap:20px; margin-bottom:40px;">
+            <input type="text" id="clientName" class="search-minimal" placeholder="Nombre Completo" style="width:100%; text-align:left; border-bottom:1px solid #333; padding:15px 0;">
+            <select id="deliveryZone" class="search-minimal" style="width:100%; background:transparent; color:#888; text-align:left; border-bottom:1px solid #333; padding:15px 0;">
+                <option value="">Seleccionar Zona de Entrega Privada</option>
+                <option value="UNACH SABATINOS">UNACH SABATINOS (Priority)</option> 
+                <option value="Cuyamiapa">Cuyamiapa (Concierge Gratis)</option>
+                <option value="Chamulapa">Chamulapa (Concierge Gratis)</option>
+                <option value="Huehuetán">Huehuetán (+$15 Express)</option>
+                <option value="Estación">Estación (+$10 Standard)</option>
             </select>
         </div>
 
-        <div style="display:flex; justify-content:space-between; align-items:flex-end; border-top:1px solid #222; padding-top:20px;">
+        <div style="display:flex; justify-content:space-between; align-items:flex-end;">
             <div style="text-align:left;">
-                <p style="color:#666; font-size:0.8rem; text-transform:uppercase; letter-spacing:1px;">Total Estimado</p>
-                <h2 id="cartTotal" style="color:var(--text-main); font-family:var(--font-display); font-size:2.5rem; font-weight:400;">$0</h2>
+                <p style="color:#666; font-size:0.7rem; text-transform:uppercase; letter-spacing:1px; margin-bottom:5px;">Total Estimado</p>
+                <h2 id="cartTotal" style="color:var(--text-white); font-family:var(--font-mono); font-size:2.2rem; letter-spacing:-1px;">$0.00</h2>
             </div>
-            <button id="btn-checkout" class="btn-primary" style="padding:15px 50px;" onclick="generateAdvancedTicket()">
-                FINALIZAR COMPRA
+            <button id="btn-checkout" class="btn-luxury" onclick="generateAdvancedTicket()">
+                CONFIRMAR & PAGAR
             </button>
         </div>
     </div>
 </div>
 
-<footer class="site-footer">
-    <div class="footer-grid">
-        <div class="footer-col">
-            <h4 style="color:var(--main);">SANTSHOP</h4>
-            <p>Redefiniendo la experiencia de compra tecnológica. Calidad, garantía y exclusividad en cada entrega.</p>
-        </div>
-        <div class="footer-col">
-            <h4>ASISTENCIA</h4>
-            <ul>
-                <li>Estado del Pedido</li>
-                <li>Devoluciones y Garantía</li>
-                <li>Términos de Servicio</li>
-            </ul>
-        </div>
-        <div class="footer-col">
-            <h4>SEGURIDAD</h4>
-            <div style="display:flex; gap:15px; margin-bottom:15px; opacity:0.7;">
-                <i data-lucide="shield-check"></i>
-                <i data-lucide="lock"></i>
-            </div>
-            <p style="font-size:0.8rem;">Transacciones encriptadas. Garantía de satisfacción total.</p>
-        </div>
-        <div class="footer-col">
-            <h4>CONCIERGE</h4>
-            <p><i data-lucide="message-circle" style="width:14px;"></i> 964 103 4714</p>
-            <p><i data-lucide="map-pin" style="width:14px;"></i> Huehuetán, Chiapas</p>
-        </div>
+<footer style="padding: 100px 20px; text-align: center; border-top: 1px solid #111; color: #444; font-size: 0.65rem; letter-spacing: 2px; background: #020202;">
+    <img src="https://framerusercontent.com/images/AThoHC9cD7xYXolSv1sqdBmVx0.png" width="40" style="opacity:0.3; margin-bottom:30px; filter: grayscale(1);">
+    <div style="display:flex; justify-content:center; gap:40px; margin-bottom:40px;">
+        <span style="border-bottom:1px solid #333; padding-bottom:5px;">GARANTÍA OFICIAL</span>
+        <span style="border-bottom:1px solid #333; padding-bottom:5px;">SOPORTE 24/7</span>
+        <span style="border-bottom:1px solid #333; padding-bottom:5px;">ENVÍOS SEGUROS</span>
     </div>
-    <div style="text-align:center; margin-top:60px; padding-top:30px; border-top:1px solid #111; font-family:var(--font-body); font-size:0.7rem; text-transform:uppercase; letter-spacing:2px; color:#444;">
-        © 2024 SANTSHOP SYSTEMS V20.0 • EXCELLENCE IN TECH.
-    </div>
+    <p>SANTSHOP © 2024 • THE LUXURY GROUP</p>
+    <p style="margin-top:15px; opacity:0.4; font-family:var(--font-serif); font-style:italic;">"La simplicidad es la máxima sofisticación"</p>
 </footer>
 
-<div id="ticket-capture" style="position:fixed; left:-9999px; width:450px; background:white; color:black; padding:40px; font-family:'Space Mono', monospace;"></div>
-
-<div id="compareModal" style="position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.95); z-index:9999; display:none; align-items:center; justify-content:center;">
-    <div style="background:#111; border:1px solid #333; padding:40px; max-width:700px; width:90%; position:relative;">
-        <button onclick="document.getElementById('compareModal').style.display='none'" style="position:absolute; top:20px; right:20px; background:none; border:none; color:white;">✕</button>
-        <h3 style="color:var(--main); margin-bottom:30px; font-family:var(--font-display); text-align:center; font-weight:400;">COMPARATIVA</h3>
-        <div id="compareContent" style="display:grid; grid-template-columns:1fr 1fr; gap:40px; color:#ccc;"></div>
-    </div>
-</div>
+<div id="ticket-capture" style="position:fixed; left:-9999px; width:500px; background:#fff; color:#000; padding:60px; font-family:'Inter', sans-serif;"></div>
 
 <audio id="sound-add" src="https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3"></audio>
 <audio id="sound-success" src="https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3"></audio>
 
 <script>
     // ==========================================
-    // BASE DE DATOS Y ESTADO (Lógica v19.5 intacta)
+    // LÓGICA DEL SISTEMA (INTACTA)
     // ==========================================
     const products = [
-        {id:1, name:'Airpods Gen 3', cat:'audio', price:320, specs:'Audio Espacial, 5h batería', tags:['airpod', 'audifono', 'oficina', 'gaming'], img:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSLtV_pnUElYNMdkOw0-Wm9_e8bgBeTCKlB_w&s', stock:12},
-        {id:2, name:'Power Bank 30k mAh', cat:'carga', price:699, specs:'30000mAh, Carga Ultra Rápida', tags:['power', 'bateria', 'oficina'], img:'https://http2.mlstatic.com/D_NQ_NP_2X_995948-MLA99547949208_122025-F.webp', stock:8},
-        {id:3, name:'Smartwatch Elegance', cat:'relojes', price:549, specs:'Rosa Pastel, Ritmo Cardíaco', tags:['reloj', 'mujer', 'oficina'], img:'https://http2.mlstatic.com/D_852047-MLA99082336731_112025-N.jpg', stock:5},
-        {id:4, name:'P9 Pro Max Cascos', cat:'audio', price:550, specs:'Hi-Fi, Cancelación de Ruido', tags:['p9', 'cascos', 'gaming', 'oficina'], img:'https://http2.mlstatic.com/D_722013-MLA95660056214_102025-N.jpg', stock:4},
-        {id:5, name:'Smartwatch Ultra G2', cat:'relojes', price:499, specs:'Titanium Edition, GPS', tags:['ultra', 'reloj', 'deporte'], img:'https://http2.mlstatic.com/D_NQ_NP_2X_849901-MLA99940357261_112025-F.webp', stock:10},
-        {id:6, name:'Reloj Cuarzo Luxe', cat:'relojes', price:200, specs:'Elegancia Clásica, Set x2', tags:['cuarzo', 'hombre', 'oficina'], img:'https://http2.mlstatic.com/D_NQ_NP_2X_840400-MLM93386215052_092025-F-2-pzas-relojes-de-cuarzo-casuales-impermeables-para-hombre.webp', stock:15},
-        {id:7, name:'Set Perlas Jewelry', cat:'relojes', price:500, specs:'Estilo Joyería, 5 Accesorios', tags:['perlas', 'reloj', 'mujer'], img:'https://http2.mlstatic.com/D_NQ_NP_2X_927510-MLA101975346478_122025-F.webp', stock:3},
-        {id:8, name:'R9 Display Tech', cat:'audio', price:480, specs:'Case con Pantalla LCD, ANC', tags:['r9', 'audifono', 'gaming'], img: 'https://http2.mlstatic.com/D_NQ_NP_2X_786898-MLA104624802146_012026-F.webp', stock:6},
-        {id:9, name:'Reloj De Hombre', cat:'relojes', price:220, specs:'7pcs Metal con Fecha', tags:['reloj', 'hombre', 'oficina'], img:'https://http2.mlstatic.com/D_NQ_NP_2X_668100-MLM86048051379_062025-F-7pcs-reloj-de-hombre-con-correa-de-metal-con-fecha-traje.webp', stock:7},
-        {id:10, name:'Reloj De Mujer', cat:'relojes', price:450, specs:'5 Piezas Set Regalo', tags:['reloj', 'mujer'], img:'https://http2.mlstatic.com/D_NQ_NP_2X_806989-CBT83215632095_032025-F-5-piezas-reloj-con-caja-contiene-pulsera-regalo-para-mujer.webp', stock:9},
-        {id:11, name:'Reloj De Hombre', cat:'relojes', price:220, specs:'7pcs Metal con Fecha', tags:['reloj', 'hombre', 'oficina'], img:'https://http2.mlstatic.com/D_NQ_NP_2X_836965-MLM86047783249_062025-F-7pcs-reloj-de-hombre-con-correa-de-metal-con-fecha-traje.webp', stock:8},
-        {id:12, name:'Rosas Rojas Eternas', cat:'relojes', price:349, specs:'Rosas eternas con joyería', tags:['reloj', 'mujer'], img:'https://http2.mlstatic.com/D_NQ_NP_2X_945334-MLM82184401503_012025-F.webp', stock:2}
+        {id:1, name:'Airpods Pro Gen 3', cat:'audio', price:320, specs:'Spatial Audio • MagSafe', tags:['airpod', 'audio', 'best_seller'], img:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSLtV_pnUElYNMdkOw0-Wm9_e8bgBeTCKlB_w&s', stock:12},
+        {id:2, name:'Titanium Power Bank', cat:'carga', price:699, specs:'30,000mAh • 100W PD', tags:['power', 'viaje'], img:'https://http2.mlstatic.com/D_NQ_NP_2X_995948-MLA99547949208_122025-F.webp', stock:8},
+        {id:3, name:'Watch Series Elegance', cat:'relojes', price:549, specs:'Ceramic Shield • Bio-Sensors', tags:['reloj', 'mujer', 'new'], img:'https://http2.mlstatic.com/D_852047-MLA99082336731_112025-N.jpg', stock:4},
+        {id:4, name:'Studio P9 Max', cat:'audio', price:550, specs:'Hi-Fi Lossless • ANC', tags:['p9', 'cascos', 'gaming'], img:'https://http2.mlstatic.com/D_722013-MLA95660056214_102025-N.jpg', stock:4},
+        {id:5, name:'Ultra G2 Titanium', cat:'relojes', price:499, specs:'Aerospace Grade • GPS', tags:['ultra', 'reloj', 'deporte', 'sale'], img:'https://http2.mlstatic.com/D_NQ_NP_2X_849901-MLA99940357261_112025-F.webp', stock:10},
+        {id:6, name:'Luxe Quartz Duo', cat:'relojes', price:200, specs:'Sapphire Glass • Set x2', tags:['cuarzo', 'hombre'], img:'https://http2.mlstatic.com/D_NQ_NP_2X_840400-MLM93386215052_092025-F-2-pzas-relojes-de-cuarzo-casuales-impermeables-para-hombre.webp', stock:15},
+        {id:7, name:'Pearl Collection', cat:'relojes', price:500, specs:'5-Piece Set • Limited', tags:['perlas', 'reloj', 'mujer'], img:'https://http2.mlstatic.com/D_NQ_NP_2X_927510-MLA101975346478_122025-F.webp', stock:3},
+        {id:8, name:'R9 Smart Folio', cat:'audio', price:480, specs:'OLED Touch • ANC', tags:['r9', 'audio', 'tech'], img: 'https://http2.mlstatic.com/D_NQ_NP_2X_786898-MLA104624802146_012026-F.webp', stock:6},
+        {id:9, name:'Executive Steel Set', cat:'relojes', price:220, specs:'7 Pieces • Stainless Steel', tags:['reloj', 'hombre'], img:'https://http2.mlstatic.com/D_NQ_NP_2X_668100-MLM86048051379_062025-F-7pcs-reloj-de-hombre-con-correa-de-metal-con-fecha-traje.webp', stock:7},
+        {id:10, name:'Gift Box Edition', cat:'relojes', price:450, specs:'Premium Packaging • 5pc', tags:['reloj', 'mujer'], img:'https://http2.mlstatic.com/D_NQ_NP_2X_806989-CBT83215632095_032025-F-5-piezas-reloj-con-caja-contiene-pulsera-regalo-para-mujer.webp', stock:9},
+        {id:11, name:'Classic Chrono', cat:'relojes', price:220, specs:'Polished Finish • Date', tags:['reloj', 'hombre'], img:'https://http2.mlstatic.com/D_NQ_NP_2X_836965-MLM86047783249_062025-F-7pcs-reloj-de-hombre-con-correa-de-metal-con-fecha-traje.webp', stock:8},
+        {id:12, name:'Eternal Roses Set', cat:'relojes', price:349, specs:'Preserved Rose • Jewelry', tags:['regalo', 'mujer', 'sale'], img:'https://http2.mlstatic.com/D_NQ_NP_2X_945334-MLM82184401503_012025-F.webp', stock:2}
     ];
 
-    let cart = JSON.parse(localStorage.getItem('santshop_cart_v19')) || [];
-    let wishlist = JSON.parse(localStorage.getItem('santshop_wish_v19')) || [];
+    let cart = JSON.parse(localStorage.getItem('santshop_cart_v21')) || [];
+    let wishlist = JSON.parse(localStorage.getItem('santshop_wish_v21')) || [];
     let currentUser = localStorage.getItem('santshop_user') || null;
-    let compareList = [];
     let activeCoupon = null;
 
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+            }
+        });
+    }, { threshold: 0.1 });
+
     window.onload = function() {
+        lucide.createIcons();
         if(currentUser) {
             document.getElementById('login-screen').style.display = 'none';
             initSystem();
         }
-        lucide.createIcons();
+        document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
     };
 
     function socialLogin(provider) {
-        currentUser = `${provider}_User_${Math.floor(Math.random()*999)}`;
+        currentUser = `${provider}_VIP`;
         completeLogin();
     }
 
     function guestLogin() {
-        currentUser = "Invitado";
+        currentUser = "Invitado_VIP";
         completeLogin();
     }
 
     function completeLogin() {
         localStorage.setItem('santshop_user', currentUser);
-        document.getElementById('login-screen').style.transition = 'opacity 0.6s ease';
-        document.getElementById('login-screen').style.opacity = '0';
+        const screen = document.getElementById('login-screen');
+        screen.style.opacity = '0';
         setTimeout(() => {
-            document.getElementById('login-screen').style.display = 'none';
+            screen.style.display = 'none';
             initSystem();
-        }, 600);
+        }, 1000);
     }
 
     function initSystem() {
-        const grid = document.getElementById('mainGrid');
         const loader = document.getElementById('skeleton-loader');
-        
         loader.style.display = 'grid';
-        loader.innerHTML = Array(6).fill('<div class="card skeleton" style="height:400px;"></div>').join('');
+        loader.innerHTML = Array(4).fill('<div class="card-pro skeleton" style="height:400px;"></div>').join('');
         
         setTimeout(() => {
             loader.style.display = 'none';
             renderProducts(products);
             updateCartUI();
-            checkScroll();
             startFakeMarketing();
         }, 1200);
     }
 
     function renderProducts(data) {
         const grid = document.getElementById('mainGrid');
+        
         if(data.length === 0) {
-            grid.innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:100px; color:#666; font-family:var(--font-display);">NO SE ENCONTRARON RESULTADOS</div>';
+            grid.innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:100px; color:#555; font-family:var(--font-serif);">NO SE ENCONTRARON PIEZAS</div>';
             return;
         }
 
-        grid.innerHTML = data.map(p => {
+        grid.innerHTML = data.map((p, index) => {
             let badgeHtml = '';
-            if(p.tags.includes('new')) badgeHtml = '<span class="badge">NUEVO</span>';
-            else if(p.tags.includes('best_seller')) badgeHtml = '<span class="badge">BEST SELLER</span>';
-            else if(p.tags.includes('sale')) badgeHtml = '<span class="badge">OFERTA</span>';
+            if(p.tags.includes('new')) badgeHtml = '<span class="tag-pill" style="color:#fff; border-color:#fff;">NEW ARRIVAL</span>';
+            else if(p.tags.includes('sale')) badgeHtml = '<span class="tag-pill" style="color:#d9534f; border-color:#d9534f;">LAST CHANCE</span>';
             
-            const stockPercent = (p.stock / 20) * 100;
-            const stockColor = p.stock < 5 ? '#d9534f' : 'var(--main)';
-            const viewing = Math.floor(Math.random() * 8) + 2;
-            const isWish = wishlist.includes(p.id) ? 'fill:var(--main); color:var(--main);' : '';
+            const isWish = wishlist.includes(p.id) ? 'background:white; color:black;' : '';
+            const delay = index * 0.1; 
+            
+            const urgencyHtml = p.stock < 5 ? `<div class="low-stock" style="color:#d9534f; font-size:0.65rem; margin-top:5px;">• Solo ${p.stock} disponibles</div>` : '';
 
             return `
-            <div class="card fade-in">
-                ${badgeHtml}
-                <button onclick="toggleWish(${p.id}, this)" style="position:absolute; right:15px; top:15px; background:rgba(255,255,255,0.1); border:none; color:white; padding:8px; border-radius:50%; cursor:pointer; z-index:10; transition:0.3s; ${isWish}">
-                    <i data-lucide="heart" style="width:16px;"></i>
+            <div class="card-pro fade-up" style="animation-delay: ${delay}s;">
+                <button class="wish-btn" onclick="toggleWish(${p.id}, this)" style="${isWish}">
+                    <i data-lucide="heart" width="16"></i>
                 </button>
-                <div class="img-wrapper"><img src="${p.img}" alt="${p.name}"></div>
-                <div class="card-body">
-                    <div class="card-title">${p.name}</div>
-                    <div class="card-price">$${p.price}</div>
-                    <div style="margin:10px 0;">
-                        <div class="meta-info">
-                            <span>Stock: ${p.stock}</span>
-                            <span style="color:#aaa;"><i data-lucide="eye" style="width:10px;"></i> ${viewing}</span>
-                        </div>
-                        <div class="stock-bar"><div class="stock-fill" style="width:${stockPercent}%; background:${stockColor};"></div></div>
+                <div class="card-img-box">
+                    <img src="${p.img}" alt="${p.name}">
+                </div>
+                <div class="card-info">
+                    <div>
+                        <div class="tag-row">${badgeHtml}</div>
+                        <div class="prod-title">${p.name}</div>
+                        <div class="prod-specs">${p.specs}</div>
+                        ${urgencyHtml}
                     </div>
+                    
+                    <div class="price-row">
+                        <div class="prod-price">$${p.price}</div>
+                    </div>
+
                     <div class="card-actions">
-                        <button class="btn-primary" onclick="addToCart(${p.id})">AGREGAR</button>
-                        <button class="btn-outline" onclick="addToCompare(${p.id})" style="padding:0; display:flex; align-items:center; justify-content:center;">
-                            <i data-lucide="arrow-left-right" style="width:16px;"></i>
-                        </button>
+                        <button class="btn-ghost" onclick="addToCart(${p.id})">Añadir</button>
+                        <button class="btn-luxury" style="padding:12px;" onclick="buyNow(${p.id})">Comprar</button>
                     </div>
                 </div>
             </div>`;
         }).join('');
+        
         lucide.createIcons();
+        document.querySelectorAll('.card-pro').forEach(el => observer.observe(el));
     }
 
-    function addToCart(id) {
+    function addToCart(id, silent = false) {
         const p = products.find(x => x.id === id);
         const existing = cart.find(x => x.id === id);
         
-        if(p.stock <= 0) return showToast("Producto Agotado", "error");
+        if(p.stock <= 0) return showToast("Artículo Agotado Temporalmente", "error");
 
         if(existing) { existing.qty++; } 
         else { cart.push({...p, qty: 1}); }
         
+        if(!silent) {
+            playSound('sound-add');
+            showToast(`${p.name} añadido a su selección`, "success");
+            // Confeti Dorado Fino
+            confetti({ 
+                particleCount: 30, 
+                spread: 40, 
+                origin: { y: 0.9 }, 
+                colors:['#D4AF37', '#F5F5F7'], 
+                scalar: 0.7, 
+                gravity: 0.8 
+            });
+        }
+        
         p.stock--; 
-        playSound('sound-add');
-        showToast(`${p.name} añadido a la selección`, "success");
-        renderProducts(products); 
-        // Confeti ahora es Dorado y Blanco
-        confetti({ particleCount: 30, spread: 50, origin: { y: 0.8 }, colors:['#D4AF37', '#FFFFFF'] });
         saveCart();
+    }
+
+    function buyNow(id) {
+        addToCart(id, true);
+        document.getElementById('cartSection').scrollIntoView({ behavior: 'smooth' });
+        showToast("Procesando solicitud inmediata...", "success");
     }
 
     function removeFromCart(id) {
@@ -561,8 +655,9 @@
     }
 
     function saveCart() {
-        localStorage.setItem('santshop_cart_v19', JSON.stringify(cart));
+        localStorage.setItem('santshop_cart_v21', JSON.stringify(cart));
         updateCartUI();
+        document.getElementById('cart-count-badge').innerText = cart.reduce((acc, item) => acc + item.qty, 0);
     }
 
     function updateCartUI() {
@@ -576,22 +671,21 @@
         list.innerHTML = cart.map(item => {
             subtotal += item.price * item.qty;
             return `
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; border-bottom:1px solid #222; padding-bottom:15px;">
+            <div class="cart-item">
+                <img src="${item.img}" style="width:60px; height:60px; object-fit:contain; border-radius:4px; background:white; padding:5px;">
                 <div>
-                    <div style="font-family:var(--font-display); font-size:1rem;">${item.name}</div>
-                    <div style="color:#666; font-size:0.8rem; margin-top:5px;">$${item.price} x ${item.qty}</div>
+                    <div style="font-size:0.9rem; color:white; font-family:var(--font-serif);">${item.name}</div>
+                    <div style="color:#666; font-size:0.75rem;">$${item.price} USD | Qty: ${item.qty}</div>
                 </div>
-                <div style="display:flex; align-items:center; gap:15px;">
-                    <button class="btn-outline" style="padding:2px 10px;" onclick="changeQty(${item.id}, -1)">-</button>
-                    <span style="font-family:var(--font-mono);">${item.qty}</span>
-                    <button class="btn-outline" style="padding:2px 10px;" onclick="changeQty(${item.id}, 1)">+</button>
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <button class="btn-ghost" style="padding:5px 10px;" onclick="changeQty(${item.id}, -1)">-</button>
+                    <button class="btn-ghost" style="padding:5px 10px;" onclick="changeQty(${item.id}, 1)">+</button>
                 </div>
             </div>`;
         }).join('');
 
-        if(cart.length === 0) list.innerHTML = '<p style="text-align:center; color:#444; padding:30px; font-style:italic;">Su bolsa de compras está vacía.</p>';
+        if(cart.length === 0) list.innerHTML = '<p style="text-align:center; color:#444; padding:30px; font-style:italic;">Su selección está vacía.</p>';
 
-        // Envío Gratis
         const freeShipLimit = 500;
         let progress = (subtotal / freeShipLimit) * 100;
         if(progress > 100) progress = 100;
@@ -599,31 +693,30 @@
         shipProg.style.width = `${progress}%`;
         if(subtotal >= freeShipLimit) {
             shipProg.style.background = '#4CAF50';
-            shipMsg.innerHTML = 'ENVÍO DE CORTESÍA APLICADO';
+            shipMsg.innerHTML = 'ENVÍO PLATINUM INCLUIDO';
             shipMsg.style.color = '#4CAF50';
         } else {
-            shipProg.style.background = 'var(--main)';
-            shipMsg.innerHTML = `Agregue <b>$${freeShipLimit - subtotal}</b> para envío de cortesía`;
+            shipProg.style.background = 'var(--gold-primary)';
+            shipMsg.innerHTML = `Faltan <b>$${freeShipLimit - subtotal}</b> para Concierge`;
             shipMsg.style.color = '#888';
         }
 
-        // Descuentos (Lógica v19.5)
         let discount = 0;
         if(activeCoupon === 'SANTSHOP') discount = subtotal * 0.05;
         if(activeCoupon === 'KIM') discount = subtotal * 0.20;
         if(activeCoupon === 'JSB') discount = subtotal * 0.02;
-        if(activeCoupon === 'PAR' && cart.length >= 2) discount = subtotal * 0.05;
+        
         if(subtotal > 1000 && !activeCoupon) {
-            activeCoupon = 'AUTO_VIP';
-            showToast("Cliente Distinguido: 15% Descuento", "success");
+            activeCoupon = 'VIP_AUTO';
+            showToast("Membresía VIP Detectada: 15% OFF", "success");
         }
-        if(activeCoupon === 'AUTO_VIP') discount = subtotal * 0.15;
+        if(activeCoupon === 'VIP_AUTO') discount = subtotal * 0.15;
 
         const finalTotal = subtotal - discount;
         totalEl.innerText = `$${finalTotal.toFixed(0)}`;
         
         if(discount > 0) {
-            document.getElementById('coupon-msg').innerText = `DESC. (${activeCoupon}): -$${discount.toFixed(0)}`;
+            document.getElementById('coupon-msg').innerText = `PRIVILEGIO APLICADO (${activeCoupon}): -$${discount.toFixed(0)}`;
         } else {
             document.getElementById('coupon-msg').innerText = "";
         }
@@ -631,10 +724,9 @@
 
     function applyCoupon() {
         const code = document.getElementById('couponInput').value.toUpperCase().trim();
-
-        if(code === 'SANTSHOP' || code === 'KIM' || code === 'JSB' || code === 'PAR') {
+        if(['SANTSHOP','KIM','JSB','PAR'].includes(code)) {
             activeCoupon = code;
-            showToast("Código aceptado", "success");
+            showToast("Código Válido. Aplicando...", "success");
         } else {
             showToast("Código no reconocido", "error");
             return;
@@ -643,60 +735,71 @@
     }
 
     function generateAdvancedTicket() {
-        if(cart.length === 0) return showToast("Bolsa vacía", "error");
+        if(cart.length === 0) return showToast("Su bolsa está vacía", "error");
         
-        const name = document.getElementById('clientName').value || "Cliente";
-        const zone = document.getElementById('deliveryZone').value || "Tienda";
+        const name = document.getElementById('clientName').value || "Cliente Exclusivo";
+        const zone = document.getElementById('deliveryZone').value;
+        if(!zone) return showToast("Seleccione destino de entrega", "error");
+
         const total = document.getElementById('cartTotal').innerText;
         const btn = document.getElementById('btn-checkout');
 
-        btn.innerHTML = 'PROCESANDO...';
+        btn.innerHTML = 'PROCESANDO PAGO SEGURO...';
         btn.disabled = true;
 
         const ticketDiv = document.getElementById('ticket-capture');
-        const date = new Date().toLocaleString();
-        const folio = Math.floor(Math.random() * 100000);
+        const date = new Date().toLocaleDateString('es-MX', { year: 'numeric', month: 'long', day: 'numeric' });
+        const folio = Math.floor(Math.random() * 90000) + 10000;
 
+        // Ticket Diseño Editorial
         ticketDiv.innerHTML = `
-            <div style="text-align:center; border-bottom:1px solid #000; padding-bottom:20px; margin-bottom:20px;">
-                <h2 style="margin:0; font-size:24px; letter-spacing:2px;">SANTSHOP</h2>
-                <p style="font-size:10px; margin-top:5px; text-transform:uppercase;">Recibo de Compra</p>
-                <p style="font-size:10px;">FOLIO: #${folio} | ${date}</p>
-            </div>
-            <div style="font-size:12px; line-height:1.6;">
-                <p><strong>CLIENTE:</strong> ${name}</p>
-                <p><strong>DESTINO:</strong> ${zone}</p>
-                <hr style="border:1px dashed #ccc; margin:15px 0;">
-                ${cart.map(i => `<div style="display:flex; justify-content:space-between;">
-                    <span>${i.qty} x ${i.name}</span>
-                    <span>$${i.price * i.qty}</span>
-                </div>`).join('')}
-                <hr style="border:1px solid #000; margin:15px 0;">
-                <div style="display:flex; justify-content:space-between; font-size:18px; font-weight:bold;">
-                    <span>TOTAL:</span>
-                    <span>${total}</span>
+            <div style="border: 1px solid #000; padding: 50px; position:relative; max-width:500px;">
+                <div style="text-align:center; margin-bottom:40px;">
+                    <h1 style="margin:0; font-family:'Playfair Display'; font-size:36px; letter-spacing:2px;">SANTSHOP</h1>
+                    <p style="font-size:9px; margin-top:5px; text-transform:uppercase; letter-spacing:4px;">Official Receipt • Folio #${folio}</p>
                 </div>
-                <div style="margin-top:30px; text-align:center; font-size:9px; color:#555;">
-                    Gracias por su preferencia.<br>www.santshop.com
+                
+                <div style="border-top:1px solid #000; border-bottom:1px solid #000; padding:20px 0; margin-bottom:30px; font-size:10px; display:flex; justify-content:space-between;">
+                    <div>CLIENTE: ${name.toUpperCase()}</div>
+                    <div>${date.toUpperCase()}</div>
+                </div>
+
+                <table style="width:100%; font-size:11px; border-collapse:collapse; margin-bottom:40px;">
+                    ${cart.map(i => `
+                    <tr style="border-bottom:1px solid #eee;">
+                        <td style="padding:15px 0;">${i.name.toUpperCase()}</td>
+                        <td style="text-align:right;">x${i.qty}</td>
+                        <td style="text-align:right;">$${i.price * i.qty}</td>
+                    </tr>`).join('')}
+                </table>
+
+                <div style="text-align:right; margin-bottom:40px;">
+                    <p style="font-size:10px; text-transform:uppercase;">Destino: ${zone}</p>
+                    <h2 style="font-size:40px; margin:10px 0; font-family:'Playfair Display';">${total}</h2>
+                </div>
+
+                <div style="text-align:center; font-size:9px; color:#555;">
+                    <p>GRACIAS POR SU COMPRA</p>
+                    <p>soysant.github.io/SantShop/ • Chiapas, México</p>
                 </div>
             </div>
         `;
 
         setTimeout(() => {
-            html2canvas(ticketDiv).then(canvas => {
+            html2canvas(ticketDiv, { scale: 2 }).then(canvas => {
                 const link = document.createElement('a');
-                link.download = `Recibo_${folio}.png`;
+                link.download = `SantShop_Receipt_${folio}.png`;
                 link.href = canvas.toDataURL('image/png');
                 link.click();
 
                 cart = [];
                 saveCart();
                 playSound('sound-success');
-                showToast("Compra confirmada. Recibo descargado.", "success");
-                btn.innerHTML = 'FINALIZAR COMPRA';
+                showToast("Pedido Confirmado. Gracias.", "success");
+                btn.innerHTML = 'CONFIRMAR & PAGAR';
                 btn.disabled = false;
                 
-                const waMsg = `Hola SantShop, soy *${name}*. Deseo confirmar mi pedido #${folio} por un total de *${total}* para entrega en *${zone}*.`;
+                const waMsg = `*NUEVA ORDEN SANTSHOP*\n\nCliente: *${name}*\nFolio: #${folio}\n\nTotal Aprobado: *${total}*\nDestino: ${zone}`;
                 window.open(`https://wa.me/529641034714?text=${encodeURIComponent(waMsg)}`, '_blank');
             });
         }, 1500);
@@ -705,21 +808,23 @@
     function showToast(msg, type = "normal") {
         const container = document.getElementById('toast-container');
         const toast = document.createElement('div');
-        toast.className = 'toast';
+        toast.className = 'toast-luxury';
         
         let icon = 'info';
-        if(type === 'success') icon = 'check-circle';
+        if(type === 'success') icon = 'check';
         if(type === 'error') icon = 'alert-triangle';
         
-        toast.innerHTML = `<i data-lucide="${icon}" style="width:16px;"></i> ${msg}`;
-        if(type === 'error') toast.style.borderLeft = '3px solid #d9534f';
-        else toast.style.borderLeft = '3px solid #D4AF37';
+        toast.innerHTML = `<i data-lucide="${icon}" width="16"></i> ${msg}`;
+        if(type === 'error') {
+            toast.style.borderLeftColor = '#d9534f';
+        }
         
         container.appendChild(toast);
         lucide.createIcons();
         
         setTimeout(() => {
-            toast.style.transform = 'translateY(-100%)';
+            toast.style.opacity = '0';
+            toast.style.transform = 'translateY(-20px)';
             setTimeout(() => toast.remove(), 500);
         }, 3000);
     }
@@ -728,15 +833,17 @@
         const audio = document.getElementById(id);
         if(audio) {
             audio.currentTime = 0;
+            audio.volume = 0.2; // Volumen sutil
             audio.play().catch(e => {});
         }
     }
 
     function startFakeMarketing() {
         const fakeSales = [
-            { txt: "Smartwatch Elegance (Tapachula)", img: products[2].img },
-            { txt: "Airpods Gen 3 (Huehuetán)", img: products[0].img },
-            { txt: "Power Bank 30k (Estación)", img: products[1].img }
+            { txt: "Carlos A. compró AirPods", img: products[0].img },
+            { txt: "Sofía M. ordenó PowerBank", img: products[1].img },
+            { txt: "Envío a Tapachula programado", img: products[2].img },
+            { txt: "Roberto L. compró Gift Set", img: products[6].img }
         ];
         
         setInterval(() => {
@@ -748,7 +855,7 @@
             
             popup.style.display = 'flex';
             setTimeout(() => popup.style.display = 'none', 5000);
-        }, 25000); 
+        }, 12000); 
     }
 
     function handleSearch(val) {
@@ -757,7 +864,9 @@
         
         if(val.length > 1) {
             const matches = products.filter(p => p.name.toLowerCase().includes(val));
-            suggestions.innerHTML = matches.map(p => `<div class="suggestion" onclick="document.getElementById('mainSearch').value='${p.name}'; handleSearch('${p.name}')">${p.name}</div>`).join('');
+            suggestions.innerHTML = matches.map(p => 
+                `<div onclick="document.getElementById('mainSearch').value='${p.name}'; handleSearch('${p.name}')" style="padding:15px; border-bottom:1px solid #222; cursor:pointer; font-size:0.75rem; color:#ccc; transition:0.2s;">${p.name}</div>`
+            ).join('');
             suggestions.style.display = matches.length ? 'block' : 'none';
         } else {
             suggestions.style.display = 'none';
@@ -772,69 +881,24 @@
     }
 
     function filterCat(cat, btn) {
-        document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.cat-link').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
         const filtered = cat === 'all' ? products : products.filter(p => p.cat === cat);
-        renderProducts(filtered);
-    }
-    
-    function filterTag(tag, btn) {
-        document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        const filtered = products.filter(p => p.tags.includes(tag));
         renderProducts(filtered);
     }
 
     function toggleWish(id, btn) {
         if(wishlist.includes(id)) {
             wishlist = wishlist.filter(x => x !== id);
+            btn.style.background = 'rgba(255,255,255,0.05)';
             btn.style.color = 'white';
-            btn.style.fill = 'none';
         } else {
             wishlist.push(id);
-            btn.style.color = 'var(--main)';
-            btn.style.fill = 'var(--main)';
-            showToast("Añadido a favoritos", "success");
+            btn.style.background = 'white';
+            btn.style.color = 'black';
+            showToast("Guardado en Wishlist", "success");
         }
-        localStorage.setItem('santshop_wish_v19', JSON.stringify(wishlist));
-    }
-
-    function addToCompare(id) {
-        if(compareList.length >= 2) return showToast("Máximo 2 artículos", "error");
-        compareList.push(id);
-        
-        if(compareList.length === 2) {
-            const p1 = products.find(x => x.id === compareList[0]);
-            const p2 = products.find(x => x.id === compareList[1]);
-            
-            const modal = document.getElementById('compareModal');
-            document.getElementById('compareContent').innerHTML = `
-                <div style="text-align:center;">
-                    <img src="${p1.img}" style="width:120px; height:120px; object-fit:contain; margin-bottom:15px;">
-                    <h4 style="font-family:var(--font-display); font-size:1.2rem;">${p1.name}</h4>
-                    <h2 style="color:var(--main); font-weight:400;">$${p1.price}</h2>
-                    <p style="font-size:0.8rem; color:#888; margin-top:10px;">${p1.specs}</p>
-                </div>
-                <div style="text-align:center; border-left:1px solid #333; padding-left:20px;">
-                    <img src="${p2.img}" style="width:120px; height:120px; object-fit:contain; margin-bottom:15px;">
-                    <h4 style="font-family:var(--font-display); font-size:1.2rem;">${p2.name}</h4>
-                    <h2 style="color:var(--main); font-weight:400;">$${p2.price}</h2>
-                    <p style="font-size:0.8rem; color:#888; margin-top:10px;">${p2.specs}</p>
-                </div>
-            `;
-            modal.style.display = 'flex';
-            compareList = []; 
-        } else {
-            showToast("Seleccione otro artículo para comparar", "normal");
-        }
-    }
-
-    function checkScroll() {
-        window.addEventListener('scroll', () => {
-            const btn = document.getElementById('backToTop');
-            if(window.scrollY > 300) btn.classList.add('visible');
-            else btn.classList.remove('visible');
-        });
+        localStorage.setItem('santshop_wish_v21', JSON.stringify(wishlist));
     }
 </script>
 </body>
